@@ -25,7 +25,7 @@ Ensure the following tools are installed on your system:
 ## Installation
 
    ```bash
-   git clone https://github.com/your-username/micro-farm-js.git
+   git clone git@github.com:aicell-lab/micro-farm-js.git
    cd micro-farm-js
    npm install
    npm run dev
@@ -38,7 +38,15 @@ micro-farm-js/
 ├── tsconfig.json      # TypeScript configuration
 ├── vite.config.ts     # Vite configuration
 ├── public/            # Public assets directory
-│   └── output.zip     # (Download zip separately)
+│   └── assets.zip     # (Download zip separately)
 ├─── dist/             # Build output 
 └─── src/              # Source code
 ```
+
+### Assets
+Download assets separately and store them in a directory named `public`.
+ ```bash
+mkdir -p public
+wget -O ./public/assets.zip <URL>
+ ```
+ Replace `<URL>` with the download [link](https://www.dropbox.com/scl/fi/nt8shjhr498602uz5pg0o/output.zip?rlkey=eygfbhecelvjnxclxtend8pao&st=m9vl3e5i&dl=1).
