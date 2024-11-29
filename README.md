@@ -50,3 +50,11 @@ mkdir -p public
 wget -O ./public/assets.zip <URL>
  ```
  Replace `<URL>` with the download [link](https://www.dropbox.com/scl/fi/nt8shjhr498602uz5pg0o/output.zip?rlkey=eygfbhecelvjnxclxtend8pao&st=m9vl3e5i&dl=1).
+
+ ## Installation via Docker
+```bash
+git clone git@github.com:aicell-lab/micro-farm-js.git
+cd micro-farm-js
+docker build -t micro-farm-js .
+docker run -it --rm -p 80:80 --name micro-farm-js micro-farm-js
+ ```
