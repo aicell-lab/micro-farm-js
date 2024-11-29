@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 
 export function animate(objects: THREE.Object3D[], scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) {
-  function render() {
-    requestAnimationFrame(render);
 
+  var draw = function(){
     if (objects.length > 0) {
       let obj = objects[0];
 
@@ -18,7 +17,7 @@ export function animate(objects: THREE.Object3D[], scene: THREE.Scene, camera: T
     } else {
       console.warn('No objects to animate.');
     }
-}
+  };
 
-render();
+  renderer.setAnimationLoop(draw);
 }
