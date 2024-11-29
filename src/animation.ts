@@ -18,8 +18,6 @@ export function animate(objects: THREE.Object3D[], scene: THREE.Scene, camera: T
     } else {
       console.warn('No objects to animate.');
     }
-
-  renderer.render(scene, camera);
 }
 
 render();
