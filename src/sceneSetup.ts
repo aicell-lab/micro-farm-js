@@ -27,7 +27,7 @@ function getRenderer(): THREE.WebGLRenderer {
   return renderer;
 }
 
-function applyStandardMaterial(obj: THREE.Object3D){
+function applyStandardMaterial(obj: THREE.Object3D) {
   obj.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
       const mesh = child as THREE.Mesh;
@@ -38,7 +38,7 @@ function applyStandardMaterial(obj: THREE.Object3D){
   });
 }
 
-function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D | null{
+function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D | null {
   const objFile = collection.textFiles.get(filepath);
   let obj = null;
   if (objFile) {
@@ -52,10 +52,26 @@ function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D 
 function loadModels(collection: FileCollections): THREE.Object3D[] {
   let objects: THREE.Object3D[] = [];
   var obj = loadOBJ(collection, modelFilepaths[Models.OpticalTable]);
-  if (obj){
+  if (obj) {
     objects.push(obj);
   }
   return objects;
+}
+
+export class SceneSetup {
+  scene: THREE.Scene;
+  objects: THREE.Object3D[];
+  renderer: THREE.WebGLRenderer;
+  camera: THREE.PerspectiveCamera;
+
+  constructor(fileMaps: FileCollections){
+    this.scene = getScene();
+    this.objects = loadModels(fileMaps);
+    this.objects.forEach((obj) => { this.scene.add(obj); });
+    this.renderer = getRenderer();
+    this.camera = getCamera();
+  }
+
 }
 
 export function createScene(fileMaps: FileCollections): { scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, objects: THREE.Object3D[] } {

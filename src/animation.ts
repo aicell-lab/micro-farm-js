@@ -1,6 +1,12 @@
 import * as THREE from 'three';
+import { SceneSetup } from './sceneSetup';
 
-export function animate(objects: THREE.Object3D[], scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) {
+export function animate(sceneSetup: SceneSetup) {
+
+  let objects = sceneSetup.objects;
+  let renderer = sceneSetup.renderer;
+  let scene = sceneSetup.scene;
+  let camera = sceneSetup.camera;
 
   var draw = function(){
     if (objects.length > 0) {
