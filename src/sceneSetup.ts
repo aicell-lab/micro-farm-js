@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { FileCollections } from './assets';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { Models, modelFilepaths } from "./models"
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -50,7 +51,7 @@ function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D 
 
 function loadModels(collection: FileCollections): THREE.Object3D[] {
   let objects: THREE.Object3D[] = [];
-  var obj = loadOBJ(collection, 'objs/optical_table.obj');
+  var obj = loadOBJ(collection, modelFilepaths[Models.OpticalTable]);
   if (obj){
     objects.push(obj);
   }
