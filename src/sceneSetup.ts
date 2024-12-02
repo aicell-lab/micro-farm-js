@@ -49,34 +49,29 @@ function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D 
   return obj;
 }
 
-function loadModels(collection: FileCollections): THREE.Object3D[] {
-  let objects: THREE.Object3D[] = [];
-  var obj = loadOBJ(collection, modelFilepaths[Models.OpticalTable]);
-  if (obj) {
-    objects.push(obj);
+function loadModels(collection: FileCollections): Map<Models,THREE.Object3D> {
+  let modelMap: Map<Models,THREE.Object3D> = new Map();
+  const keys: Models[] = [Models.OpticalTable];
+  for (const key of keys){
+    var obj = loadOBJ(collection, modelFilepaths[key]);
+    if(obj)
+      modelMap.set(key, obj);
   }
-  return objects;
+  return modelMap;
 }
 
 export class SceneSetup {
   scene: THREE.Scene;
-  objects: THREE.Object3D[];
+  modelMap: Map<Models,THREE.Object3D>;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
 
   constructor(fileMaps: FileCollections){
     this.scene = getScene();
-    this.objects = loadModels(fileMaps);
-    this.objects.forEach((obj) => { this.scene.add(obj); });
+    this.modelMap = loadModels(fileMaps);
+    this.modelMap.forEach((value, _) => { this.scene.add(value); });
     this.renderer = getRenderer();
     this.camera = getCamera();
   }
 
-}
-
-export function createScene(fileMaps: FileCollections): { scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, objects: THREE.Object3D[] } {
-  let scene = getScene();
-  let objects = loadModels(fileMaps);
-  objects.forEach((obj) => { scene.add(obj); });
-  return { scene, camera: getCamera(), renderer: getRenderer(), objects };
 }
