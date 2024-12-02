@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { FileCollections } from './assets';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { Models, modelFilepaths } from "./models"
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -65,6 +66,7 @@ export class SceneSetup {
   modelMap: Map<Models,THREE.Object3D>;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
+  cameraCtrl: OrbitControls;
 
   constructor(fileMaps: FileCollections){
     this.scene = getScene();
@@ -72,6 +74,7 @@ export class SceneSetup {
     this.modelMap.forEach((value, _) => { this.scene.add(value); });
     this.renderer = getRenderer();
     this.camera = getCamera();
+    this.cameraCtrl = new OrbitControls( this.camera, this.renderer.domElement );
   }
 
 }
