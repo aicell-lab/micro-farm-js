@@ -12,8 +12,7 @@ export function animate(sceneSetup: SceneSetup) {
   var draw = function(){
     let table = modelMap.get(Models.OpticalTable);
     if(table){
-      table.rotation.x += 0.001;
-      table.rotation.y += 0.001;
+      table.rotation.x = 1.0*Math.PI;
     }
     renderer.render(scene, camera);
   };
