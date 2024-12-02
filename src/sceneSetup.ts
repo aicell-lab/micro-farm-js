@@ -26,24 +26,33 @@ function getRenderer(): THREE.WebGLRenderer {
   return renderer;
 }
 
-function loadModels(collection: FileCollections): THREE.Object3D[] {
-  let objects: THREE.Object3D[] = [];
-  const objFile = collection.textFiles.get('objs/optical_table.obj');
+function applyStandardMaterial(obj: THREE.Object3D){
+  obj.traverse((child) => {
+    if ((child as THREE.Mesh).isMesh) {
+      const mesh = child as THREE.Mesh;
+      if (!mesh.material) {
+        mesh.material = new THREE.MeshStandardMaterial({ color: 0x888888 });
+      }
+    }
+  });
+}
+
+function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D | null{
+  const objFile = collection.textFiles.get(filepath);
+  let obj = null;
   if (objFile) {
     const loader = new OBJLoader();
-    var obj = loader.parse(objFile);
+    obj = loader.parse(objFile);
+    applyStandardMaterial(obj);
+  }
+  return obj;
+}
 
-    obj.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        const mesh = child as THREE.Mesh;
-        if (!mesh.material) {
-          mesh.material = new THREE.MeshStandardMaterial({ color: 0x888888 });
-        }
-      }
-    });
-
+function loadModels(collection: FileCollections): THREE.Object3D[] {
+  let objects: THREE.Object3D[] = [];
+  var obj = loadOBJ(collection, 'objs/optical_table.obj');
+  if (obj){
     objects.push(obj);
-
   }
   return objects;
 }
