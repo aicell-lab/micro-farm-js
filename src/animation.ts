@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import { SceneSetup } from './sceneSetup';
 import {Models} from './models'
 
@@ -12,7 +11,7 @@ export function animate(sceneSetup: SceneSetup) {
   var draw = function(){
     let table = modelMap.get(Models.OpticalTable);
     if(table){
-      table.rotation.x = 1.0*Math.PI;
+      table.rotation.x = 0.25*Math.PI;
     }
     renderer.render(scene, camera);
   };

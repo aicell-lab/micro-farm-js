@@ -83,7 +83,7 @@ function mergeMaps<K, V>(...maps: Map<K, V>[]): Map<K, V> {
 }
 
 export async function getFileCollections(): Promise<FileCollections> {
-    const zipFilePath = '/assets.zip';
+    const zipFilePath = './assets.zip';
     const textFilesMap = await loadAndExtractZipTextFiles(zipFilePath, ".obj");
     const pngFilesMap = await loadAndExtractZipBinaryFiles(zipFilePath, ".png");
     const mergedBinaryFiles = mergeMaps(pngFilesMap);
