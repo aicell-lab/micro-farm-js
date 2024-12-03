@@ -1,5 +1,5 @@
 import { SceneSetup } from './sceneSetup';
-import {Models} from './models'
+import { Models } from './models'
 
 export function animate(sceneSetup: SceneSetup) {
 
@@ -7,11 +7,21 @@ export function animate(sceneSetup: SceneSetup) {
   let renderer = sceneSetup.renderer;
   let scene = sceneSetup.scene;
   let camera = sceneSetup.camera;
+  let cameraCtrl = sceneSetup.cameraCtrl
 
-  var draw = function(){
+  window.addEventListener('resize', () => {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    cameraCtrl.update();
+  });
+
+  var draw = function () {
     let table = modelMap.get(Models.OpticalTable);
-    if(table){
-      table.rotation.x = 0.25*Math.PI;
+    if (table) {
+      table.rotation.x = 0.25 * Math.PI;
     }
     renderer.render(scene, camera);
   };
