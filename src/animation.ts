@@ -28,7 +28,10 @@ export function animate(sceneSetup: SceneSetup) {
       const boundingBox = new THREE.Box3().setFromObject(table);
       const dimensions = new THREE.Vector3();
       boundingBox.getSize(dimensions);
-      //console.log('Model dimensions (in Three.js units):', dimensions);
+      const tableMinY = boundingBox.min.y;
+      if (tableMinY < 0) {
+        table.position.y -= tableMinY;
+      }
 
       if (!boundingBoxHelper) {
         boundingBoxHelper = new THREE.BoxHelper(table, 0xffff00); // Yellow color for visibility
@@ -40,7 +43,7 @@ export function animate(sceneSetup: SceneSetup) {
     }
 
     if (table) {
-      table.rotation.x = toRadians(45);
+      table.rotation.x = toRadians(0);
     }
     renderer.render(scene, camera);
   };
