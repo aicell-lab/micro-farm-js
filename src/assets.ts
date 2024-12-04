@@ -1,8 +1,31 @@
 import JSZip from 'jszip';
 
 export interface FileCollections {
-    textFiles: Map< string, string >;
-    binaryFiles: Map< string, ArrayBuffer >;
+    textFiles: Map<string, string>;
+    binaryFiles: Map<string, ArrayBuffer>;
+}
+
+export interface BlobCollections {
+    textFileURIs: Map<string, string>;
+    binaryFileURIs: Map<string, string>;
+}
+
+export function createBlobURIs(fileCollections: FileCollections): BlobCollections {
+    const textFileURIs = new Map<string, string>();
+    const binaryFileURIs = new Map<string, string>();
+
+    for (const [fileName, content] of fileCollections.textFiles.entries()) {
+        const blob = new Blob([content], { type: "text/plain" });
+        const uri = URL.createObjectURL(blob);
+        textFileURIs.set(fileName, uri);
+    }
+    for (const [fileName, content] of fileCollections.binaryFiles.entries()) {
+        const blob = new Blob([content], { type: "application/octet-stream" });
+        const uri = URL.createObjectURL(blob);
+        binaryFileURIs.set(fileName, uri);
+    }
+
+    return { textFileURIs, binaryFileURIs };
 }
 
 /**
@@ -82,15 +105,26 @@ function mergeMaps<K, V>(...maps: Map<K, V>[]): Map<K, V> {
     return mergedMap;
 }
 
+async function retrieveMergedMap(
+    zipFilePath: string,
+    extensions: string[],
+    loaderFunction: (zipFilePath: string, extension: string) => Promise<Map<string, any>>
+): Promise<Map<string, any>> {
+    const maps = await Promise.all(extensions.map((ext) => loaderFunction(zipFilePath, ext)));
+    return mergeMaps(...maps);
+}
+
 export async function getFileCollections(): Promise<FileCollections> {
     const zipFilePath = './assets.zip';
-    const textFilesMap = await loadAndExtractZipTextFiles(zipFilePath, ".obj");
-    const pngFilesMap = await loadAndExtractZipBinaryFiles(zipFilePath, ".png");
-    const mergedBinaryFiles = mergeMaps(pngFilesMap);
+    const textFileExtensions = [".obj", ".urdf"];
+    const binaryFileExtensions = [".png", ".STL"];
+
+    const textFilesMap = await retrieveMergedMap(zipFilePath, textFileExtensions, loadAndExtractZipTextFiles);
+    const binaryFilesMap = await retrieveMergedMap(zipFilePath, binaryFileExtensions, loadAndExtractZipBinaryFiles);
 
     const fileCollections: FileCollections = {
         textFiles: textFilesMap,
-        binaryFiles: mergedBinaryFiles,
+        binaryFiles: binaryFilesMap,
     };
 
     return fileCollections;

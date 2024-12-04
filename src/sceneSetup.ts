@@ -14,6 +14,10 @@ function getScene(): THREE.Scene {
   const light = new THREE.DirectionalLight(0xffffff, 1);
   light.position.set(5, 5, 5).normalize();
   scene.add(light);
+
+  const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+  scene.add(ambientLight);
+  
   return scene
 }
 
@@ -26,18 +30,18 @@ function getRenderer(): THREE.WebGLRenderer {
 
 export class SceneSetup {
   scene: THREE.Scene;
-  modelMap: Map<Models,THREE.Object3D>;
+  modelMap: Map<Models, THREE.Object3D>;
   renderer: THREE.WebGLRenderer;
   camera: THREE.PerspectiveCamera;
   cameraCtrl: OrbitControls;
 
-  constructor(fileMaps: FileCollections){
+  constructor(fileMaps: FileCollections) {
     this.scene = getScene();
     this.modelMap = loadModels(fileMaps);
     this.modelMap.forEach((value, _) => { this.scene.add(value); });
     this.renderer = getRenderer();
     this.camera = getCamera();
-    this.cameraCtrl = new OrbitControls( this.camera, this.renderer.domElement );
+    this.cameraCtrl = new OrbitControls(this.camera, this.renderer.domElement);
   }
 
 }

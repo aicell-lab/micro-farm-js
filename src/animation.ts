@@ -28,7 +28,7 @@ export function animate(sceneSetup: SceneSetup) {
       const boundingBox = new THREE.Box3().setFromObject(table);
       const dimensions = new THREE.Vector3();
       boundingBox.getSize(dimensions);
-      console.log('Model dimensions (in Three.js units):', dimensions);
+      //console.log('Model dimensions (in Three.js units):', dimensions);
 
       if (!boundingBoxHelper) {
         boundingBoxHelper = new THREE.BoxHelper(table, 0xffff00); // Yellow color for visibility

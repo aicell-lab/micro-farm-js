@@ -1,6 +1,6 @@
 import { SceneSetup } from './sceneSetup';
 import { animate } from './animation';
-import { FileCollections, getFileCollections } from './assets';
+import { FileCollections, getFileCollections, BlobCollections, createBlobURIs } from './assets';
 
 async function loadAssets(): Promise<FileCollections> {
     try {
@@ -15,6 +15,8 @@ async function loadAssets(): Promise<FileCollections> {
 
 async function initializeApp() {
     const fileMaps = await loadAssets();
+    const blobs = createBlobURIs(fileMaps);
+    console.log(blobs);
     const sceneSetup = new SceneSetup(fileMaps);
     animate(sceneSetup);
 }
