@@ -1,15 +1,22 @@
 import * as THREE from 'three';
 import { SceneSetup } from './sceneSetup';
 import { Models } from './models'
-import { toRadians } from './util';
+import { MathUtils } from 'three';
+import { InputKey, KeyboardListener } from './keyboard';
+import { Actor } from './actor';
 
 export function animate(sceneSetup: SceneSetup) {
+
+  let keyboardListener = new KeyboardListener();
+  let actor = new Actor();
 
   let modelMap = sceneSetup.modelMap;
   let renderer = sceneSetup.renderer;
   let scene = sceneSetup.scene;
   let camera = sceneSetup.camera;
   let cameraCtrl = sceneSetup.cameraCtrl
+
+  scene.add(actor.mesh);
 
   let boundingBoxHelper: any = null;
 
@@ -21,6 +28,12 @@ export function animate(sceneSetup: SceneSetup) {
     camera.updateProjectionMatrix();
     cameraCtrl.update();
   });
+
+  var stateUpdate = function () {
+    const delta = 0.016; 
+    actor.applyInput(keyboardListener.getKeyboardState());
+    actor.update(delta);
+  }
 
   var draw = function () {
     let table = modelMap.get(Models.OpticalTable);
@@ -43,9 +56,12 @@ export function animate(sceneSetup: SceneSetup) {
     }
 
     if (table) {
-      table.rotation.x = toRadians(0);
+      table.rotation.x = MathUtils.degToRad(0);
     }
+
+    stateUpdate();
     renderer.render(scene, camera);
+
   };
 
   renderer.setAnimationLoop(draw);
