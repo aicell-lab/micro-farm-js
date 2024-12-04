@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { FileCollections } from './assets';
 import { Models, loadModels } from "./models"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { getLights, getFloor } from './roomExterior';
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -11,13 +12,8 @@ function getCamera(): THREE.PerspectiveCamera {
 
 function getScene(): THREE.Scene {
   const scene = new THREE.Scene();
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 5, 5).normalize();
-  scene.add(light);
-
-  const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
-  scene.add(ambientLight);
-  
+  getLights().forEach((light) => scene.add(light));
+  scene.add(getFloor());
   return scene
 }
 
