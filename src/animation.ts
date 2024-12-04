@@ -1,5 +1,7 @@
+import * as THREE from 'three';
 import { SceneSetup } from './sceneSetup';
 import { Models } from './models'
+import { toRadians } from './util';
 
 export function animate(sceneSetup: SceneSetup) {
 
@@ -8,6 +10,8 @@ export function animate(sceneSetup: SceneSetup) {
   let scene = sceneSetup.scene;
   let camera = sceneSetup.camera;
   let cameraCtrl = sceneSetup.cameraCtrl
+
+  let boundingBoxHelper: any = null;
 
   window.addEventListener('resize', () => {
     const width = window.innerWidth;
@@ -21,7 +25,22 @@ export function animate(sceneSetup: SceneSetup) {
   var draw = function () {
     let table = modelMap.get(Models.OpticalTable);
     if (table) {
-      table.rotation.x = 0.25 * Math.PI;
+      const boundingBox = new THREE.Box3().setFromObject(table);
+      const dimensions = new THREE.Vector3();
+      boundingBox.getSize(dimensions);
+      console.log('Model dimensions (in Three.js units):', dimensions);
+
+      if (!boundingBoxHelper) {
+        boundingBoxHelper = new THREE.BoxHelper(table, 0xffff00); // Yellow color for visibility
+        scene.add(boundingBoxHelper);
+      }
+
+      boundingBoxHelper.update();
+      boundingBoxHelper.rotation.copy(table.rotation);
+    }
+
+    if (table) {
+      table.rotation.x = toRadians(45);
     }
     renderer.render(scene, camera);
   };
