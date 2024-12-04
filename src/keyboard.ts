@@ -4,11 +4,7 @@ export enum InputKey {
     ArrowDown = 'ArrowDown',
     ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
-    Space = 'Space',
-    W = 'w',
-    A = 'a',
-    S = 's',
-    D = 'd',
+    Space = 'Space'
 }
 
 export class KeyboardState {
@@ -18,8 +14,16 @@ export class KeyboardState {
         this.keys = { ...keys };
     }
 
-    isPressed(key: InputKey): boolean {
-        return !!this.keys[key];
+    isPressed(key: InputKey | InputKey[]): boolean {
+        if (Array.isArray(key)) {
+            return this.isAnyPressed(key);
+        } else {
+            return !!this.keys[key];
+        }
+    }
+
+    private isAnyPressed(keys: InputKey[]): boolean {
+        return keys.some(k => !!this.keys[k]);
     }
 }
 
