@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { InputKey, KeyboardState } from './keyboard';
+import { Action, Move } from './action';
 
 export class Actor {
     mesh: THREE.Mesh;
@@ -15,28 +15,34 @@ export class Actor {
         this.acceleration = new THREE.Vector3();
     }
 
-    applyInput(input: KeyboardState) {
-        if (input.isPressed(InputKey.ArrowUp)) {
-            this.acceleration.z = -2;
-        } else if (input.isPressed(InputKey.ArrowDown)) {
-            this.acceleration.z = 2;
+    private applyMove(move: Move) {
+        let acc = 5;
+
+        if (move.forward) {
+            this.acceleration.z = -acc;
+        } else if (move.backward) {
+            this.acceleration.z = acc;
         } else {
             this.acceleration.z = 0;
         }
-        if (input.isPressed(InputKey.ArrowLeft)) {
-            this.acceleration.x = -2;
-        } else if (input.isPressed(InputKey.ArrowRight)) {
-            this.acceleration.x = 2;
+        if (move.left) {
+            this.acceleration.x = -acc;
+        } else if (move.right) {
+            this.acceleration.x = acc;
         } else {
             this.acceleration.x = 0;
         }
+    }
+
+    applyAction(action: Action) {
+        this.applyMove(action.move);
     }
 
     update(delta: number) {
         this.updatePosition(delta);
     }
 
-    updatePosition(delta: number) {
+    private updatePosition(delta: number) {
         this.velocity.add(this.acceleration.clone().multiplyScalar(delta));
         this.mesh.position.add(this.velocity.clone().multiplyScalar(delta));
         this.velocity.multiplyScalar(0.95);

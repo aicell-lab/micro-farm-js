@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import { SceneSetup } from './sceneSetup';
 import { Models } from './models'
 import { MathUtils } from 'three';
-import { InputKey, KeyboardListener } from './keyboard';
 import { Actor } from './actor';
+import { InputListener } from './input';
 
 export function animate(sceneSetup: SceneSetup) {
 
-  let keyboardListener = new KeyboardListener();
+  let inputListener = new InputListener();
   let actor = new Actor();
 
   let modelMap = sceneSetup.modelMap;
@@ -31,7 +31,7 @@ export function animate(sceneSetup: SceneSetup) {
 
   var stateUpdate = function () {
     const delta = 0.016; 
-    actor.applyInput(keyboardListener.getKeyboardState());
+    actor.applyAction(inputListener.getAction());
     actor.update(delta);
   }
 
