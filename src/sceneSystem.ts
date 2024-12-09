@@ -21,6 +21,7 @@ export class SceneSystem {
   private inputListener: InputListener;
   private sceneSetup: SceneSetup;
   private actor: Actor;
+  private lastFrameTime: number;
 
   constructor(sceneSetup: SceneSetup) {
     this.sceneSetup = sceneSetup;
@@ -28,10 +29,10 @@ export class SceneSystem {
     this.actor = new Actor();
     this.sceneSetup.scene.add(this.actor.mesh);
     setResizeListener(sceneSetup);
+    this.lastFrameTime = performance.now();
   }
 
-  actorUpdate() {
-    const delta = 0.016;
+  actorUpdate(delta: number) {
     this.actor.applyAction(this.inputListener.getAction());
     this.actor.update(delta);
   }
@@ -54,8 +55,16 @@ export class SceneSystem {
     sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.camera);
   }
 
+  calcFrameDelta() {
+    const currentFrameTime = performance.now();
+    const delta = (currentFrameTime - this.lastFrameTime) / 1000;
+    this.lastFrameTime = currentFrameTime; 
+    return delta;
+  }
+
   mainLoop = () => {
-    this.actorUpdate();
+    let delta = this.calcFrameDelta();
+    this.actorUpdate(delta);
     this.positionSceneObjects(this.sceneSetup);
     this.renderScene(this.sceneSetup);
     requestAnimationFrame(this.mainLoop);
