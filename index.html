@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Micro Farm Demo</title>
   </head>
+
+  <style>
+    /* Ensures the body and html occupy the full viewport without scrollbars */
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Makes the Three.js canvas fit the entire window */
+    canvas {
+      display: block; /* Removes inline spacing */
+      position: fixed; /* Sticks to the viewport */
+      top: 0;
+      left: 0;
+    }
+  </style>
+
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>

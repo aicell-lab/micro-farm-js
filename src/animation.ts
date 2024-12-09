@@ -5,38 +5,45 @@ import { MathUtils } from 'three';
 import { Actor } from './actor';
 import { InputListener } from './input';
 
-export function animate(sceneSetup: SceneSetup) {
-
-  let inputListener = new InputListener();
-  let actor = new Actor();
-
-  let modelMap = sceneSetup.modelMap;
-  let renderer = sceneSetup.renderer;
-  let scene = sceneSetup.scene;
-  let camera = sceneSetup.camera;
-  let cameraCtrl = sceneSetup.cameraCtrl
-
-  scene.add(actor.mesh);
-
-  let boundingBoxHelper: any = null;
-
+function setResizeListener(sceneSetup: SceneSetup) {
   window.addEventListener('resize', () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
-    renderer.setSize(width, height);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    cameraCtrl.update();
+    sceneSetup.renderer.setSize(width, height);
+    sceneSetup.camera.aspect = width / height;
+    sceneSetup.camera.updateProjectionMatrix();
+    sceneSetup.cameraCtrl.update();
   });
+}
 
-  var stateUpdate = function () {
-    const delta = 0.016; 
-    actor.applyAction(inputListener.getAction());
-    actor.update(delta);
+export class SceneSystem {
+
+  private inputListener: InputListener;
+  private sceneSetup: SceneSetup;
+  private actor: Actor;
+
+  constructor(sceneSetup: SceneSetup) {
+    this.sceneSetup = sceneSetup;
+    this.inputListener = new InputListener();
+    this.actor = new Actor();
+    this.sceneSetup.scene.add(this.actor.mesh);
+    setResizeListener(sceneSetup);
   }
 
-  var draw = function () {
-    let table = modelMap.get(Models.OpticalTable);
+  actorUpdate() {
+    const delta = 0.016;
+    this.actor.applyAction(this.inputListener.getAction());
+    this.actor.update(delta);
+  }
+
+  mainLoop = () => {
+    this.actorUpdate();
+    this.renderScene(this.sceneSetup);
+    requestAnimationFrame(this.mainLoop);
+  };
+
+  renderScene(sceneSetup: SceneSetup) {
+    let table = sceneSetup.modelMap.get(Models.OpticalTable);
     if (table) {
       const boundingBox = new THREE.Box3().setFromObject(table);
       const dimensions = new THREE.Vector3();
@@ -45,24 +52,9 @@ export function animate(sceneSetup: SceneSetup) {
       if (tableMinY < 0) {
         table.position.y -= tableMinY;
       }
-
-      if (!boundingBoxHelper) {
-        boundingBoxHelper = new THREE.BoxHelper(table, 0xffff00); // Yellow color for visibility
-        scene.add(boundingBoxHelper);
-      }
-
-      boundingBoxHelper.update();
-      boundingBoxHelper.rotation.copy(table.rotation);
-    }
-
-    if (table) {
       table.rotation.x = MathUtils.degToRad(0);
     }
+    sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.camera);
+  }
 
-    stateUpdate();
-    renderer.render(scene, camera);
-
-  };
-
-  renderer.setAnimationLoop(draw);
 }

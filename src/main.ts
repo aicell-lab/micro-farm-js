@@ -1,6 +1,6 @@
 import { SceneSetup } from './sceneSetup';
-import { animate } from './animation';
-import { FileCollections, getFileCollections, BlobCollections, createBlobURIs } from './assets';
+import { SceneSystem } from './animation';
+import { FileCollections, getFileCollections, createBlobURIs } from './assets';
 
 async function loadAssets(): Promise<FileCollections> {
     try {
@@ -18,7 +18,8 @@ async function initializeApp() {
     const blobs = createBlobURIs(fileMaps);
     console.log(blobs);
     const sceneSetup = new SceneSetup(fileMaps);
-    animate(sceneSetup);
+    let sceneSystem = new SceneSystem(sceneSetup);
+    sceneSystem.mainLoop();
 }
 
 initializeApp();
