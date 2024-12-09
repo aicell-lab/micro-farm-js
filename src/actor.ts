@@ -21,7 +21,7 @@ export class Actor {
     }
 
     private applyMove(move: Move) {
-        let acc = 5;
+        let acc = 10;
 
         if (move.forward) {
             this.acceleration.z = -acc;
@@ -50,7 +50,13 @@ export class Actor {
     private updatePosition(delta: number) {
         this.velocity.add(this.acceleration.clone().multiplyScalar(delta));
         this.mesh.position.add(this.velocity.clone().multiplyScalar(delta));
-        this.velocity.multiplyScalar(0.95);
+
+        const dampingFactor = 1 - Math.min(1, 5 * delta);
+        this.velocity.multiplyScalar(dampingFactor);
+        const velocityThreshold = 0.01;
+        if (this.velocity.lengthSq() < velocityThreshold * velocityThreshold) {
+            this.velocity.set(0, 0, 0);
+        }
     }
 
 }
