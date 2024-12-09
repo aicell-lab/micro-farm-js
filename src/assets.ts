@@ -129,3 +129,14 @@ export async function getFileCollections(): Promise<FileCollections> {
 
     return fileCollections;
 }
+
+export async function getFileCollectionsNoThrow(): Promise<FileCollections> {
+    try {
+        const fileMaps = await getFileCollections();
+        console.log('ZIP file loaded and extracted successfully.', fileMaps);
+        return fileMaps
+    } catch (error) {
+        console.error('Error during ZIP loading:', error);
+    }
+    return { textFiles: new Map(), binaryFiles: new Map() };
+}
