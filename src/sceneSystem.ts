@@ -16,12 +16,31 @@ function setResizeListener(sceneSetup: SceneSetup) {
   });
 }
 
+function setFloorPosition(object: THREE.Object3D) {
+  const boundingBox = new THREE.Box3().setFromObject(object);
+  const minY = boundingBox.min.y;
+  if (minY < 0) {
+    object.position.y -= minY;
+  }
+}
+
+interface FrameTime {
+  delta: number;
+  timestamp: number;
+}
+
+function getFrameTime(prevFrameTime?: FrameTime) : FrameTime{
+  const timestamp = performance.now();
+  const delta = prevFrameTime ? (timestamp - prevFrameTime.timestamp) / 1000.0 : 0;
+  return { delta, timestamp };
+}
+
 export class SceneSystem {
 
   private inputListener: InputListener;
   private sceneSetup: SceneSetup;
   private actor: Actor;
-  private lastFrameTime: number;
+  private frameTime: FrameTime;
 
   constructor(sceneSetup: SceneSetup) {
     this.sceneSetup = sceneSetup;
@@ -29,44 +48,32 @@ export class SceneSystem {
     this.actor = new Actor();
     this.sceneSetup.scene.add(this.actor.mesh);
     setResizeListener(sceneSetup);
-    this.lastFrameTime = performance.now();
+    this.frameTime = getFrameTime();
+    this.positionSceneObjects(this.sceneSetup);
   }
 
-  actorUpdate(delta: number) {
+  actorUpdate() {
+    setFloorPosition(this.actor.mesh);
     this.actor.applyAction(this.inputListener.getAction());
-    this.actor.update(delta);
+    this.actor.update(this.frameTime.delta);
   }
 
   positionSceneObjects(sceneSetup: SceneSetup) {
     let table = sceneSetup.modelMap.get(Models.OpticalTable);
     if (table) {
-      const boundingBox = new THREE.Box3().setFromObject(table);
-      const dimensions = new THREE.Vector3();
-      boundingBox.getSize(dimensions);
-      const tableMinY = boundingBox.min.y;
-      if (tableMinY < 0) {
-        table.position.y -= tableMinY;
-      }
+      setFloorPosition(table);
       table.rotation.x = MathUtils.degToRad(0);
     }
   }
 
-  renderScene(sceneSetup: SceneSetup) {
-    sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.camera);
-  }
-
-  calcFrameDelta() {
-    const currentFrameTime = performance.now();
-    const delta = (currentFrameTime - this.lastFrameTime) / 1000;
-    this.lastFrameTime = currentFrameTime; 
-    return delta;
+  renderScene() {
+    this.sceneSetup.renderer.render(this.sceneSetup.scene, this.sceneSetup.camera);
   }
 
   mainLoop = () => {
-    let delta = this.calcFrameDelta();
-    this.actorUpdate(delta);
-    this.positionSceneObjects(this.sceneSetup);
-    this.renderScene(this.sceneSetup);
+    this.frameTime = getFrameTime(this.frameTime);
+    this.actorUpdate();
+    this.renderScene();
     requestAnimationFrame(this.mainLoop);
   };
 

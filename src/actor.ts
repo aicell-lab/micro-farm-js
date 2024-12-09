@@ -7,9 +7,14 @@ export class Actor {
     acceleration: THREE.Vector3;
 
     constructor() {
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
+        const material = new THREE.MeshBasicMaterial({ color: 0x008822 });
         this.mesh = new THREE.Mesh(geometry, material);
+
+        const edges = new THREE.EdgesGeometry(geometry);
+        const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x222222 });
+        const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+        this.mesh.add(edgeLines);
 
         this.velocity = new THREE.Vector3();
         this.acceleration = new THREE.Vector3();
