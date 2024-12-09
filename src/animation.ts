@@ -36,13 +36,7 @@ export class SceneSystem {
     this.actor.update(delta);
   }
 
-  mainLoop = () => {
-    this.actorUpdate();
-    this.renderScene(this.sceneSetup);
-    requestAnimationFrame(this.mainLoop);
-  };
-
-  renderScene(sceneSetup: SceneSetup) {
+  positionSceneObjects(sceneSetup: SceneSetup) {
     let table = sceneSetup.modelMap.get(Models.OpticalTable);
     if (table) {
       const boundingBox = new THREE.Box3().setFromObject(table);
@@ -54,7 +48,17 @@ export class SceneSystem {
       }
       table.rotation.x = MathUtils.degToRad(0);
     }
+  }
+
+  renderScene(sceneSetup: SceneSetup) {
     sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.camera);
   }
+
+  mainLoop = () => {
+    this.actorUpdate();
+    this.positionSceneObjects(this.sceneSetup);
+    this.renderScene(this.sceneSetup);
+    requestAnimationFrame(this.mainLoop);
+  };
 
 }
