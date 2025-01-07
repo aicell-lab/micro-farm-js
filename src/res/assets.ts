@@ -1,6 +1,6 @@
 import { assetPath } from './paths';
 import { loadAndExtractZipBinaryFiles, loadAndExtractZipTextFiles } from './assetLoader';
-import { FileCollections } from './assetTypes';
+import { FileCollections } from '../types/assetTypes';
 
 /**
  * Merges multiple Map objects into one.

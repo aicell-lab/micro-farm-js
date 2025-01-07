@@ -1,4 +1,4 @@
-import { FileCollections, BlobCollections } from './assetTypes';
+import { FileCollections, BlobCollections } from '../types/assetTypes';
 
 function createBlobURI(fileName: string, content: string | ArrayBuffer, type: string): [string, string] {
     const blob = new Blob([content], { type });

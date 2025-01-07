@@ -1,14 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-export enum Models {
-    OpticalTable
-}
-
-export interface FrameTime {
-    delta: number;
-    timestamp: number;
-}
+import { Models } from './models';
 
 export interface CameraSetup {
   camera: THREE.PerspectiveCamera;

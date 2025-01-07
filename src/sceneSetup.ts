@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { FileCollections } from './res/assetTypes';
+import { FileCollections } from './types/assetTypes';
 import { loadModels } from "./res/modelLoader"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getLights, getFloor } from './roomExterior';
-import { SceneSetup, CameraSetup } from './core'
+import { SceneSetup, CameraSetup } from './types/setup'
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
