@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { SceneSetup } from './sceneSetup';
-import { Models, FrameTime } from './core'
+import { Models, FrameTime, SceneSetup } from './core'
 import { MathUtils } from 'three';
 import { Actor } from './actor';
 import { InputListener } from './input';

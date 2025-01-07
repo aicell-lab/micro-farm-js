@@ -3,7 +3,7 @@ import { FileCollections } from './res/assetTypes';
 import { loadModels } from "./models"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getLights, getFloor } from './roomExterior';
-import { Models } from './core'
+import { SceneSetup, CameraSetup } from './core'
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -28,18 +28,6 @@ function getRenderer(): THREE.WebGLRenderer {
 function getCameraSetup(renderer: THREE.WebGLRenderer): CameraSetup {
   let camera = getCamera()
   return { camera: camera, cameraCtrl: new OrbitControls(camera, renderer.domElement) }
-}
-
-export interface CameraSetup {
-  camera: THREE.PerspectiveCamera;
-  cameraCtrl: OrbitControls;
-}
-
-export interface SceneSetup {
-  scene: THREE.Scene;
-  modelMap: Map<Models, THREE.Object3D>;
-  renderer: THREE.WebGLRenderer;
-  cameraSetup: CameraSetup
 }
 
 export function getSceneSetup(files: FileCollections): SceneSetup {
