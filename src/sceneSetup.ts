@@ -25,20 +25,28 @@ function getRenderer(): THREE.WebGLRenderer {
   return renderer;
 }
 
-export class SceneSetup {
+function getCameraSetup(renderer: THREE.WebGLRenderer): CameraSetup {
+  let camera = getCamera()
+  return { camera: camera, cameraCtrl: new OrbitControls(camera, renderer.domElement) }
+}
+
+export interface CameraSetup {
+  camera: THREE.PerspectiveCamera;
+  cameraCtrl: OrbitControls;
+}
+
+export interface SceneSetup {
   scene: THREE.Scene;
   modelMap: Map<Models, THREE.Object3D>;
   renderer: THREE.WebGLRenderer;
-  camera: THREE.PerspectiveCamera;
-  cameraCtrl: OrbitControls;
+  cameraSetup: CameraSetup
+}
 
-  constructor(fileMaps: FileCollections) {
-    this.scene = getScene();
-    this.modelMap = loadModels(fileMaps);
-    this.modelMap.forEach((value, _) => { this.scene.add(value); });
-    this.renderer = getRenderer();
-    this.camera = getCamera();
-    this.cameraCtrl = new OrbitControls(this.camera, this.renderer.domElement);
-  }
-
+export function getSceneSetup(files: FileCollections): SceneSetup {
+  let scene = getScene();
+  let modelMap = loadModels(files);
+  modelMap.forEach((value, _) => { scene.add(value); });
+  let renderer = getRenderer();
+  let cameraSetup = getCameraSetup(renderer);
+  return {scene: scene, modelMap: modelMap, renderer: renderer, cameraSetup: cameraSetup};
 }

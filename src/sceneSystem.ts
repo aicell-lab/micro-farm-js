@@ -11,9 +11,9 @@ function setResizeListener(sceneSetup: SceneSetup) {
     const width = window.innerWidth;
     const height = window.innerHeight;
     sceneSetup.renderer.setSize(width, height);
-    sceneSetup.camera.aspect = width / height;
-    sceneSetup.camera.updateProjectionMatrix();
-    sceneSetup.cameraCtrl.update();
+    sceneSetup.cameraSetup.camera.aspect = width / height;
+    sceneSetup.cameraSetup.camera.updateProjectionMatrix();
+    sceneSetup.cameraSetup.cameraCtrl.update();
   });
 }
 
@@ -42,10 +42,10 @@ export class SceneSystem {
     this.frameTime = getFrameTime();
     this.positionSceneObjects(this.sceneSetup);
 
-    this.cameraOffset = this.sceneSetup.camera.position.clone().sub(this.actor.mesh.position);
+    this.cameraOffset = this.sceneSetup.cameraSetup.camera.position.clone().sub(this.actor.mesh.position);
   }
 
-  positionSceneObjects(sceneSetup: SceneSetup) {
+  positionSceneObjects(sceneSetup: SceneSetup): void {
     setFloorPosition(this.actor.mesh);
     let table = sceneSetup.modelMap.get(Models.OpticalTable);
     if (table) {

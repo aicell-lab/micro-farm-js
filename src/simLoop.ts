@@ -20,21 +20,21 @@ export function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
 
 function updateActor(state: SimState): void {
     state.actor.applyAction(state.inputListener.getAction());
-    state.cameraOffset = state.sceneSetup.camera.position.clone().sub(state.actor.mesh.position);
+    let cameraSetup = state.sceneSetup.cameraSetup;
+    state.cameraOffset = cameraSetup.camera.position.clone().sub(state.actor.mesh.position);
     state.actor.update(state.frameTime.delta);
-    state.sceneSetup.camera.position.copy(state.actor.mesh.position.clone().add(state.cameraOffset));
-    state.sceneSetup.cameraCtrl.target.copy(state.actor.mesh.position);
-    state.sceneSetup.cameraCtrl.update();
+    cameraSetup.camera.position.copy(state.actor.mesh.position.clone().add(state.cameraOffset));
+    cameraSetup.cameraCtrl.target.copy(state.actor.mesh.position);
+    cameraSetup.cameraCtrl.update();
 }
 
 function renderScene(sceneSetup: SceneSetup): void {
-    sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.camera);
+    sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.cameraSetup.camera);
 }
 
 export function simLoopStep(
     state: SimState
 ): FrameTime {
-
     const updatedFrameTime = getFrameTime(state.frameTime);
     updateActor(state);
     renderScene(state.sceneSetup);

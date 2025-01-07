@@ -1,14 +1,16 @@
-import { SceneSetup } from './sceneSetup';
+import { getSceneSetup } from './sceneSetup';
 import { SceneSystem } from './sceneSystem';
 import { getFileCollectionsNoThrow } from './res/assets';
 import { createBlobURIs } from './res/assetURI';
 
 async function initializeApp() {
     const fileMaps = await getFileCollectionsNoThrow();
-    const blobs = createBlobURIs(fileMaps); // TODO: Replace URDF paths with BlobURIs
-    console.log(blobs);
-    const sceneSetup = new SceneSetup(fileMaps);
-    let sceneSystem = new SceneSystem(sceneSetup);
+    
+    // TODO: Replace URDF paths with BlobURIs
+    // const blobs = createBlobURIs(fileMaps);
+    // console.log(blobs);
+    
+    let sceneSystem = new SceneSystem(getSceneSetup(fileMaps));
     sceneSystem.mainLoop();
 }
 
