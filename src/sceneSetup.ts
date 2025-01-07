@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { FileCollections } from './res/assetTypes';
-import { loadModels } from "./models"
+import { loadModels } from "./res/modelLoader"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getLights, getFloor } from './roomExterior';
 import { SceneSetup, CameraSetup } from './core'
