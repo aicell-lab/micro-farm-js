@@ -1,5 +1,6 @@
-import { InputKey, KeyboardListener } from './keyboard';
-import { Action, Move } from './action';
+import { KeyboardListener } from './keyboard';
+import { Action, Move } from '../types/action';
+import { InputKey } from '../types/keys';
 
 export class InputListener {
     keyboardListener: KeyboardListener;

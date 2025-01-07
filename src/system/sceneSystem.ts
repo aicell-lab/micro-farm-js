@@ -1,11 +1,11 @@
 import * as THREE from 'three';
-import { SceneSetup } from './types/setup'
+import { SceneSetup } from '../types/setup'
 import { MathUtils } from 'three';
 import { Actor } from './actor';
-import { InputListener } from './input';
+import { InputListener } from '../io/input';
 import { simLoopStep, getFrameTime, SimState } from './simLoop';
-import { FrameTime } from './types/frameTime';
-import { Models } from './types/models';
+import { FrameTime } from '../types/frameTime';
+import { Models } from '../types/models';
 
 function setResizeListener(sceneSetup: SceneSetup) {
   window.addEventListener('resize', () => {

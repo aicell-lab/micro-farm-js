@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Action, Move } from './action';
+import { Action, Move } from '../types/action';
 
 export class Actor {
     mesh: THREE.Mesh;

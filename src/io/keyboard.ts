@@ -1,11 +1,4 @@
-
-export enum InputKey {
-    ArrowUp = 'ArrowUp',
-    ArrowDown = 'ArrowDown',
-    ArrowLeft = 'ArrowLeft',
-    ArrowRight = 'ArrowRight',
-    Space = 'Space'
-}
+import { InputKey } from "../types/keys";
 
 export class KeyboardState {
     private keys: { [key in InputKey]?: boolean };

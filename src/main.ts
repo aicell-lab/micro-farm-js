@@ -1,5 +1,5 @@
-import { getSceneSetup } from './sceneSetup';
-import { SceneSystem } from './sceneSystem';
+import { getSceneSetup } from './setup/sceneSetup';
+import { SceneSystem } from './system/sceneSystem';
 import { getFileCollectionsNoThrow } from './res/assets';
 //import { createBlobURIs } from './res/assetURI';
 

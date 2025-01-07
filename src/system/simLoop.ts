@@ -1,7 +1,7 @@
 import { Actor } from './actor';
-import { SceneSetup } from './types/setup';
-import { FrameTime } from './types/frameTime';
-import { InputListener } from './input';
+import { SceneSetup } from '../types/setup';
+import { FrameTime } from '../types/frameTime';
+import { InputListener } from '../io/input';
 import * as THREE from 'three';
 
 export interface SimState {
