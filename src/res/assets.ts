@@ -1,5 +1,6 @@
 import { assetPath } from './paths';
-import { FileCollections, loadAndExtractZipBinaryFiles, loadAndExtractZipTextFiles } from './assetLoader';
+import { loadAndExtractZipBinaryFiles, loadAndExtractZipTextFiles } from './assetLoader';
+import { FileCollections } from './assetTypes';
 
 /**
  * Merges multiple Map objects into one.
@@ -28,13 +29,13 @@ async function retrieveMergedMap(
 }
 
 async function getTextFiles(): Promise<Map<string, string>> {
-    const textFileExtensions = [".obj", ".urdf"];
-    return await retrieveMergedMap(assetPath, textFileExtensions, loadAndExtractZipTextFiles);
+    const fileExtensions = [".obj", ".urdf"];
+    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipTextFiles);
 }
 
 async function getBinaryFiles(): Promise<Map<string, ArrayBuffer>> {
-    const binaryFileExtensions = [".png", ".STL"];
-    return await retrieveMergedMap(assetPath, binaryFileExtensions, loadAndExtractZipBinaryFiles);
+    const fileExtensions = [".png", ".STL"];
+    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipBinaryFiles);
 }
 
 async function getFileCollections(): Promise<FileCollections> {

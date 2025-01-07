@@ -1,7 +1,7 @@
 import { SceneSetup } from './sceneSetup';
 import { SceneSystem } from './sceneSystem';
-import { getFileCollectionsNoThrow } from './assets';
-import { createBlobURIs } from './assetURI';
+import { getFileCollectionsNoThrow } from './res/assets';
+import { createBlobURIs } from './res/assetURI';
 
 async function initializeApp() {
     const fileMaps = await getFileCollectionsNoThrow();

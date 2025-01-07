@@ -1,9 +1,4 @@
-import { FileCollections } from './assetLoader';
-
-export interface BlobCollections {
-    textFileURIs: Map<string, string>;
-    binaryFileURIs: Map<string, string>;
-}
+import { FileCollections, BlobCollections } from './assetTypes';
 
 function createBlobURI(fileName: string, content: string | ArrayBuffer, type: string): [string, string] {
     const blob = new Blob([content], { type });
