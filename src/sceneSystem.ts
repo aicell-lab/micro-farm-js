@@ -4,6 +4,7 @@ import { Models, FrameTime } from './core'
 import { MathUtils } from 'three';
 import { Actor } from './actor';
 import { InputListener } from './input';
+import { simLoopStep, getFrameTime, SimState } from './simLoop';
 
 function setResizeListener(sceneSetup: SceneSetup) {
   window.addEventListener('resize', () => {
@@ -22,12 +23,6 @@ function setFloorPosition(object: THREE.Object3D) {
   if (minY < 0) {
     object.position.y -= minY;
   }
-}
-
-function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
-  const timestamp = performance.now();
-  const delta = prevFrameTime ? (timestamp - prevFrameTime.timestamp) / 1000.0 : 0;
-  return { delta, timestamp };
 }
 
 export class SceneSystem {
@@ -50,15 +45,6 @@ export class SceneSystem {
     this.cameraOffset = this.sceneSetup.camera.position.clone().sub(this.actor.mesh.position);
   }
 
-  actorUpdate() {
-    this.actor.applyAction(this.inputListener.getAction());
-    this.cameraOffset = this.sceneSetup.camera.position.clone().sub(this.actor.mesh.position);
-    this.actor.update(this.frameTime.delta);
-    this.sceneSetup.camera.position.copy(this.actor.mesh.position.clone().add(this.cameraOffset));
-    this.sceneSetup.cameraCtrl.target.copy(this.actor.mesh.position);
-    this.sceneSetup.cameraCtrl.update();
-  }
-
   positionSceneObjects(sceneSetup: SceneSetup) {
     setFloorPosition(this.actor.mesh);
     let table = sceneSetup.modelMap.get(Models.OpticalTable);
@@ -68,14 +54,12 @@ export class SceneSystem {
     }
   }
 
-  renderScene() {
-    this.sceneSetup.renderer.render(this.sceneSetup.scene, this.sceneSetup.camera);
+  getSimState(): SimState {
+    return {actor: this.actor, sceneSetup: this.sceneSetup, inputListener: this.inputListener, frameTime: this.frameTime, cameraOffset: this.cameraOffset}
   }
 
   mainLoop = () => {
-    this.frameTime = getFrameTime(this.frameTime);
-    this.actorUpdate();
-    this.renderScene();
+    this.frameTime = simLoopStep(this.getSimState());
     requestAnimationFrame(this.mainLoop);
   };
 

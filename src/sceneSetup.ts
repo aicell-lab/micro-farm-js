@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { FileCollections } from './res/assets';
+import { FileCollections } from './res/assetTypes';
 import { loadModels } from "./models"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getLights, getFloor } from './roomExterior';

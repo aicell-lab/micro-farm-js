@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { FileCollections } from './res/assetLoader';
+import { FileCollections } from './res/assetTypes';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { Models } from './core'
 import { modelFilepaths } from './res/paths';
