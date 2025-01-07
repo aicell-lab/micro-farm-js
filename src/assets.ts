@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import { assetPath } from './paths';
 
 export interface FileCollections {
     textFiles: Map<string, string>;
@@ -115,12 +116,11 @@ async function retrieveMergedMap(
 }
 
 export async function getFileCollections(): Promise<FileCollections> {
-    const zipFilePath = './assets.zip';
     const textFileExtensions = [".obj", ".urdf"];
     const binaryFileExtensions = [".png", ".STL"];
 
-    const textFilesMap = await retrieveMergedMap(zipFilePath, textFileExtensions, loadAndExtractZipTextFiles);
-    const binaryFilesMap = await retrieveMergedMap(zipFilePath, binaryFileExtensions, loadAndExtractZipBinaryFiles);
+    const textFilesMap = await retrieveMergedMap(assetPath, textFileExtensions, loadAndExtractZipTextFiles);
+    const binaryFilesMap = await retrieveMergedMap(assetPath, binaryFileExtensions, loadAndExtractZipBinaryFiles);
 
     const fileCollections: FileCollections = {
         textFiles: textFilesMap,

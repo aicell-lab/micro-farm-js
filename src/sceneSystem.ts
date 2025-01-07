@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { SceneSetup } from './sceneSetup';
-import { Models } from './models'
+import { Models, FrameTime } from './core'
 import { MathUtils } from 'three';
 import { Actor } from './actor';
 import { InputListener } from './input';
@@ -22,11 +22,6 @@ function setFloorPosition(object: THREE.Object3D) {
   if (minY < 0) {
     object.position.y -= minY;
   }
-}
-
-interface FrameTime {
-  delta: number;
-  timestamp: number;
 }
 
 function getFrameTime(prevFrameTime?: FrameTime): FrameTime {

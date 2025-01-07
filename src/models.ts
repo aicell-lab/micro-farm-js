@@ -1,14 +1,8 @@
 import * as THREE from 'three';
 import { FileCollections } from './assets';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-
-export enum Models {
-    OpticalTable
-}
-
-const modelFilepaths: { [key in Models]: string } = {
-    [Models.OpticalTable]: "objs/optical_table.obj",
-};
+import { Models } from './core'
+import { modelFilepaths } from './paths';
 
 function applyStandardMaterial(obj: THREE.Object3D) {
     obj.traverse((child) => {
