@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { Action, Move } from '../types/action';
 
 export class Actor {
     mesh: THREE.Mesh;
@@ -18,29 +17,6 @@ export class Actor {
 
         this.velocity = new THREE.Vector3();
         this.acceleration = new THREE.Vector3();
-    }
-
-    private applyMove(move: Move) {
-        let acc = 10;
-
-        if (move.forward) {
-            this.acceleration.z = -acc;
-        } else if (move.backward) {
-            this.acceleration.z = acc;
-        } else {
-            this.acceleration.z = 0;
-        }
-        if (move.left) {
-            this.acceleration.x = -acc;
-        } else if (move.right) {
-            this.acceleration.x = acc;
-        } else {
-            this.acceleration.x = 0;
-        }
-    }
-
-    applyAction(action: Action) {
-        this.applyMove(action.move);
     }
 
     update(delta: number) {

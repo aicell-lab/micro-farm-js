@@ -8,16 +8,18 @@ export interface SimState {
     sceneSetup: SceneSetup;
 }
 
-function applyAction(state: SimState, actorAction: Action): void {
-    state.actor.applyAction(actorAction);
+function applyAction(state: SimState, playerAction: Action): void {
+    if (playerAction) {
+        playerAction.execute(state.actor);
+    }
 }
 
 export function simPhysicsStep(state: SimState, frameTime: FrameTime): void {
     state.actor.update(frameTime.delta);
 }
 
-export function simLoopStep(state: SimState, frameTime: FrameTime, actorAction: Action): void {
-    applyAction(state, actorAction);
+export function simLoopStep(state: SimState, frameTime: FrameTime, playerAction: Action): void {
+    applyAction(state, playerAction);
     simPhysicsStep(state, frameTime);
     let setup = state.sceneSetup;
     setup.renderer.render(setup.scene, setup.cameraSetup.camera);

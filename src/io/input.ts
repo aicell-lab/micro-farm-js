@@ -1,5 +1,5 @@
 import { KeyboardListener } from './keyboard';
-import { Action, Move } from '../types/action';
+import { Action, MoveAction } from '../types/action';
 import { InputKey } from '../types/keys';
 
 export class InputListener {
@@ -10,22 +10,21 @@ export class InputListener {
     }
 
     getAction(): Action {
-        let move: Move = { forward: false, backward: false, left: false, right: false };
+        let dir = { forward: false, backward: false, left: false, right: false };
 
         let keys = this.keyboardListener.getKeyboardState();
         if (keys.isPressed(InputKey.ArrowUp)) {
-            move.forward = true;
+            dir.forward = true;
         } else if (keys.isPressed(InputKey.ArrowDown)) {
-            move.backward = true;
+            dir.backward = true;
         }
         if (keys.isPressed(InputKey.ArrowLeft)) {
-            move.left = true;
+            dir.left = true;
         } else if (keys.isPressed(InputKey.ArrowRight)) {
-            move.right = true;
+            dir.right = true;
         }
 
-        let action: Action = { move };
-        return action;
+        return new MoveAction(dir);
     }
 
 }
