@@ -8,7 +8,6 @@ export interface SimState {
     actor: Actor;
     sceneSetup: SceneSetup;
     inputListener: InputListener;
-    frameTime: FrameTime;
     cameraOffset: THREE.Vector3;
 }
 
@@ -18,11 +17,11 @@ export function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
     return { delta, timestamp };
 }
 
-function updateActor(state: SimState): void {
+function updateActor(state: SimState, frameTime: FrameTime): void {
     state.actor.applyAction(state.inputListener.getAction());
     let cameraSetup = state.sceneSetup.cameraSetup;
     state.cameraOffset = cameraSetup.camera.position.clone().sub(state.actor.mesh.position);
-    state.actor.update(state.frameTime.delta);
+    state.actor.update(frameTime.delta);
     cameraSetup.camera.position.copy(state.actor.mesh.position.clone().add(state.cameraOffset));
     cameraSetup.cameraCtrl.target.copy(state.actor.mesh.position);
     cameraSetup.cameraCtrl.update();
@@ -32,12 +31,8 @@ function renderScene(sceneSetup: SceneSetup): void {
     sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.cameraSetup.camera);
 }
 
-export function simLoopStep(
-    state: SimState
-): FrameTime {
-    const updatedFrameTime = getFrameTime(state.frameTime);
-    updateActor(state);
+export function simLoopStep(state: SimState, frameTime: FrameTime): void {
+    updateActor(state, frameTime);
     renderScene(state.sceneSetup);
-    return updatedFrameTime;
 }
 

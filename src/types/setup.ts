@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { Models } from './models';
 
 export interface CameraSetup {
   camera: THREE.PerspectiveCamera;
@@ -9,7 +8,13 @@ export interface CameraSetup {
 
 export interface SceneSetup {
   scene: THREE.Scene;
-  modelMap: Map<Models, THREE.Object3D>;
+  room: Room;
   renderer: THREE.WebGLRenderer;
-  cameraSetup: CameraSetup
+  cameraSetup: CameraSetup;
 }
+
+export interface Room {
+  floor: THREE.Object3D;
+  opticalTable: THREE.Object3D;
+}
+

@@ -11,7 +11,7 @@ async function initializeApp() {
     // console.log(blobs);
     
     let sceneSystem = new SceneSystem(getSceneSetup(fileMaps));
-    sceneSystem.mainLoop();
+    sceneSystem.simulationLoop();
 }
 
 initializeApp();
