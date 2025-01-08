@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import { SceneSetup } from '../types/setup'
 import { Actor } from './actor';
 import { InputListener } from '../io/input';
-import { simLoopStep, getFrameTime, SimState } from './simLoop';
+import { simLoopStep, SimState } from './simLoop';
 import { FrameTime } from '../types/frameTime';
 import { setResizeListener } from './window';
 import { setStaticFurniturePositions } from '../setup/roomPositions';
+import { CameraController } from './cameraController';
 
 export function setActorPosition(actor: Actor) {
   const boundingBox = new THREE.Box3().setFromObject(actor.mesh);
@@ -15,13 +16,19 @@ export function setActorPosition(actor: Actor) {
   }
 }
 
+function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
+  const timestamp = performance.now();
+  const delta = prevFrameTime ? (timestamp - prevFrameTime.timestamp) / 1000.0 : 0;
+  return { delta, timestamp };
+}
+
 export class SceneSystem {
 
   private inputListener: InputListener;
   private sceneSetup: SceneSetup;
   private actor: Actor;
   private frameTime: FrameTime;
-  private cameraOffset: THREE.Vector3;
+  private cameraController: CameraController;
 
   constructor(sceneSetup: SceneSetup) {
     setResizeListener(sceneSetup);
@@ -32,25 +39,20 @@ export class SceneSystem {
     this.frameTime = getFrameTime();
     setStaticFurniturePositions(this.sceneSetup.room);
     setActorPosition(this.actor);
-    this.cameraOffset = this.sceneSetup.cameraSetup.camera.position.clone().sub(this.actor.mesh.position);
+    this.cameraController = new CameraController(this.sceneSetup.cameraSetup, this.actor);
   }
 
   getSimState(): SimState {
-    return { actor: this.actor, sceneSetup: this.sceneSetup, cameraOffset: this.cameraOffset }
+    return { actor: this.actor, sceneSetup: this.sceneSetup }
   }
 
   simulationLoop = () => {
     const updatedFrameTime = getFrameTime(this.frameTime);
     let action = this.inputListener.getAction();
-    
-    let cameraSetup = this.sceneSetup.cameraSetup;
-    this.cameraOffset = cameraSetup.camera.position.clone().sub(this.actor.mesh.position);
 
+    this.cameraController.setOffset();
     simLoopStep(this.getSimState(), this.frameTime, action);
-
-    cameraSetup.camera.position.copy(this.actor.mesh.position.clone().add(this.cameraOffset));
-    cameraSetup.cameraCtrl.target.copy(this.actor.mesh.position);
-    cameraSetup.cameraCtrl.update();
+    this.cameraController.update();
 
     this.frameTime = updatedFrameTime
     requestAnimationFrame(this.simulationLoop);

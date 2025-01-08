@@ -8,12 +8,6 @@ export interface SimState {
     sceneSetup: SceneSetup;
 }
 
-export function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
-    const timestamp = performance.now();
-    const delta = prevFrameTime ? (timestamp - prevFrameTime.timestamp) / 1000.0 : 0;
-    return { delta, timestamp };
-}
-
 function applyAction(state: SimState, actorAction: Action): void {
     state.actor.applyAction(actorAction);
 }
