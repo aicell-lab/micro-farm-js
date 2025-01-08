@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { MathUtils } from 'three';
-import { Actor } from '../system/actor';
 import { Room } from '../types/setup';
 
 function setFloorPosition(object: THREE.Object3D) {

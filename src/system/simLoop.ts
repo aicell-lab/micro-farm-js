@@ -1,14 +1,11 @@
 import { Actor } from './actor';
 import { SceneSetup } from '../types/setup';
 import { FrameTime } from '../types/frameTime';
-import { InputListener } from '../io/input';
-import * as THREE from 'three';
+import { Action } from '../types/action';
 
 export interface SimState {
     actor: Actor;
     sceneSetup: SceneSetup;
-    inputListener: InputListener;
-    cameraOffset: THREE.Vector3;
 }
 
 export function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
@@ -17,22 +14,18 @@ export function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
     return { delta, timestamp };
 }
 
-function updateActor(state: SimState, frameTime: FrameTime): void {
-    state.actor.applyAction(state.inputListener.getAction());
-    let cameraSetup = state.sceneSetup.cameraSetup;
-    state.cameraOffset = cameraSetup.camera.position.clone().sub(state.actor.mesh.position);
+function applyAction(state: SimState, actorAction: Action): void {
+    state.actor.applyAction(actorAction);
+}
+
+export function simPhysicsStep(state: SimState, frameTime: FrameTime): void {
     state.actor.update(frameTime.delta);
-    cameraSetup.camera.position.copy(state.actor.mesh.position.clone().add(state.cameraOffset));
-    cameraSetup.cameraCtrl.target.copy(state.actor.mesh.position);
-    cameraSetup.cameraCtrl.update();
 }
 
-function renderScene(sceneSetup: SceneSetup): void {
-    sceneSetup.renderer.render(sceneSetup.scene, sceneSetup.cameraSetup.camera);
-}
-
-export function simLoopStep(state: SimState, frameTime: FrameTime): void {
-    updateActor(state, frameTime);
-    renderScene(state.sceneSetup);
+export function simLoopStep(state: SimState, frameTime: FrameTime, actorAction: Action): void {
+    applyAction(state, actorAction);
+    simPhysicsStep(state, frameTime);
+    let setup = state.sceneSetup;
+    setup.renderer.render(setup.scene, setup.cameraSetup.camera);
 }
 
