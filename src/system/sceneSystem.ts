@@ -2,12 +2,11 @@ import * as THREE from 'three';
 import { SceneSetup } from '../types/setup'
 import { Actor, Human } from './actor';
 import { InputListener } from '../io/input';
-import { simLoopStep, SimState } from './simLoop';
-import { FrameTime } from '../types/frameTime';
 import { setResizeListener } from './window';
 import { setStaticFurniturePositions } from '../setup/roomPositions';
 import { CameraController } from './cameraController';
 import { FLOOR_Y_POSITION } from '../setup/roomConstants';
+import { SimulationLoop } from './simLoop';
 
 export function setActorPosition(actor: Actor) {
   const boundingBox = new THREE.Box3().setFromObject(actor.mesh);
@@ -17,45 +16,32 @@ export function setActorPosition(actor: Actor) {
   }
 }
 
-function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
-  const timestamp = performance.now();
-  const delta = prevFrameTime ? (timestamp - prevFrameTime.timestamp) / 1000.0 : 0;
-  return { delta, timestamp };
-}
-
 export class SceneSystem {
 
   private inputListener: InputListener;
-  private sceneSetup: SceneSetup;
-  private actor: Actor;
-  private frameTime: FrameTime;
   private cameraController: CameraController;
+  private simLoop: SimulationLoop;
 
   constructor(sceneSetup: SceneSetup) {
     setResizeListener(sceneSetup);
-    this.sceneSetup = sceneSetup;
-    this.inputListener = new InputListener();
-    this.actor = new Human();
-    this.sceneSetup.scene.add(this.actor.mesh);
-    this.frameTime = getFrameTime();
-    setStaticFurniturePositions(this.sceneSetup.room);
-    setActorPosition(this.actor);
-    this.cameraController = new CameraController(this.sceneSetup.cameraSetup, this.actor);
-  }
 
-  getSimState(): SimState {
-    return { actor: this.actor, sceneSetup: this.sceneSetup }
+    this.inputListener = new InputListener();
+    let actor = new Human();
+    sceneSetup.scene.add(actor.mesh);
+
+    setStaticFurniturePositions(sceneSetup.room);
+    setActorPosition(actor);
+    this.simLoop = new SimulationLoop(sceneSetup, actor);
+    this.cameraController = new CameraController(sceneSetup.cameraSetup, actor);
   }
 
   simulationLoop = () => {
-    const updatedFrameTime = getFrameTime(this.frameTime);
     let action = this.inputListener.getAction();
-
+  
     this.cameraController.setOffset();
-    simLoopStep(this.getSimState(), this.frameTime, action);
+    this.simLoop.step(action);
     this.cameraController.update();
 
-    this.frameTime = updatedFrameTime
     requestAnimationFrame(this.simulationLoop);
   };
 
