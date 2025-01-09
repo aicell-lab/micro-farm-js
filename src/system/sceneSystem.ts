@@ -3,9 +3,8 @@ import { Actor, Human } from './actor';
 import { InputListener } from '../io/input';
 import { setResizeListener } from './window';
 import { CameraController } from './cameraController';
-import { FLOOR_Y_POSITION } from '../setup/roomConstants';
 import { SimulationLoop } from './simLoop';
-import { SceneSetup } from '../setup/sceneSetup';
+import { SceneSetup, FLOOR_Y_POSITION } from '../setup/room';
 
 export function setActorPosition(actor: Actor) {
   const boundingBox = new THREE.Box3().setFromObject(actor.mesh);

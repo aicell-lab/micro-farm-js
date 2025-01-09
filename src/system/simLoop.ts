@@ -1,9 +1,9 @@
 import { Actor } from './actor';
 import { FrameTime } from '../types/frameTime';
 import { Action } from '../types/action';
-import { SceneSetup } from '../setup/sceneSetup';
 import * as THREE from 'three';
 import { getRenderer } from './window';
+import { SceneSetup } from '../setup/room';
 
 export interface SimState {
     actor: Actor;

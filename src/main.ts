@@ -1,8 +1,8 @@
-import { getSceneSetup } from './setup/sceneSetup';
 import { SceneSystem } from './system/sceneSystem';
 import { CameraController, getCameraSetup } from './system/cameraController';
 import { Human } from './system/actor';
 import { Assets } from './res/assets';
+import { getSceneSetup } from './setup/room';
 
 async function initializeApp() {
     await Assets.init();
