@@ -1,18 +1,12 @@
 import { getSceneSetup } from './setup/sceneSetup';
 import { SceneSystem } from './system/sceneSystem';
-import { getFileCollectionsNoThrow } from './res/assets';
 import { CameraController, getCameraSetup } from './system/cameraController';
 import { Human } from './system/actor';
-//import { createBlobURIs } from './res/assetURI';
+import { Assets } from './res/assets';
 
 async function initializeApp() {
-    const fileMaps = await getFileCollectionsNoThrow();
-    
-    // TODO: Replace URDF paths with BlobURIs
-    // const blobs = createBlobURIs(fileMaps);
-    // console.log(blobs);
-    
-    let sceneSetup = getSceneSetup(fileMaps);
+    await Assets.init();
+    let sceneSetup = getSceneSetup();
     let human = new Human();
     sceneSetup.scene.add(human.mesh);
     let cameraController = new CameraController(getCameraSetup(), human.mesh);

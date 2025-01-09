@@ -1,57 +1,46 @@
-import { assetPath } from './paths';
-import { loadAndExtractZipBinaryFiles, loadAndExtractZipTextFiles } from './assetLoader';
-import { FileCollections } from '../types/assetTypes';
+import * as THREE from 'three';
+import { FileCollections } from "../types/assetTypes";
+import { getFileCollectionsNoThrow } from "./assetOrganizer";
+import { Models } from "../types/models";
+import { loadModels } from './modelLoader';
 
-/**
- * Merges multiple Map objects into one.
- * @param maps - An array of Map objects to be merged.
- * @returns A new Map containing all entries from the input maps.
- */
-function mergeMaps<K, V>(...maps: Map<K, V>[]): Map<K, V> {
-    const mergedMap = new Map<K, V>();
+//////////////////////////////////////////////////////////////
+//import { createBlobURIs } from './res/assetURI';          //
+// TODO: Replace URDF paths with BlobURIs                   //
+// const blobs = createBlobURIs(fileMaps);                  //
+// console.log(blobs);                                      //
+//////////////////////////////////////////////////////////////
 
-    maps.forEach((map) => {
-        map.forEach((value, key) => {
-            mergedMap.set(key, value);
-        });
-    });
+export class Assets {
 
-    return mergedMap;
-}
+    private static instance: Assets;
+    private files: FileCollections;
+    private modelMap: Map<Models, THREE.Object3D>;
 
-async function retrieveMergedMap(
-    zipFilePath: string,
-    extensions: string[],
-    loaderFunction: (zipFilePath: string, extension: string) => Promise<Map<string, any>>
-): Promise<Map<string, any>> {
-    const maps = await Promise.all(extensions.map((ext) => loaderFunction(zipFilePath, ext)));
-    return mergeMaps(...maps);
-}
-
-async function getTextFiles(): Promise<Map<string, string>> {
-    const fileExtensions = [".obj", ".urdf"];
-    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipTextFiles);
-}
-
-async function getBinaryFiles(): Promise<Map<string, ArrayBuffer>> {
-    const fileExtensions = [".png", ".STL"];
-    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipBinaryFiles);
-}
-
-async function getFileCollections(): Promise<FileCollections> {
-    return {
-        textFiles: await getTextFiles(),
-        binaryFiles: await getBinaryFiles(),
-    };
-}
-
-export async function getFileCollectionsNoThrow(): Promise<FileCollections> {
-    let fileMaps: FileCollections | null = null;
-    try {
-        fileMaps = await getFileCollections();
-        console.log('ZIP file loaded and extracted successfully.', fileMaps);
-    } catch (error) {
-        console.error('Error during ZIP loading:', error);
+    private constructor() {
+        this.files = { textFiles: new Map(), binaryFiles: new Map() };
+        this.modelMap = new Map();
     }
-    return fileMaps || { textFiles: new Map(), binaryFiles: new Map() };
-}
+
+    public static async init(): Promise<Assets> {
+        if (!Assets.instance) {
+            const assets = new Assets();
+            assets.files = await getFileCollectionsNoThrow();
+            assets.modelMap = loadModels(assets.files);
+            Assets.instance = assets;
+        }
+        return Assets.instance;
+    }
+
+    public static getInstance(): Assets {
+        if (!Assets.instance) {
+            throw new Error("Assets has not been initialized. Call init) first.");
+        }
+        return Assets.instance;
+    }
+
+    public getModels(): Map<Models, THREE.Object3D> {
+        return this.modelMap;
+    }
+
+} 
