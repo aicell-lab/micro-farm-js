@@ -1,28 +1,19 @@
+import { ActionPayload, ActionType } from "./actionType";
 import { Actor } from "../system/actor";
 
-export interface Action {
-    execute(actor: Actor): void;
-}
+export class Action {
+    private action: ActionPayload;
 
-export class MoveAction implements Action {
-    private direction: { forward: boolean; backward: boolean; left: boolean; right: boolean };
-
-    constructor(direction: { forward: boolean; backward: boolean; left: boolean; right: boolean }) {
-        this.direction = direction;
+    constructor(action: ActionPayload) {
+        this.action = action;
     }
 
-    execute(actor: Actor): void {
-        const acc = 10;
-        if (this.direction.forward) actor.acceleration.z = -acc;
-        else if (this.direction.backward) actor.acceleration.z = acc;
-        else actor.acceleration.z = 0;
-
-        if (this.direction.left) actor.acceleration.x = -acc;
-        else if (this.direction.right) actor.acceleration.x = acc;
-        else actor.acceleration.x = 0;
+    execute(actor: Actor) {
+        switch (this.action.type) {
+            case ActionType.MOVE:
+                actor.handleMove(this.action.payload);
+                break;
+        }
     }
 }
-
-
-
 

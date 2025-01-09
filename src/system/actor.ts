@@ -1,6 +1,7 @@
 import * as THREE from 'three';
+import { MovePayload } from '../types/actionType';
 
-export class Actor {
+export abstract class Actor {
     mesh: THREE.Mesh;
     velocity: THREE.Vector3;
     acceleration: THREE.Vector3;
@@ -35,5 +36,19 @@ export class Actor {
         }
     }
 
+    abstract handleMove(payload: MovePayload): void;
+
 }
 
+export class Human extends Actor {
+    handleMove(p: MovePayload): void {
+        const acc = 10;
+        if (p.forward) this.acceleration.z = -acc;
+        else if (p.backward) this.acceleration.z = acc;
+        else this.acceleration.z = 0;
+
+        if (p.left) this.acceleration.x = -acc;
+        else if (p.right) this.acceleration.x = acc;
+        else this.acceleration.x = 0;
+    }
+}

@@ -1,17 +1,18 @@
 import * as THREE from 'three';
 import { SceneSetup } from '../types/setup'
-import { Actor } from './actor';
+import { Actor, Human } from './actor';
 import { InputListener } from '../io/input';
 import { simLoopStep, SimState } from './simLoop';
 import { FrameTime } from '../types/frameTime';
 import { setResizeListener } from './window';
 import { setStaticFurniturePositions } from '../setup/roomPositions';
 import { CameraController } from './cameraController';
+import { FLOOR_Y_POSITION } from '../setup/roomConstants';
 
 export function setActorPosition(actor: Actor) {
   const boundingBox = new THREE.Box3().setFromObject(actor.mesh);
   const minY = boundingBox.min.y;
-  if (minY < 0) {
+  if (minY < FLOOR_Y_POSITION) {
     actor.mesh.position.y -= minY;
   }
 }
@@ -34,7 +35,7 @@ export class SceneSystem {
     setResizeListener(sceneSetup);
     this.sceneSetup = sceneSetup;
     this.inputListener = new InputListener();
-    this.actor = new Actor();
+    this.actor = new Human();
     this.sceneSetup.scene.add(this.actor.mesh);
     this.frameTime = getFrameTime();
     setStaticFurniturePositions(this.sceneSetup.room);
