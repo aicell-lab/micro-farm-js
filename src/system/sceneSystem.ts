@@ -22,8 +22,7 @@ export class SceneSystem {
   private simLoop: SimulationLoop;
 
   constructor(sceneSetup: SceneSetup, cameraController: CameraController, human: Human) {
-    setResizeListener(sceneSetup);
-
+    setResizeListener(cameraController.getCameraSetup());
     this.inputListener = new InputListener();
 
     setActorPosition(human);

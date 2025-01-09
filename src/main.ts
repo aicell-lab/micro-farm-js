@@ -15,7 +15,7 @@ async function initializeApp() {
     let sceneSetup = getSceneSetup(fileMaps);
     let human = new Human();
     sceneSetup.scene.add(human.mesh);
-    let cameraController = new CameraController(getCameraSetup(sceneSetup.renderer), human.mesh);
+    let cameraController = new CameraController(getCameraSetup(), human.mesh);
     let sceneSystem = new SceneSystem(sceneSetup, cameraController, human);
     sceneSystem.simulationLoop();
 }

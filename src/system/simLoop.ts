@@ -3,6 +3,7 @@ import { FrameTime } from '../types/frameTime';
 import { Action } from '../types/action';
 import { SceneSetup } from '../setup/sceneSetup';
 import * as THREE from 'three';
+import { getRenderer } from './window';
 
 export interface SimState {
     actor: Actor;
@@ -26,7 +27,7 @@ function applyAction(state: SimState, playerAction: Action): void {
 }
 
 function render(setup: SceneSetup, camera: THREE.PerspectiveCamera): void {
-    setup.renderer.render(setup.scene, camera);
+    getRenderer().render(setup.scene, camera);
 }
 
 export class SimulationLoop {

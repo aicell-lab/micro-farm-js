@@ -10,7 +10,6 @@ import { Room } from './room';
 export interface SceneSetup {
   scene: THREE.Scene;
   room: Room;
-  renderer: THREE.WebGLRenderer;
 }
 
 function getRoom(files: FileCollections): Room {
@@ -25,13 +24,6 @@ function getScene(): THREE.Scene {
   return scene
 }
 
-function getRenderer(): THREE.WebGLRenderer {
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-  return renderer;
-}
-
 function addRoomToScene(scene: THREE.Scene, room: Room): void {
   scene.add(room.floor);
   scene.add(room.opticalTable);
@@ -42,7 +34,6 @@ export function getSceneSetup(files: FileCollections): SceneSetup {
   let room = getRoom(files);
   setStaticFurniturePositions(room);
   addRoomToScene(scene, room);
-  let renderer = getRenderer();
-  let sceneSetup = { scene: scene, room: room, renderer: renderer};
+  let sceneSetup = { scene: scene, room: room};
   return sceneSetup;
 }

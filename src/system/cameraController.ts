@@ -1,10 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-export interface CameraSetup {
-    camera: THREE.PerspectiveCamera;
-    cameraCtrl: OrbitControls;
-}
+import { getRenderer } from './window';
+import { CameraSetup } from '../setup/cameraSetup';
 
 export class CameraController {
     private cameraOffset: THREE.Vector3;
@@ -32,11 +29,15 @@ export class CameraController {
         return this.cameraSetup.camera;
     }
 
+    getCameraSetup(): CameraSetup {
+        return this.cameraSetup;
+    }
+
 }
 
-export function getCameraSetup(renderer: THREE.WebGLRenderer): CameraSetup {
+export function getCameraSetup(): CameraSetup {
     let camera = getCamera()
-    return { camera: camera, cameraCtrl: new OrbitControls(camera, renderer.domElement) }
+    return { camera: camera, cameraCtrl: new OrbitControls(camera, getRenderer().domElement) }
 }
 
 function getCamera(): THREE.PerspectiveCamera {
