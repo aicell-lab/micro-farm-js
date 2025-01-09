@@ -1,9 +1,10 @@
-import { Actor } from './actor';
 import { InputListener } from '../io/input';
 import { setResizeListener } from './window';
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simLoop';
 import { SceneSetup } from '../setup/room';
+import { ActorFactory } from './actorFactory';
+import { getCameraSetup } from './cameraController';
 
 
 export class SceneSystem {
@@ -12,7 +13,12 @@ export class SceneSystem {
   private cameraController: CameraController;
   private simLoop: SimulationLoop;
 
-  constructor(sceneSetup: SceneSetup, cameraController: CameraController, human: Actor) {
+  constructor(sceneSetup: SceneSetup) {
+
+    let human = new ActorFactory().createHuman();
+    sceneSetup.scene.add(human.mesh);
+    let cameraController = new CameraController(getCameraSetup(), human.mesh);
+
     setResizeListener(cameraController.getCameraSetup());
     this.inputListener = new InputListener();
 
