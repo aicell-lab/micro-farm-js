@@ -6,6 +6,7 @@ import { getFloor } from './roomExterior';
 import { getLights } from './lights';
 import { SceneSetup, CameraSetup, Room } from '../types/setup'
 import { Models } from '../types/models';
+import { setStaticFurniturePositions } from '../setup/roomPositions';
 
 function getCamera(): THREE.PerspectiveCamera {
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -45,8 +46,10 @@ function addRoomToScene(scene: THREE.Scene, room: Room): void {
 export function getSceneSetup(files: FileCollections): SceneSetup {
   let scene = getScene();
   let room = getRoom(files);
+  setStaticFurniturePositions(room);
   addRoomToScene(scene, room);
   let renderer = getRenderer();
   let cameraSetup = getCameraSetup(renderer);
-  return { scene: scene, room: room, renderer: renderer, cameraSetup: cameraSetup };
+  let sceneSetup = { scene: scene, room: room, renderer: renderer, cameraSetup: cameraSetup };
+  return sceneSetup;
 }

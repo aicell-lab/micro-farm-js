@@ -3,7 +3,6 @@ import { SceneSetup } from '../types/setup'
 import { Actor, Human } from './actor';
 import { InputListener } from '../io/input';
 import { setResizeListener } from './window';
-import { setStaticFurniturePositions } from '../setup/roomPositions';
 import { CameraController } from './cameraController';
 import { FLOOR_Y_POSITION } from '../setup/roomConstants';
 import { SimulationLoop } from './simLoop';
@@ -26,11 +25,11 @@ export class SceneSystem {
     setResizeListener(sceneSetup);
 
     this.inputListener = new InputListener();
+    
     let actor = new Human();
     sceneSetup.scene.add(actor.mesh);
-
-    setStaticFurniturePositions(sceneSetup.room);
     setActorPosition(actor);
+
     this.simLoop = new SimulationLoop(sceneSetup, actor);
     this.cameraController = new CameraController(sceneSetup.cameraSetup, actor);
   }
