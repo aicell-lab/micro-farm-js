@@ -1,17 +1,16 @@
 import * as THREE from 'three';
 import { FileCollections } from '../types/assetTypes';
 import { loadModels } from "../res/modelLoader"
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getFloor } from './roomExterior';
 import { getLights } from './lights';
-import { SceneSetup, CameraSetup, Room } from '../types/setup'
 import { Models } from '../types/models';
 import { setStaticFurniturePositions } from '../setup/roomPositions';
+import { Room } from './room';
 
-function getCamera(): THREE.PerspectiveCamera {
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 5);
-  return camera
+export interface SceneSetup {
+  scene: THREE.Scene;
+  room: Room;
+  renderer: THREE.WebGLRenderer;
 }
 
 function getRoom(files: FileCollections): Room {
@@ -33,11 +32,6 @@ function getRenderer(): THREE.WebGLRenderer {
   return renderer;
 }
 
-function getCameraSetup(renderer: THREE.WebGLRenderer): CameraSetup {
-  let camera = getCamera()
-  return { camera: camera, cameraCtrl: new OrbitControls(camera, renderer.domElement) }
-}
-
 function addRoomToScene(scene: THREE.Scene, room: Room): void {
   scene.add(room.floor);
   scene.add(room.opticalTable);
@@ -49,7 +43,6 @@ export function getSceneSetup(files: FileCollections): SceneSetup {
   setStaticFurniturePositions(room);
   addRoomToScene(scene, room);
   let renderer = getRenderer();
-  let cameraSetup = getCameraSetup(renderer);
-  let sceneSetup = { scene: scene, room: room, renderer: renderer, cameraSetup: cameraSetup };
+  let sceneSetup = { scene: scene, room: room, renderer: renderer};
   return sceneSetup;
 }

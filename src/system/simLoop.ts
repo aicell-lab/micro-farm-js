@@ -1,7 +1,8 @@
 import { Actor } from './actor';
-import { SceneSetup } from '../types/setup';
 import { FrameTime } from '../types/frameTime';
 import { Action } from '../types/action';
+import { SceneSetup } from '../setup/sceneSetup';
+import * as THREE from 'three';
 
 export interface SimState {
     actor: Actor;
@@ -24,8 +25,8 @@ function applyAction(state: SimState, playerAction: Action): void {
     }
 }
 
-function render(setup: SceneSetup): void {
-    setup.renderer.render(setup.scene, setup.cameraSetup.camera);
+function render(setup: SceneSetup, camera: THREE.PerspectiveCamera): void {
+    setup.renderer.render(setup.scene, camera);
 }
 
 export class SimulationLoop {
@@ -43,12 +44,12 @@ export class SimulationLoop {
         return { actor: this.actor, sceneSetup: this.sceneSetup }
     }
 
-    step(action: Action): void {
+    step(action: Action, camera: THREE.PerspectiveCamera): void {
         const state = this.getSimState();
         const updatedFrameTime = getFrameTime(this.frameTime);
         applyAction(state, action);
         simPhysicsStep(state, this.frameTime);
-        render(this.sceneSetup);
+        render(this.sceneSetup, camera);
         this.frameTime = updatedFrameTime
     }
 } 
