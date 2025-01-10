@@ -1,5 +1,5 @@
 import { ActionPayload, ActionType } from "./actionType";
-import { Actor } from "../system/actor";
+import { Actor } from "../setup/actor";
 
 export class Action {
     private action: ActionPayload;

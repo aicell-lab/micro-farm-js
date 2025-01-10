@@ -82,14 +82,14 @@ function getLights(): THREE.Light[] {
   return [dirLight, ambientLight];
 }
 
-function getScene(): THREE.Scene {
+function createScene(): THREE.Scene {
   const scene = new THREE.Scene();
   getLights().forEach((light) => scene.add(light));
   return scene
 }
 
-export function getSceneSetup(): SceneSetup {
-  let scene = getScene();
+export function createSceneSetup(): SceneSetup {
+  let scene = createScene();
   let room = new Room();
   room.addToScene(scene);
   let sceneSetup = { scene: scene, room: room};

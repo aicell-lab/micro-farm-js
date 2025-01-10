@@ -52,3 +52,8 @@ export class Human extends Actor {
         else this.acceleration.x = 0;
     }
 }
+
+export interface RoomActors {
+    player: Human;
+
+}

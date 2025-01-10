@@ -1,6 +1,6 @@
 import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
-import { MovePayload, ActionType, ActionPayload } from '../types/actionType';
+import { MovePayload, ActionType } from '../types/actionType';
 import { InputKey } from '../types/keys';
 
 export class InputListener {

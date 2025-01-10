@@ -2,7 +2,7 @@ import { FrameTime } from '../types/frameTime';
 import * as THREE from 'three';
 import { getRenderer } from './window';
 import { SceneSetup } from '../setup/room';
-import { RoomActors } from './actorFactory';
+import { RoomActors } from '../setup/actor';
 
 export interface SimState {
     actors: RoomActors;
@@ -19,8 +19,8 @@ function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
     return { delta, timestamp };
 }
 
-function render(setup: SceneSetup, camera: THREE.PerspectiveCamera): void {
-    getRenderer().render(setup.scene, camera);
+function render(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
+    getRenderer().render(scene, camera);
 }
 
 export class SimulationLoop {
@@ -42,7 +42,7 @@ export class SimulationLoop {
         const state = this.getSimState();
         const updatedFrameTime = getFrameTime(this.frameTime);
         simPhysicsStep(state, this.frameTime);
-        render(this.sceneSetup, camera);
+        render(this.sceneSetup.scene, camera);
         this.frameTime = updatedFrameTime
     }
 } 

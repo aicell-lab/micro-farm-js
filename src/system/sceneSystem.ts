@@ -1,7 +1,7 @@
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simLoop';
 import { SceneSetup } from '../setup/room';
-import { ActorFactory } from './actorFactory';
+import { ActorFactory } from '../setup/actorFactory';
 import { ActorController } from './actorController';
 
 export class SceneSystem {

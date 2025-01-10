@@ -1,6 +1,6 @@
-import { Actor, Human } from "./actor";
+import { Actor, Human, RoomActors } from "./actor";
 import * as THREE from 'three';
-import { FLOOR_Y_POSITION } from '../setup/room';
+import { FLOOR_Y_POSITION } from './room';
 
 function setActorPosition(actor: Actor) {
     const boundingBox = new THREE.Box3().setFromObject(actor.mesh);
@@ -8,11 +8,6 @@ function setActorPosition(actor: Actor) {
     if (minY < FLOOR_Y_POSITION) {
         actor.mesh.position.y -= minY;
     }
-}
-
-export interface RoomActors {
-    player: Human;
-
 }
 
 export class ActorFactory {
