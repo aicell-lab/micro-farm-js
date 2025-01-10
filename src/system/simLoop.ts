@@ -1,13 +1,9 @@
 import { FrameTime } from '../types/frameTime';
 import * as THREE from 'three';
-import { getRenderer } from './window';
 import { SceneSetup } from '../setup/room';
 import { RoomActors } from '../setup/actor';
-
-export interface SimState {
-    actors: RoomActors;
-    sceneSetup: SceneSetup;
-}
+import { SimState } from './simState';
+import { RenderController } from './renderController';
 
 export function simPhysicsStep(state: SimState, frameTime: FrameTime): void {
     state.actors.player.update(frameTime.delta);
@@ -19,30 +15,28 @@ function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
     return { delta, timestamp };
 }
 
-function render(scene: THREE.Scene, camera: THREE.PerspectiveCamera): void {
-    getRenderer().render(scene, camera);
-}
-
 export class SimulationLoop {
     private frameTime: FrameTime;
     private sceneSetup: SceneSetup;
     private actors: RoomActors;
+    private renderController: RenderController;
 
-    constructor(sceneSetup: SceneSetup, actors: RoomActors) {
+    constructor(sceneSetup: SceneSetup, actors: RoomActors, renderController: RenderController) {
         this.frameTime = getFrameTime();
         this.sceneSetup = sceneSetup;
         this.actors = actors;
+        this.renderController = renderController
     }
 
     getSimState(): SimState {
         return { actors: this.actors, sceneSetup: this.sceneSetup }
     }
 
-    step(camera: THREE.PerspectiveCamera): void {
+    step(): void {
         const state = this.getSimState();
         const updatedFrameTime = getFrameTime(this.frameTime);
         simPhysicsStep(state, this.frameTime);
-        render(this.sceneSetup.scene, camera);
+        this.renderController.render();
         this.frameTime = updatedFrameTime
     }
 } 
