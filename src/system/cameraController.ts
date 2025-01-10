@@ -2,16 +2,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { getRenderer } from './window';
 import { CameraSetup } from '../setup/cameraSetup';
+import { setResizeListener } from './window';
 
 export class CameraController {
     private cameraOffset: THREE.Vector3;
     private target: THREE.Object3D;
     private cameraSetup: CameraSetup;
 
-    constructor(cameraSetup: CameraSetup, target: THREE.Object3D) {
-        this.cameraOffset = cameraSetup.camera.position.clone().sub(target.position);
+    constructor(target: THREE.Object3D) {
+        this.cameraSetup = createCameraSetup();
+        this.cameraOffset = this.cameraSetup.camera.position.clone().sub(target.position);
         this.target = target;
-        this.cameraSetup = cameraSetup;
+        setResizeListener(this.cameraSetup);
     }
 
     setOffset(): void {
@@ -35,12 +37,12 @@ export class CameraController {
 
 }
 
-export function getCameraSetup(): CameraSetup {
-    let camera = getCamera()
+function createCameraSetup(): CameraSetup {
+    let camera = createCamera()
     return { camera: camera, cameraCtrl: new OrbitControls(camera, getRenderer().domElement) }
 }
 
-function getCamera(): THREE.PerspectiveCamera {
+function createCamera(): THREE.PerspectiveCamera {
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(0, 2, 5);
     return camera

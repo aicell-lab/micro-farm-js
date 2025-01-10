@@ -10,16 +10,24 @@ function setActorPosition(actor: Actor) {
     }
 }
 
+export interface RoomActors {
+    player: Human;
+
+}
+
 export class ActorFactory {
 
     constructor() {
 
     }
 
-
     createHuman(): Human {
         let human = new Human();
         setActorPosition(human);
         return human;
+    }
+
+    createRoomActors(): RoomActors {
+        return { player: this.createHuman() };
     }
 }

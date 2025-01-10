@@ -1,38 +1,28 @@
-import { InputListener } from '../io/input';
-import { setResizeListener } from './window';
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simLoop';
 import { SceneSetup } from '../setup/room';
 import { ActorFactory } from './actorFactory';
-import { getCameraSetup } from './cameraController';
-
+import { ActorController } from './actorController';
 
 export class SceneSystem {
 
-  private inputListener: InputListener;
+  private actorController: ActorController;
   private cameraController: CameraController;
   private simLoop: SimulationLoop;
 
   constructor(sceneSetup: SceneSetup) {
-
-    let human = new ActorFactory().createHuman();
-    sceneSetup.scene.add(human.mesh);
-    let cameraController = new CameraController(getCameraSetup(), human.mesh);
-
-    setResizeListener(cameraController.getCameraSetup());
-    this.inputListener = new InputListener();
-
-    this.simLoop = new SimulationLoop(sceneSetup, human);
-    this.cameraController = cameraController;
+    let actors = new ActorFactory().createRoomActors();
+    this.cameraController = new CameraController(actors.player.mesh);
+    sceneSetup.scene.add(actors.player.mesh);
+    this.simLoop = new SimulationLoop(sceneSetup, actors);
+    this.actorController = new ActorController(actors);
   }
 
   simulationLoop = () => {
-    let action = this.inputListener.getAction();
-  
     this.cameraController.setOffset();
-    this.simLoop.step(action, this.cameraController.getCamera());
+    this.actorController.handleUserInput();
+    this.simLoop.step(this.cameraController.getCamera());
     this.cameraController.update();
-
     requestAnimationFrame(this.simulationLoop);
   };
 
