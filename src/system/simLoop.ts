@@ -1,6 +1,5 @@
 import { FrameTime } from '../types/frameTime';
-import * as THREE from 'three';
-import { SceneSetup } from '../setup/room';
+import { Room } from '../setup/room';
 import { RoomActors } from '../setup/actor';
 import { SimState } from './simState';
 import { RenderController } from './renderController';
@@ -17,25 +16,24 @@ function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
 
 export class SimulationLoop {
     private frameTime: FrameTime;
-    private sceneSetup: SceneSetup;
+    private room: Room;
     private actors: RoomActors;
     private renderController: RenderController;
 
-    constructor(sceneSetup: SceneSetup, actors: RoomActors, renderController: RenderController) {
+    constructor(room: Room, actors: RoomActors, renderController: RenderController) {
         this.frameTime = getFrameTime();
-        this.sceneSetup = sceneSetup;
+        this.room = room;
         this.actors = actors;
         this.renderController = renderController
     }
 
     getSimState(): SimState {
-        return { actors: this.actors, sceneSetup: this.sceneSetup }
+        return { actors: this.actors, room: this.room }
     }
 
     step(): void {
-        const state = this.getSimState();
         const updatedFrameTime = getFrameTime(this.frameTime);
-        simPhysicsStep(state, this.frameTime);
+        simPhysicsStep(this.getSimState(), this.frameTime);
         this.renderController.render();
         this.frameTime = updatedFrameTime
     }

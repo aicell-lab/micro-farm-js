@@ -1,9 +1,9 @@
 import { RoomActors } from "../setup/actor";
-import { SceneSetup } from "../setup/room";
+import { Room } from "../setup/room";
 
 export interface SimState {
     actors: RoomActors;
-    sceneSetup: SceneSetup;
+    room: Room;
 }
 
-//TODO: take out "scene" from SimState and only use Room object
+

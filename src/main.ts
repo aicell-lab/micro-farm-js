@@ -1,10 +1,11 @@
 import { SceneSystem } from './system/sceneSystem';
 import { Assets } from './res/assets';
-import { createSceneSetup } from './setup/room';
+import { Room } from './setup/room';
+import { ActorFactory } from './setup/actorFactory';
 
 async function initializeApp() {
     await Assets.init();
-    new SceneSystem(createSceneSetup()).simulationLoop();
+    new SceneSystem(new Room(), new ActorFactory().createRoomActors()).simulationLoop();
 }
 
 initializeApp();

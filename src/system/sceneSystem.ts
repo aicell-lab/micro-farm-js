@@ -1,9 +1,16 @@
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simLoop';
-import { SceneSetup } from '../setup/room';
-import { ActorFactory } from '../setup/actorFactory';
+import { Room, createScene } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
+import * as THREE from 'three';
+import { RoomActors } from '../setup/actor';
+
+function populateScene(scene: THREE.Scene, actors: RoomActors, room: Room): void{
+  scene.add(actors.player.mesh);
+  scene.add(room.floor);
+  scene.add(room.opticalTable);
+}
 
 export class SceneSystem {
 
@@ -11,12 +18,12 @@ export class SceneSystem {
   private cameraController: CameraController;
   private simLoop: SimulationLoop;
 
-  constructor(sceneSetup: SceneSetup) {
-    let actors = new ActorFactory().createRoomActors();
+  constructor(room: Room, actors: RoomActors) {
+    let scene = createScene();
+    populateScene(scene, actors, room);
     this.cameraController = new CameraController(actors.player.mesh);
-    sceneSetup.scene.add(actors.player.mesh);
-    let renderController = new RenderController(sceneSetup.scene, this.cameraController.getCamera());
-    this.simLoop = new SimulationLoop(sceneSetup, actors, renderController);
+    let renderController = new RenderController(scene, this.cameraController.getCamera());
+    this.simLoop = new SimulationLoop(room, actors, renderController);
     this.actorController = new ActorController(actors);
   }
 

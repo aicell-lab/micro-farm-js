@@ -30,11 +30,6 @@ export class Room {
         setFloorPosition(this.opticalTable);
         this.opticalTable.rotation.x = MathUtils.degToRad(TABLE_ROTATION_DEGREES);
     }
-
-    addToScene(scene: THREE.Scene): void {
-        scene.add(this.floor);
-        scene.add(this.opticalTable);
-    }
 }
 
 function createFloor(): THREE.Mesh {
@@ -70,11 +65,6 @@ function createFloor(): THREE.Mesh {
     return floor;
 }
 
-export interface SceneSetup {
-  scene: THREE.Scene;
-  room: Room;
-}
-
 function getLights(): THREE.Light[] {
   const dirLight = new THREE.DirectionalLight(0xffffff, 1);
   dirLight.position.set(5, 5, 5).normalize();
@@ -82,17 +72,9 @@ function getLights(): THREE.Light[] {
   return [dirLight, ambientLight];
 }
 
-function createScene(): THREE.Scene {
+export function createScene(): THREE.Scene {
   const scene = new THREE.Scene();
   getLights().forEach((light) => scene.add(light));
   return scene
-}
-
-export function createSceneSetup(): SceneSetup {
-  let scene = createScene();
-  let room = new Room();
-  room.addToScene(scene);
-  let sceneSetup = { scene: scene, room: room};
-  return sceneSetup;
 }
 
