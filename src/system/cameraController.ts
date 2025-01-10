@@ -5,25 +5,38 @@ import { CameraSetup } from '../setup/cameraSetup';
 import { setResizeListener } from './window';
 
 export class CameraController {
-    private cameraOffset: THREE.Vector3;
+    private prevCameraOffset: THREE.Vector3;
     private target: THREE.Object3D;
     private cameraSetup: CameraSetup;
 
     constructor(target: THREE.Object3D) {
         this.cameraSetup = createCameraSetup();
-        this.cameraOffset = this.cameraSetup.camera.position.clone().sub(target.position);
         this.target = target;
+        this.prevCameraOffset = this.getCameraOffset();
         setResizeListener(this.cameraSetup);
     }
 
-    setOffset(): void {
-        let cameraSetup = this.cameraSetup;
-        this.cameraOffset = cameraSetup.camera.position.clone().sub(this.target.position);
+    private getCameraOffset(): THREE.Vector3 {
+        let camera = this.cameraSetup.camera;
+        const cameraPosition = camera.position.clone();
+        const targetPosition = this.target.position;
+        return cameraPosition.sub(targetPosition);
     }
 
-    update(): void {
-        this.cameraSetup.camera.position.copy(this.target.position.clone().add(this.cameraOffset));
-        this.cameraSetup.cameraCtrl.target.copy(this.target.position);
+    private setPrevOffset(): void {
+        this.prevCameraOffset = this.getCameraOffset();
+    }
+
+    private updateCamera(): void {
+        let cPos = this.cameraSetup.camera.position;
+        const tPos = this.target.position;
+        cPos.copy(tPos.clone().add(this.prevCameraOffset));
+        this.updateCameraCtrl();
+    }
+
+    private updateCameraCtrl(): void {
+        const tPos = this.target.position;
+        this.cameraSetup.cameraCtrl.target.copy(tPos);
         this.cameraSetup.cameraCtrl.update();
     }
 
@@ -33,6 +46,12 @@ export class CameraController {
 
     getCameraSetup(): CameraSetup {
         return this.cameraSetup;
+    }
+
+    executeWithOffsetHandling(callback: () => void): void {
+        this.setPrevOffset();
+        callback();
+        this.updateCamera();
     }
 
 }

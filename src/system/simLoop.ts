@@ -1,8 +1,12 @@
 import { FrameTime } from '../types/frameTime';
 import { Room } from '../setup/room';
 import { RoomActors } from '../setup/actor';
-import { SimState } from './simState';
 import { RenderController } from './renderController';
+
+interface SimState {
+    actors: RoomActors;
+    room: Room;
+}
 
 export function simPhysicsStep(state: SimState, frameTime: FrameTime): void {
     state.actors.player.update(frameTime.delta);

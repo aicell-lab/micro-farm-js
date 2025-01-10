@@ -6,7 +6,7 @@ import { RenderController } from './renderController';
 import * as THREE from 'three';
 import { RoomActors } from '../setup/actor';
 
-function populateScene(scene: THREE.Scene, actors: RoomActors, room: Room): void{
+function populateScene(scene: THREE.Scene, actors: RoomActors, room: Room): void {
   scene.add(actors.player.mesh);
   scene.add(room.floor);
   scene.add(room.opticalTable);
@@ -28,10 +28,10 @@ export class SceneSystem {
   }
 
   simulationLoop = () => {
-    this.cameraController.setOffset();
-    this.actorController.handleUserInput();
-    this.simLoop.step();
-    this.cameraController.update();
+    this.cameraController.executeWithOffsetHandling(() => {
+      this.actorController.handleUserInput();
+      this.simLoop.step();
+    });
     requestAnimationFrame(this.simulationLoop);
   };
 
