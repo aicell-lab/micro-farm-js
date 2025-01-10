@@ -1,23 +1,27 @@
 import * as THREE from 'three';
 import { MovePayload } from '../types/actionType';
 
+function createDefaultActorMesh(): THREE.Mesh {
+    const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
+    const material = new THREE.MeshBasicMaterial({ color: 0x008822 });
+    let mesh = new THREE.Mesh(geometry, material);
+
+    const edges = new THREE.EdgesGeometry(geometry);
+    const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x222222 });
+    const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
+    mesh.add(edgeLines);
+    return mesh;
+}
+
 export abstract class Actor {
     mesh: THREE.Mesh;
     velocity: THREE.Vector3;
     acceleration: THREE.Vector3;
 
-    constructor() {
-        const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
-        const material = new THREE.MeshBasicMaterial({ color: 0x008822 });
-        this.mesh = new THREE.Mesh(geometry, material);
-
-        const edges = new THREE.EdgesGeometry(geometry);
-        const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x222222 });
-        const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
-        this.mesh.add(edgeLines);
-
+    constructor(mesh: THREE.Mesh) {
         this.velocity = new THREE.Vector3();
         this.acceleration = new THREE.Vector3();
+        this.mesh = mesh;
     }
 
     update(delta: number) {
@@ -41,6 +45,11 @@ export abstract class Actor {
 }
 
 export class Human extends Actor {
+
+    constructor() {
+        super(createDefaultActorMesh());
+    }
+
     handleMove(p: MovePayload): void {
         const acc = 10;
         if (p.forward) this.acceleration.z = -acc;
