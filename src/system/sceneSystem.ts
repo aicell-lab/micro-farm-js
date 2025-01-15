@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simulationLoop';
 import { Room } from '../setup/room';
@@ -5,7 +6,6 @@ import { ActorController } from './actorController';
 import { RenderController } from './renderController';
 import { RoomActors } from '../setup/actor';
 import { FrameTime } from '../types/frameTime';
-import { SceneFactory } from '../setup/sceneFactory';
 
 function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
   const timestamp = performance.now();
@@ -21,8 +21,7 @@ export class SceneSystem {
   private simulationLoop: SimulationLoop;
   private frameTime: FrameTime;
 
-  constructor(room: Room, actors: RoomActors) {
-    let scene = new SceneFactory(room, actors).createScene();
+  constructor(room: Room, actors: RoomActors, scene: THREE.Scene) {
     this.cameraController = new CameraController(actors.player.mesh);
     this.renderController = new RenderController(scene, this.cameraController.getCamera());
     this.actorController = new ActorController(actors);
