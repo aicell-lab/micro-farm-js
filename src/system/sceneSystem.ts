@@ -15,8 +15,8 @@ function createAndPopulateScene(room: Room, actors: RoomActors) {
 
 function populateScene(scene: THREE.Scene, actors: RoomActors, room: Room): void {
   scene.add(actors.player.mesh);
-  scene.add(room.floor);
-  scene.add(room.opticalTable);
+  scene.add(room.floor.object);
+  scene.add(room.opticalTable.object);
 }
 
 function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
