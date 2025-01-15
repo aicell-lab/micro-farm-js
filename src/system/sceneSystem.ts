@@ -1,23 +1,11 @@
-import * as THREE from 'three';
 import { CameraController } from './cameraController';
-import { SimulationLoop } from './simLoop';
-import { Room, createScene } from '../setup/room';
+import { SimulationLoop } from './simulationLoop';
+import { Room } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
 import { RoomActors } from '../setup/actor';
 import { FrameTime } from '../types/frameTime';
-
-function createAndPopulateScene(room: Room, actors: RoomActors) {
-  let scene = createScene();
-  populateScene(scene, actors, room);
-  return scene;
-}
-
-function populateScene(scene: THREE.Scene, actors: RoomActors, room: Room): void {
-  scene.add(actors.player.mesh);
-  scene.add(room.floor.object);
-  scene.add(room.opticalTable.object);
-}
+import { SceneFactory } from '../setup/sceneFactory';
 
 function getFrameTime(prevFrameTime?: FrameTime): FrameTime {
   const timestamp = performance.now();
@@ -30,15 +18,15 @@ export class SceneSystem {
   private actorController: ActorController;
   private cameraController: CameraController;
   private renderController: RenderController;
-  private simLoop: SimulationLoop;
+  private simulationLoop: SimulationLoop;
   private frameTime: FrameTime;
 
   constructor(room: Room, actors: RoomActors) {
-    let scene = createAndPopulateScene(room, actors);
+    let scene = new SceneFactory(room, actors).createScene();
     this.cameraController = new CameraController(actors.player.mesh);
     this.renderController = new RenderController(scene, this.cameraController.getCamera());
     this.actorController = new ActorController(actors);
-    this.simLoop = new SimulationLoop(room, actors);
+    this.simulationLoop = new SimulationLoop(room, actors);
     this.frameTime = getFrameTime();
   }
 
@@ -53,7 +41,7 @@ export class SceneSystem {
 
   processNextFrame() {
     this.actorController.handleUserInput();
-    this.simLoop.step(this.frameTime.delta);
+    this.simulationLoop.step(this.frameTime.delta);
     this.renderController.render();
   }
 
