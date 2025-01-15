@@ -1,4 +1,4 @@
-import { assetPath } from './paths';
+import { ZIPPED_ASSETS_PATH } from '../setup/constants'
 import { loadAndExtractZipBinaryFiles, loadAndExtractZipTextFiles } from './assetLoader';
 import { FileCollections } from '../types/assetTypes';
 
@@ -30,12 +30,12 @@ async function retrieveMergedMap(
 
 async function getTextFiles(): Promise<Map<string, string>> {
     const fileExtensions = [".obj", ".urdf"];
-    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipTextFiles);
+    return await retrieveMergedMap(ZIPPED_ASSETS_PATH, fileExtensions, loadAndExtractZipTextFiles);
 }
 
 async function getBinaryFiles(): Promise<Map<string, ArrayBuffer>> {
     const fileExtensions = [".png", ".STL"];
-    return await retrieveMergedMap(assetPath, fileExtensions, loadAndExtractZipBinaryFiles);
+    return await retrieveMergedMap(ZIPPED_ASSETS_PATH, fileExtensions, loadAndExtractZipBinaryFiles);
 }
 
 async function getFileCollections(): Promise<FileCollections> {

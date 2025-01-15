@@ -42,16 +42,16 @@ export class SceneSystem {
     this.frameTime = getFrameTime();
   }
 
-  simulationLoop = () => {
+  runSimulationLoop = () => {
     const updatedFrameTime = getFrameTime(this.frameTime);
     this.cameraController.executeWithOffsetHandling(() => {
-      this.processFrame();
+      this.processNextFrame();
     });
     this.frameTime = updatedFrameTime
-    requestAnimationFrame(this.simulationLoop);
+    requestAnimationFrame(this.runSimulationLoop);
   };
 
-  processFrame() {
+  processNextFrame() {
     this.actorController.handleUserInput();
     this.simLoop.step(this.frameTime.delta);
     this.renderController.render();

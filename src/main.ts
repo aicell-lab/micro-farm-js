@@ -5,7 +5,7 @@ import { ActorFactory } from './setup/actorFactory';
 
 async function initializeApp() {
     await Assets.init();
-    new SceneSystem(new Room(), new ActorFactory().createRoomActors()).simulationLoop();
+    new SceneSystem(new Room(), new ActorFactory().createActors()).runSimulationLoop();
 }
 
 initializeApp();

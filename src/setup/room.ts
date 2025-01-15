@@ -3,9 +3,7 @@ import { Assets } from '../res/assets';
 import { Models } from '../types/models';
 import { MathUtils } from 'three';
 import { createNoise2D } from 'simplex-noise';
-
-export const TABLE_ROTATION_DEGREES = 0;
-export const FLOOR_Y_POSITION = 0;
+import { FLOOR_Y_POSITION, TABLE_ROTATION_DEGREES } from './constants';
 
 function setFloorPosition(object: THREE.Object3D) {
     const boundingBox = new THREE.Box3().setFromObject(object);
