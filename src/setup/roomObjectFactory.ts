@@ -4,6 +4,7 @@ import { RoomObject } from '../object/roomObject';
 import { OpticalTable } from '../object/opticalTable';
 import { Floor } from '../object/floor';
 import { MathUtils } from 'three';
+import { Room } from './room';
 
 
 export class RoomObjectFactory {
@@ -23,6 +24,12 @@ export class RoomObjectFactory {
         return table;
     }
 
+    createRoom(): Room {
+        return {
+            floor: this.createFloor(), opticalTable: this.createOpticalTable()
+        }
+    }
+
 }
 
 function setFloorPosition(object: THREE.Object3D) {
@@ -32,4 +39,3 @@ function setFloorPosition(object: THREE.Object3D) {
         object.position.y -= minY;
     }
 }
-
