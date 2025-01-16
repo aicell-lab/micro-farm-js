@@ -4,13 +4,6 @@ import { getFileCollectionsNoThrow } from "./assetOrganizer";
 import { Models } from "../types/models";
 import { loadModels } from './modelLoader';
 
-//////////////////////////////////////////////////////////////
-//import { createBlobURIs } from './res/assetURI';          //
-// TODO: Replace URDF paths with BlobURIs                   //
-// const blobs = createBlobURIs(fileMaps);                  //
-// console.log(blobs);                                      //
-//////////////////////////////////////////////////////////////
-
 export class Assets {
 
     private static instance: Assets;
@@ -41,6 +34,10 @@ export class Assets {
 
     public getModels(): Map<Models, THREE.Object3D> {
         return this.modelMap;
+    }
+
+    public getFiles(): FileCollections {
+        return this.files;
     }
 
 } 
