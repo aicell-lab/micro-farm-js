@@ -10,7 +10,7 @@ export class InputListener {
         this.keyboardListener = new KeyboardListener();
     }
 
-    getAction(): Action {
+    getMoveAction(): Action {
         const dir: MovePayload = {
             forward: false,
             backward: false,
@@ -33,12 +33,13 @@ export class InputListener {
             dir.right = true;
         }
 
-        const payload = {
-            type: ActionType.MOVE,
-            payload: dir
-        }
+        return new Action({ type: ActionType.MOVE, payload: dir });
+    }
 
-        return new Action(payload);
+    getActions(): Action[] {
+        const actions: Action[] = [];
+        actions.push(this.getMoveAction());
+        return actions;
     }
 
 }

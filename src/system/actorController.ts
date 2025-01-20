@@ -12,10 +12,10 @@ export class ActorController {
     }
 
     handleUserInput() {
-        let action = this.inputListener.getAction();
-        if (action) {
+        let actions = this.inputListener.getActions();
+        actions.forEach(action => {
             action.execute(this.actors.player);
-        }
+        });
     }
 
 }
