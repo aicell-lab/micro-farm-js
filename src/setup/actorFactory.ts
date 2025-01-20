@@ -1,7 +1,7 @@
 import { Actor } from "../actor/actor";
 import { Human } from "../actor/human";
 import * as THREE from 'three';
-import { FLOOR_Y_POSITION, TABLE_ROTATION_DEGREES } from "./constants";
+import { FLOOR_Y_POSITION } from "./constants";
 import { RoomActors } from "../actor/roomActors";
 import { OpticalTable } from "../actor/opticalTable";
 import { MathUtils } from "three";

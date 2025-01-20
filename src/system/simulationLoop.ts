@@ -1,5 +1,5 @@
 import { Room } from '../setup/room';
-import { RoomActors } from '../actor/actor';
+import { RoomActors } from '../actor/roomActors';
 
 interface SimState {
     actors: RoomActors;
