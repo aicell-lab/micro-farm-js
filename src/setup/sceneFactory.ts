@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Room } from './room';
-import { RoomActors } from '../actor/actor';
+import { RoomActors } from '../actor/roomActors';
 
 export class SceneFactory {
     private room: Room;
@@ -19,9 +19,11 @@ export class SceneFactory {
     }
 
     private populateScene(scene: THREE.Scene): void {
-        scene.add(this.actors.player.mesh);
+        scene.add(this.actors.player.object);
+        scene.add(this.actors.table.object);
+
         scene.add(this.room.floor.object);
-        scene.add(this.room.opticalTable.object);
+        //scene.add(this.room.opticalTable.object);
     }
 }
 

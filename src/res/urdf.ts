@@ -1,6 +1,6 @@
 import { LoadingManager } from 'three';
 import URDFLoader, { URDFRobot } from 'urdf-loader';
-import { RobotType, ROS_LAB_NAME, ROS_LAB_PKG_PATH, ROS_LAB_URDF_PATH } from '../setup/constants';
+import { Robots, ROS_LAB_NAME, ROS_LAB_PKG_PATH, ROS_LAB_URDF_PATH } from '../setup/constants';
 
 export interface URDFPackage {
     packageName: string;
@@ -24,11 +24,11 @@ function _loadURDF(loader: URDFLoader, pgg: URDFPackage): Promise<URDFRobot> {
     });
 }
 
-function getPackage(type: RobotType): URDFPackage {
+function getPackage(type: Robots): URDFPackage {
     let packageName = '';
     let packagePath = '';
     let urdfPath = '';
-    if (type == RobotType.OpticalTable) {
+    if (type == Robots.OpticalTable) {
         packageName = ROS_LAB_NAME;
         packagePath = ROS_LAB_PKG_PATH;
         urdfPath = ROS_LAB_URDF_PATH;
@@ -37,7 +37,7 @@ function getPackage(type: RobotType): URDFPackage {
     return { packageName: packageName, packagePath: packagePath, urdfPath: urdfPath };
 }
 
-export function loadURDF(type: RobotType): Promise<URDFRobot> {
+export function loadURDF(type: Robots): Promise<URDFRobot> {
     const manager = new LoadingManager();
     const loader = new URDFLoader(manager);
     const pkg = getPackage(type);

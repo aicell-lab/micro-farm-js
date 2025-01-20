@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { MovePayload } from '../types/actionType';
 
-export function createDefaultActorMesh(): THREE.Mesh {
+export function createDefaultActorMesh(): THREE.Object3D {
+    let object = new THREE.Object3D();
     const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
     const material = new THREE.MeshBasicMaterial({ color: 0x008822 });
     let mesh = new THREE.Mesh(geometry, material);
@@ -10,18 +11,19 @@ export function createDefaultActorMesh(): THREE.Mesh {
     const edgeMaterial = new THREE.LineBasicMaterial({ color: 0x222222 });
     const edgeLines = new THREE.LineSegments(edges, edgeMaterial);
     mesh.add(edgeLines);
-    return mesh;
+    object.add(mesh);
+    return object;
 }
 
 export abstract class Actor {
-    mesh: THREE.Mesh;
+    object: THREE.Object3D;
     velocity: THREE.Vector3;
     acceleration: THREE.Vector3;
 
-    constructor(mesh: THREE.Mesh) {
+    constructor(object: THREE.Object3D) {
         this.velocity = new THREE.Vector3();
         this.acceleration = new THREE.Vector3();
-        this.mesh = mesh;
+        this.object = object;
     }
 
     update(delta: number) {
@@ -30,7 +32,7 @@ export abstract class Actor {
 
     private updatePosition(delta: number) {
         this.velocity.add(this.acceleration.clone().multiplyScalar(delta));
-        this.mesh.position.add(this.velocity.clone().multiplyScalar(delta));
+        this.object.position.add(this.velocity.clone().multiplyScalar(delta));
 
         const dampingFactor = 1 - Math.min(1, 5 * delta);
         this.velocity.multiplyScalar(dampingFactor);
