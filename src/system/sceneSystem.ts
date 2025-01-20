@@ -4,7 +4,7 @@ import { SimulationLoop } from './simulationLoop';
 import { Room } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
-import { RoomActors } from '../setup/actor';
+import { RoomActors } from '../actor/actor';
 import { FrameTime } from '../types/frameTime';
 
 function getFrameTime(prevFrameTime?: FrameTime): FrameTime {

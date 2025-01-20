@@ -1,6 +1,12 @@
-import { Actor, Human, RoomActors } from "./actor";
+import { Actor } from "../actor/actor";
+import { Human } from "../actor/human";
 import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
+
+export interface RoomActors {
+    player: Human;
+
+}
 
 function setActorPosition(actor: Actor) {
     const boundingBox = new THREE.Box3().setFromObject(actor.mesh);

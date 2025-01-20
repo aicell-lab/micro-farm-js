@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { MovePayload } from '../types/actionType';
 
-function createDefaultActorMesh(): THREE.Mesh {
+export function createDefaultActorMesh(): THREE.Mesh {
     const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
     const material = new THREE.MeshBasicMaterial({ color: 0x008822 });
     let mesh = new THREE.Mesh(geometry, material);
@@ -44,25 +44,6 @@ export abstract class Actor {
 
 }
 
-export class Human extends Actor {
 
-    constructor() {
-        super(createDefaultActorMesh());
-    }
 
-    handleMove(p: MovePayload): void {
-        const acc = 10;
-        if (p.forward) this.acceleration.z = -acc;
-        else if (p.backward) this.acceleration.z = acc;
-        else this.acceleration.z = 0;
 
-        if (p.left) this.acceleration.x = -acc;
-        else if (p.right) this.acceleration.x = acc;
-        else this.acceleration.x = 0;
-    }
-}
-
-export interface RoomActors {
-    player: Human;
-
-}

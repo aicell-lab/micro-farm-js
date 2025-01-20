@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { Room } from './room';
-import { RoomActors } from './actor';
+import { RoomActors } from '../actor/actor';
 
 export class SceneFactory {
     private room: Room;
