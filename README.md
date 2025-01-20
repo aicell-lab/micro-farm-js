@@ -38,23 +38,11 @@ micro-farm-js/
 ├── tsconfig.json      # TypeScript configuration
 ├── vite.config.ts     # Vite configuration
 ├── public/            # Public assets directory
-│   └── assets.zip     # (Download zip separately)
+│   ├── assets.zip     # (Download separately)
+│   └── packages/      # URDF packages (Download separately)
 ├─── dist/             # Build output 
 └─── src/              # Source code
 ```
 
 ### Assets
-Download assets separately and store them in a directory named `public`.
- ```bash
-mkdir -p public
-wget -O ./public/assets.zip <URL>
- ```
- Replace `<URL>` with the download [link](https://www.dropbox.com/scl/fi/nt8shjhr498602uz5pg0o/output.zip?rlkey=eygfbhecelvjnxclxtend8pao&st=m9vl3e5i&dl=1).
-
- ## Installation via Docker
-```bash
-git clone git@github.com:aicell-lab/micro-farm-js.git
-cd micro-farm-js
-docker build -t micro-farm-js .
-docker run -it --rm -p 80:80 --name micro-farm-js micro-farm-js
- ```
+Download asset files separately and store them in a directory named `public`. There is a SciLifeLab Google Drive folder for the asset files ([link](https://drive.google.com/drive/folders/1g0Fn1z1HypzZXlIOSOknS61B0Xc6bXgN?usp=sharing)).
