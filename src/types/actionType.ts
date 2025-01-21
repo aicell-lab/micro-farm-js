@@ -1,14 +1,20 @@
 
-export enum ActionType {
-    MOVE
+export enum Actions {
+    PLAYER_MOVE,
+    ARM_BASE_MOVE,
 }
 
 export interface MovePayload {
     forward: boolean;
     backward: boolean;
     left: boolean;
-    right: boolean
+    right: boolean;
+}
+
+export interface AnglePayload {
+    angle: Number;
 }
 
 export type ActionPayload =
-    | { type: ActionType.MOVE; payload: MovePayload };
+    | { type: Actions.PLAYER_MOVE; payload: MovePayload }
+    | { type: Actions.ARM_BASE_MOVE; payload: AnglePayload };

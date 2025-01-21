@@ -12,9 +12,11 @@ export class ActorController {
     }
 
     handleUserInput() {
-        let actions = this.inputListener.getActions();
-        actions.forEach(action => {
+        this.inputListener.getPlayerActions().forEach(action => {
             action.execute(this.actors.player);
+        });
+        this.inputListener.getArmActions().forEach(action => {
+            action.execute(this.actors.table);
         });
     }
 

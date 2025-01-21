@@ -8,6 +8,7 @@ interface SimState {
 
 export function simPhysicsStep(state: SimState, delta: number): void {
     state.actors.player.update(delta);
+    state.actors.table.update(delta);
 }
 
 export class SimulationLoop {

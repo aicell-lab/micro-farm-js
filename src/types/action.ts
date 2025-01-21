@@ -1,4 +1,4 @@
-import { ActionPayload, ActionType } from "./actionType";
+import { ActionPayload, Actions } from "./actionType";
 import { Actor } from "../actor/actor";
 
 export class Action {
@@ -10,8 +10,11 @@ export class Action {
 
     execute(actor: Actor) {
         switch (this.action.type) {
-            case ActionType.MOVE:
+            case Actions.PLAYER_MOVE:
                 actor.handleMove(this.action.payload);
+                break;
+            case Actions.ARM_BASE_MOVE:
+                actor.handleBaseMove(this.action.payload);
                 break;
         }
     }

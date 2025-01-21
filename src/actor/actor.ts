@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { MovePayload } from '../types/actionType';
+import { MovePayload, AnglePayload } from '../types/actionType';
 
 export function createDefaultActorMesh(): THREE.Object3D {
     let object = new THREE.Object3D();
@@ -26,11 +26,7 @@ export abstract class Actor {
         this.object = object;
     }
 
-    update(delta: number) {
-        this.updatePosition(delta);
-    }
-
-    private updatePosition(delta: number) {
+    protected updatePosition(delta: number) {
         this.velocity.add(this.acceleration.clone().multiplyScalar(delta));
         this.object.position.add(this.velocity.clone().multiplyScalar(delta));
 
@@ -42,7 +38,10 @@ export abstract class Actor {
         }
     }
 
+
+    abstract update(delta: number): void;
     abstract handleMove(payload: MovePayload): void;
+    abstract handleBaseMove(payload: AnglePayload): void;
 
 }
 

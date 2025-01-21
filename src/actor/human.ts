@@ -1,4 +1,4 @@
-import { MovePayload } from '../types/actionType';
+import { MovePayload, AnglePayload } from '../types/actionType';
 import { Actor, createDefaultActorMesh } from './actor';
 
 export class Human extends Actor {
@@ -16,6 +16,13 @@ export class Human extends Actor {
         if (p.left) this.acceleration.x = -acc;
         else if (p.right) this.acceleration.x = acc;
         else this.acceleration.x = 0;
+    }
+
+    handleBaseMove(_: AnglePayload): void {
+    }
+
+    update(delta: number): void {
+        this.updatePosition(delta);
     }
 }
 

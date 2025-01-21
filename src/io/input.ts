@@ -1,6 +1,6 @@
 import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
-import { MovePayload, ActionType } from '../types/actionType';
+import { MovePayload, Actions, ActionPayload } from '../types/actionType';
 import { InputKey } from '../types/keys';
 
 export class InputListener {
@@ -32,13 +32,21 @@ export class InputListener {
         if (keys.isPressed(InputKey.ArrowRight)) {
             dir.right = true;
         }
+        const actionPayload: ActionPayload = { type: Actions.PLAYER_MOVE, payload: dir };
 
-        return new Action({ type: ActionType.MOVE, payload: dir });
+        return new Action(actionPayload);
     }
 
-    getActions(): Action[] {
+    getPlayerActions(): Action[] {
         const actions: Action[] = [];
         actions.push(this.getMoveAction());
+        return actions;
+    }
+
+    getArmActions(): Action[] {
+        const actions: Action[] = [];
+        const target: ActionPayload = { type: Actions.ARM_BASE_MOVE, payload: { angle: -2.0 } };
+        actions.push(new Action(target));
         return actions;
     }
 
