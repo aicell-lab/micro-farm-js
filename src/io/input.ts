@@ -2,11 +2,14 @@ import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
 import { MovePayload, Actions, ActionPayload } from '../types/actionType';
 import { InputKey } from '../types/keys';
+import { DashboardController } from '../system/dashboardController';
 
 export class InputListener {
     keyboardListener: KeyboardListener;
+    dashboardController: DashboardController;
 
-    constructor() {
+    constructor(dashboardController: DashboardController) {
+        this.dashboardController = dashboardController;
         this.keyboardListener = new KeyboardListener();
     }
 
@@ -44,10 +47,7 @@ export class InputListener {
     }
 
     getArmActions(): Action[] {
-        const actions: Action[] = [];
-        //const target: ActionPayload = { type: Actions.ARM_BASE_MOVE, payload: { angle: -2.0 } };
-        //actions.push(new Action(target));
-        return actions;
+        return this.dashboardController.getAndClearQueue();
     }
 
 }

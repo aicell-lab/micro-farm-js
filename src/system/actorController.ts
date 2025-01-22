@@ -6,9 +6,9 @@ export class ActorController {
     private actors: RoomActors;
     private inputListener: InputListener;
 
-    constructor(actors: RoomActors) {
+    constructor(actors: RoomActors, inputListener: InputListener) {
         this.actors = actors;
-        this.inputListener = new InputListener();
+        this.inputListener = inputListener;
     }
 
     handleUserInput() {
@@ -17,6 +17,7 @@ export class ActorController {
         });
         this.inputListener.getArmActions().forEach(action => {
             action.execute(this.actors.table);
+            this.inputListener.dashboardController.updateDisplay();
         });
     }
 

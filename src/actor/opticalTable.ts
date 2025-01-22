@@ -7,18 +7,18 @@ import { URDFRobot, URDFJoint } from 'urdf-loader';
 export class OpticalTable extends Actor {
     table!: URDFRobot;
     slideJoint!: URDFJoint; // range [-3.5, 0]
-    targetAngle: Number;
+    targetAngle: number;
 
     constructor() {
         let table = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
         super(table);
         this.table = table;
         this.slideJoint = table.joints["slide-j"];
-        this.targetAngle = this.slideJoint.angle;
+        this.targetAngle = this.slideJoint.angle as number;
     }
 
-    getCurrentAngle(): Number {
-        return this.slideJoint.angle;
+    getCurrentAngle(): number {
+        return this.slideJoint.angle as number;
     }
 
     handleMove(_: MovePayload): void {
@@ -30,12 +30,12 @@ export class OpticalTable extends Actor {
 
     update(delta: number): void {
         const speed = 1.0;
-        const currentAngle = this.getCurrentAngle() as number;
-        const angleDifference = this.targetAngle as number - currentAngle;
+        const currentAngle = this.getCurrentAngle();
+        const angleDifference = this.targetAngle - currentAngle;
         const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * delta);
         this.slideJoint.setJointValue(currentAngle + step);
         if (Math.abs(angleDifference) < 0.01) {
-            this.slideJoint.setJointValue(this.targetAngle as number);
+            this.slideJoint.setJointValue(this.targetAngle);
         }
     }
 }

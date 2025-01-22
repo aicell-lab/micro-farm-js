@@ -12,7 +12,7 @@ export interface MovePayload {
 }
 
 export interface AnglePayload {
-    angle: Number;
+    angle: number;
 }
 
 export type ActionPayload =
