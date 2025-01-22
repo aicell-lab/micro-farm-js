@@ -9,10 +9,15 @@ export class DashboardController {
     constructor(actors: RoomActors) {
         this.gui = new GUI()
         const tableFolder = this.gui.addFolder('Table')
-        let p = actors.table.object.position;
-        tableFolder.add(p, 'x', 0, 5.0, 0.02);
-        tableFolder.add(p, 'y', 0, Math.PI * 2);
-        tableFolder.add(p, 'z', 0, Math.PI * 2);
+        let table = actors.table;
+        tableFolder.add({
+            get base() {
+                return table.targetAngle;
+            },
+            set base(value) {
+                table.targetAngle = value;
+            },
+        }, 'base', -3.5, 0.0, 0.02);
         tableFolder.open();
     }
 

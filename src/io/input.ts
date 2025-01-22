@@ -45,8 +45,8 @@ export class InputListener {
 
     getArmActions(): Action[] {
         const actions: Action[] = [];
-        const target: ActionPayload = { type: Actions.ARM_BASE_MOVE, payload: { angle: -2.0 } };
-        actions.push(new Action(target));
+        //const target: ActionPayload = { type: Actions.ARM_BASE_MOVE, payload: { angle: -2.0 } };
+        //actions.push(new Action(target));
         return actions;
     }
 
