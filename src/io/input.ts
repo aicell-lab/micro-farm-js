@@ -3,6 +3,7 @@ import { Action } from '../types/action';
 import { MovePayload, Actions, ActionPayload } from '../types/actionType';
 import { InputKey } from '../types/keys';
 import { DashboardController } from '../system/dashboardController';
+import { ArmCommand } from '../actor/armState';
 
 export class InputListener {
     keyboardListener: KeyboardListener;
@@ -46,7 +47,7 @@ export class InputListener {
         return actions;
     }
 
-    getArmActions(): Action[] {
+    getArmCommands(): ArmCommand[] {
         return this.dashboardController.getAndClearQueue();
     }
 

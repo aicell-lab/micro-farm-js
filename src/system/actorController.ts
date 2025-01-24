@@ -15,8 +15,8 @@ export class ActorController {
         this.inputListener.getPlayerActions().forEach(action => {
             action.execute(this.actors.player);
         });
-        this.inputListener.getArmActions().forEach(action => {
-            action.execute(this.actors.table);
+        this.inputListener.getArmCommands().forEach(command => {
+            this.actors.table.handleArmCommand(command);
             this.inputListener.dashboardController.updateDisplay();
         });
     }

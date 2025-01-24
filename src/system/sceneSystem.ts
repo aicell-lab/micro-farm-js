@@ -25,7 +25,7 @@ export class SceneSystem {
 
   constructor(room: Room, actors: RoomActors, scene: THREE.Scene) {
     this.cameraController = new CameraController(actors.player.object);
-    this.dashboardController = new DashboardController(actors);
+    this.dashboardController = new DashboardController();
     this.renderController = new RenderController(scene, this.cameraController.getCamera());
     this.actorController = new ActorController(actors, new InputListener(this.dashboardController));
     this.simulationLoop = new SimulationLoop(room, actors);

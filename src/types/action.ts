@@ -13,9 +13,6 @@ export class Action {
             case Actions.PLAYER_MOVE:
                 actor.handleMove(this.action.payload);
                 break;
-            case Actions.ARM_BASE_MOVE:
-                actor.handleBaseMove(this.action.payload);
-                break;
         }
     }
 }

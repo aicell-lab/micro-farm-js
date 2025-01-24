@@ -1,20 +1,21 @@
 import { Actor } from './actor';
-import { MovePayload, AnglePayload } from '../types/actionType';
+import { MovePayload } from '../types/actionType';
 import { Robots } from '../setup/constants';
 import { Assets } from '../res/assets';
 import { URDFRobot, URDFJoint } from 'urdf-loader';
+import { ArmStateMachine, ArmCommand, ArmState } from './armState';
 
 export class OpticalTable extends Actor {
     table!: URDFRobot;
     slideJoint!: URDFJoint; // range [-3.5, 0]
-    targetAngle: number;
+    armFSM: ArmStateMachine;
 
     constructor() {
         let table = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
         super(table);
         this.table = table;
         this.slideJoint = table.joints["slide-j"];
-        this.targetAngle = this.slideJoint.angle as number;
+        this.armFSM = new ArmStateMachine();
     }
 
     getCurrentAngle(): number {
@@ -24,18 +25,30 @@ export class OpticalTable extends Actor {
     handleMove(_: MovePayload): void {
     }
 
-    handleBaseMove(payload: AnglePayload): void {
-        this.targetAngle = payload.angle;
+    public getArmState(): ArmState {
+        return this.armFSM.getState();
+    }
+
+    public handleArmCommand(newCommand: ArmCommand): void {
+        this.armFSM.transition(newCommand);
+    }
+
+    private getTargetAngle(): number {
+        return this.armFSM.getTargetAngle();
     }
 
     update(delta: number): void {
+        if (this.armFSM.getState() == ArmState.Idle) {
+            return;
+        }
+
         const speed = 1.0;
         const currentAngle = this.getCurrentAngle();
-        const angleDifference = this.targetAngle - currentAngle;
+        const angleDifference = this.getTargetAngle() - currentAngle;
         const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * delta);
         this.slideJoint.setJointValue(currentAngle + step);
         if (Math.abs(angleDifference) < 0.01) {
-            this.slideJoint.setJointValue(this.targetAngle);
+            this.slideJoint.setJointValue(this.getTargetAngle());
         }
     }
 }

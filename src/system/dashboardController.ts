@@ -1,51 +1,45 @@
 import { GUI } from 'dat.gui'
-import { RoomActors } from '../actor/roomActors';
-import { Action } from '../types/action';
-import { Actions, ActionPayload } from '../types/actionType';
+import { ArmCommand } from '../actor/armState';
 
 /* Must be instantiated after the CameraController class. */
 export class DashboardController {
 
     private gui: GUI;
-    private actionQueue: Array<Action> = [];
-    private baseController!: dat.GUIController;
+    private actionQueue: Array<ArmCommand> = [];
 
-    constructor(actors: RoomActors) {
-        this.gui = new GUI()
-        const tableFolder = this.gui.addFolder('Table')
-        let table = actors.table;
-        const self = this;
-
-        this.baseController = tableFolder.add({
-            get base(): number {
-                return table.targetAngle;
-            },
-            set base(value: number) {
-                self.addBaseMoveActionToQueue(value);
-            },
-        }, 'base', -3.5, 0.0, 0.02);
-
+    constructor() {
+        this.gui = new GUI();
+        const tableFolder = this.gui.addFolder('Table');
+        tableFolder.add({ armGotoA: () => this.armGotoA() }, 'armGotoA').name('Action 1');
+        tableFolder.add({ armGotoB: () => this.armGotoB() }, 'armGotoB').name('Action 2');
+        tableFolder.add({ armStop: () => this.armStop() }, 'armStop').name('Action 3');
         tableFolder.open();
     }
 
-    private createBaseMoveAction(value: number): Action {
-        const target: ActionPayload = { type: Actions.ARM_BASE_MOVE, payload: { angle: value } };
-        return new Action(target);
+    private armGotoA() {
+        console.log('armGotoA command');
+        this.actionQueue.push(ArmCommand.GOTO_A);
     }
 
-    private addBaseMoveActionToQueue(value: number) {
-        this.actionQueue = [];
-        this.actionQueue.push(this.createBaseMoveAction(value));
+    private armGotoB() {
+        console.log('armGotoB command');
+        this.actionQueue.push(ArmCommand.GOTO_B);
     }
 
-    public getAndClearQueue(): Array<Action> {
+    private armStop() {
+        console.log('armStop command');
+        this.actionQueue.push(ArmCommand.STOP);
+    }
+
+    public getAndClearQueue(): Array<ArmCommand> {
         const queue = [...this.actionQueue];
         this.actionQueue = [];
         return queue;
     }
 
     public updateDisplay() {
-        this.baseController.updateDisplay();
+        //this.baseController.updateDisplay();
     }
 
 }
+
