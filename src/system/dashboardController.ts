@@ -10,9 +10,9 @@ export class DashboardController {
     constructor() {
         this.gui = new GUI();
         const tableFolder = this.gui.addFolder('Table');
-        tableFolder.add({ armGotoA: () => this.armGotoA() }, 'armGotoA').name('Action 1');
-        tableFolder.add({ armGotoB: () => this.armGotoB() }, 'armGotoB').name('Action 2');
-        tableFolder.add({ armStop: () => this.armStop() }, 'armStop').name('Action 3');
+        tableFolder.add({ armGotoA: () => this.armGotoA() }, 'armGotoA').name('Position A');
+        tableFolder.add({ armGotoB: () => this.armGotoB() }, 'armGotoB').name('Position B');
+        tableFolder.add({ armStop: () => this.armStop() }, 'armStop').name('STOP');
         tableFolder.open();
     }
 
