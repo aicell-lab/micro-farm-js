@@ -22,6 +22,7 @@ export class SceneFactory {
         scene.add(this.actors.player.object);
         scene.add(this.actors.table.object);
         scene.add(this.room.floor.object);
+        scene.add(this.room.cube.object);
     }
 }
 
@@ -29,7 +30,8 @@ function createLights(): THREE.Light[] {
     const dirLight = new THREE.DirectionalLight(0xffffff, 1);
     dirLight.position.set(5, 5, 5).normalize();
     const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
-    return [dirLight, ambientLight];
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x222222, 0.2); 
+    return [dirLight, ambientLight, hemiLight];
 }
 
 
