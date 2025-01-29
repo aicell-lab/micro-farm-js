@@ -17,7 +17,6 @@ export class ActorController {
         });
         this.inputListener.getArmCommands().forEach(command => {
             this.actors.table.handleArmCommand(command);
-            this.inputListener.dashboardController.updateDisplay();
         });
     }
 

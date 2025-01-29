@@ -21,9 +21,7 @@ export class SceneFactory {
     private populateScene(scene: THREE.Scene): void {
         scene.add(this.actors.player.object);
         scene.add(this.actors.table.object);
-
         scene.add(this.room.floor.object);
-        //scene.add(this.room.opticalTable.object);
     }
 }
 

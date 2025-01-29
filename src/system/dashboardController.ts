@@ -36,10 +36,5 @@ export class DashboardController {
         this.actionQueue = [];
         return queue;
     }
-
-    public updateDisplay() {
-        //this.baseController.updateDisplay();
-    }
-
 }
 
