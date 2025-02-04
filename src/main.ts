@@ -3,13 +3,14 @@ import { Assets } from './res/assets';
 import { ActorFactory } from './setup/actorFactory';
 import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
-import ammo from "ammo.js";
 
 
 async function initiAmmo() {
     try {
-        const Ammo = await ammo.bind(window)();
-        console.log(new Ammo.btVector3(12, 2, 3).x());
+        //const Ammo = await ammo.bind(window)();
+        const Ammo = (await (await import('ammojs-typed')).default()) as typeof import('ammojs-typed').default;
+        console.log(new Ammo.btVector3(11, 2, 3).x());
+        
     } catch (error) {
         console.error('Error initializing Ammo.js:', error);
     }
