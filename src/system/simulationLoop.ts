@@ -1,6 +1,7 @@
 import { Room } from '../setup/room';
 import { RoomActors } from '../actor/roomActors';
 import { PhysicsWorld } from './physicsWorld';
+import * as THREE from 'three';
 
 interface SimState {
     actors: RoomActors;
@@ -23,6 +24,7 @@ export class SimulationLoop {
         this.world = new PhysicsWorld();
         room.cube.addPhysics(1, this.world);
         room.floor.addPhysics(0, this.world);
+        room.cube.applyImpulse(new THREE.Vector3(4.5, 0, 0));
     }
 
     getSimState(): SimState {
@@ -31,7 +33,7 @@ export class SimulationLoop {
 
     step(dt: number): void {
         simPhysicsStep(this.getSimState(), dt);
-        this.world.step(dt);
+        this.world.step(dt/2.0);
         this.room.cube.updateFromPhysics();
     }
 } 

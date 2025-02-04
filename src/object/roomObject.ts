@@ -19,7 +19,7 @@ export abstract class RoomObject {
         bbox.getSize(size);
         const halfExtents = new Ammo.btVector3(size.x / 2, size.y / 2, size.z / 2);
         const shape = new Ammo.btBoxShape(halfExtents);
-        
+
         return shape;
     }
 
@@ -49,6 +49,21 @@ export abstract class RoomObject {
         this.body.getMotionState().getWorldTransform(transform);
         const origin = transform.getOrigin();
         this.object.position.set(origin.x(), origin.y(), origin.z());
+        const rotation = transform.getRotation();
+        this.object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
     }
+
+    applyImpulse(force: THREE.Vector3, relativePosition?: THREE.Vector3): void {
+        if (!this.body) return;
+
+        const Ammo = AmmoSingleton.get();
+        const impulse = new Ammo.btVector3(force.x, force.y, force.z);
+        const relPos = relativePosition
+            ? new Ammo.btVector3(relativePosition.x, relativePosition.y, relativePosition.z)
+            : new Ammo.btVector3(0, 0, 0);
+
+        this.body.applyImpulse(impulse, relPos);
+    }
+
 }
 
