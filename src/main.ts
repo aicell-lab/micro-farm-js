@@ -5,21 +5,27 @@ import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
 
 
-async function initiAmmo() {
-    try {
-        //const Ammo = await ammo.bind(window)();
-        const Ammo = (await (await import('ammojs-typed')).default()) as typeof import('ammojs-typed').default;
-        console.log(new Ammo.btVector3(11, 2, 3).x());
-        
-    } catch (error) {
-        console.error('Error initializing Ammo.js:', error);
+class AmmoSingleton {
+    private static instance: typeof import("ammojs-typed").default | null = null;
+    static async init() {
+        if (!this.instance) {
+            this.instance = (await (await import("ammojs-typed")).default()) as typeof import("ammojs-typed").default;
+        }
+    }
+    static get() {
+        if (!this.instance) {
+            throw new Error("Ammo has not been initialized. Call AmmoSingleton.init() first.");
+        }
+        return this.instance;
     }
 }
 
 
 async function initializeApp() {
 
-    await initiAmmo();
+    await AmmoSingleton.init();
+    let a = AmmoSingleton.get();
+    console.log(new a.btVector3(11, 2, 3).x());
 
     await Assets.init();
     let room = new RoomObjectFactory().createRoom();
