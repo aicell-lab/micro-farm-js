@@ -11,6 +11,18 @@ export abstract class RoomObject {
         this.object = object;
     }
 
+    getBoxShape() {
+        const Ammo = AmmoSingleton.get();
+
+        const bbox = new THREE.Box3().setFromObject(this.object);
+        const size = new THREE.Vector3();
+        bbox.getSize(size);
+        const halfExtents = new Ammo.btVector3(size.x / 2, size.y / 2, size.z / 2);
+        const shape = new Ammo.btBoxShape(halfExtents);
+        
+        return shape;
+    }
+
     addPhysics(mass: number, physicsWorld: PhysicsWorld): void {
         const Ammo = AmmoSingleton.get();
         const transform = new Ammo.btTransform();
@@ -22,7 +34,7 @@ export abstract class RoomObject {
         ));
 
         const motionState = new Ammo.btDefaultMotionState(transform);
-        const shape = new Ammo.btBoxShape(new Ammo.btVector3(0.5, 0.5, 0.5));
+        const shape = this.getBoxShape();
         const localInertia = new Ammo.btVector3(0, 0, 0);
         if (mass > 0) shape.calculateLocalInertia(mass, localInertia);
         const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);

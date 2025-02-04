@@ -22,6 +22,7 @@ export class SimulationLoop {
         this.actors = actors;
         this.world = new PhysicsWorld();
         room.cube.addPhysics(1, this.world);
+        room.floor.addPhysics(0, this.world);
     }
 
     getSimState(): SimState {
