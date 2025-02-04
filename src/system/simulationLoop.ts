@@ -1,5 +1,6 @@
 import { Room } from '../setup/room';
 import { RoomActors } from '../actor/roomActors';
+import { PhysicsWorld } from './physicsWorld';
 
 interface SimState {
     actors: RoomActors;
@@ -14,17 +15,22 @@ export function simPhysicsStep(state: SimState, delta: number): void {
 export class SimulationLoop {
     private room: Room;
     private actors: RoomActors;
+    private world: PhysicsWorld;
 
     constructor(room: Room, actors: RoomActors) {
         this.room = room;
         this.actors = actors;
+        this.world = new PhysicsWorld();
+        room.cube.addPhysics(1, this.world);
     }
 
     getSimState(): SimState {
         return { actors: this.actors, room: this.room }
     }
 
-    step(delta: number): void {
-        simPhysicsStep(this.getSimState(), delta);
+    step(dt: number): void {
+        simPhysicsStep(this.getSimState(), dt);
+        this.world.step(dt);
+        this.room.cube.updateFromPhysics();
     }
 } 
