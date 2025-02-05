@@ -11,7 +11,7 @@ export abstract class RoomObject {
         this.object = object;
     }
 
-    getBoxShape() {
+    getBoxShape(): Ammo.btBoxShape {
         const Ammo = AmmoSingleton.get();
 
         const bbox = new THREE.Box3().setFromObject(this.object);
@@ -39,7 +39,7 @@ export abstract class RoomObject {
         if (mass > 0) shape.calculateLocalInertia(mass, localInertia);
         const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);
         this.body = new Ammo.btRigidBody(rbInfo);
-        physicsWorld.addRigidBody(this.body);
+        physicsWorld.addRigidBody(this.body, this.object);
     }
 
     updateFromPhysics(): void {
