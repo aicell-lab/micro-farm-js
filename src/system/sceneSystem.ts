@@ -7,10 +7,8 @@ import { RenderController } from './renderController';
 import { RoomActors } from '../actor/roomActors';
 import { DashboardController } from './dashboardController';
 import { InputListener } from '../io/input';
-import { CollisionController } from './collisionController';
 
 export class SceneSystem {
-  private collisionController: CollisionController;
   private dashboardController: DashboardController;
   private actorController: ActorController;
   private cameraController: CameraController;
@@ -25,9 +23,6 @@ export class SceneSystem {
     this.actorController = new ActorController(actors, new InputListener(this.dashboardController));
     this.simulationLoop = new SimulationLoop(room, actors);
     this.clock = new THREE.Clock();
-    this.collisionController = new CollisionController();
-    this.collisionController.addObject(room.cube.object);
-    this.collisionController.addObject(actors.player.object);
   }
 
   runSimulationLoop = () => {
@@ -38,7 +33,6 @@ export class SceneSystem {
   };
 
   processNextFrame() {
-    this.collisionController.checkCollisions();
     this.actorController.handleUserInput();
     this.simulationLoop.step(this.clock.getDelta());
     this.renderController.render();

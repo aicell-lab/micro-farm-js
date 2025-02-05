@@ -2,11 +2,30 @@ import * as THREE from 'three';
 import Ammo from 'ammojs-typed';
 import { AmmoSingleton } from '../setup/ammoSingleton';
 
+function changeObjectColor(object: THREE.Object3D, color: THREE.Color | string | number) {
+    object.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material) {
+            if (Array.isArray(child.material)) {
+                child.material.forEach((mat) => {
+                    mat.color.set(color);
+                    mat.needsUpdate = true;
+                });
+            } else {
+                child.material.color.set(color);
+                child.material.needsUpdate = true;
+            }
+        }
+    });
+}
+
 export class PhysicsWorld {
     private world: Ammo.btDiscreteDynamicsWorld;
     private rigidBodies: Ammo.btRigidBody[] = [];
     private objectMap: Map<number, THREE.Object3D> = new Map();
     private nextUserIndex = 0;
+
+    private originalMaterials: Map<THREE.Object3D, THREE.Material | THREE.Material[]> = new Map();
+    private collidingObjects: Set<THREE.Object3D> = new Set();
 
     constructor() {
         const Ammo = AmmoSingleton.get();
@@ -22,6 +41,9 @@ export class PhysicsWorld {
     step(dt: number) {
         const maxSubSteps = 10;
         this.world.stepSimulation(dt, maxSubSteps);
+
+
+        const newColliding = new Set<THREE.Object3D>();
 
         const dispatcher = this.world.getDispatcher();
         const numManifolds = dispatcher.getNumManifolds();
@@ -40,26 +62,58 @@ export class PhysicsWorld {
             }
 
             if (collisionDetected) {
-                /*console.log("Collision detected.");
                 const objectA = this.objectMap.get(bodyA.getUserIndex());
                 const objectB = this.objectMap.get(bodyB.getUserIndex());
-                let mesh: THREE.Mesh | undefined = undefined;
+                const collisionColor = new THREE.Color(0.5, 0.5, 0.5);
 
-                if (objectB instanceof THREE.Mesh) {
-                    mesh = objectB;
-                } else if (objectB) {
-                    objectB.traverse((child) => {
-                        if (child instanceof THREE.Mesh && !mesh) {
-                            mesh = child;
-                        }
-                    });
+                if (objectA) {
+                    newColliding.add(objectA);
+                    changeObjectColor(objectA, collisionColor);
                 }
-
-                if (mesh) {
-                    (mesh.material as THREE.MeshStandardMaterial).color.set(0xff0000);
-                }*/
+                if (objectB) {
+                    newColliding.add(objectB);
+                    changeObjectColor(objectB, collisionColor);
+                }
             }
         }
+
+        this.collidingObjects.forEach((object) => {
+            if (!newColliding.has(object)) {
+                this.restoreOriginalMaterial(object);
+            }
+        });
+
+        this.collidingObjects = newColliding;
+    }
+
+    private storeOriginalMaterial(object: THREE.Object3D) {
+        object.traverse((child) => {
+            if (child instanceof THREE.Mesh && child.material) {
+                if (!this.originalMaterials.has(child)) {
+                    if (Array.isArray(child.material)) {
+                        this.originalMaterials.set(child, child.material.map(mat => mat.clone()));
+                    } else {
+                        this.originalMaterials.set(child, child.material.clone());
+                    }
+                }
+            }
+        });
+    }
+
+    private restoreOriginalMaterial(object: THREE.Object3D) {
+        object.traverse((child) => {
+            if (child instanceof THREE.Mesh && this.originalMaterials.has(child)) {
+                const originalMaterial = this.originalMaterials.get(child)!;
+
+                if (Array.isArray(originalMaterial)) {
+                    child.material = originalMaterial.map(mat => mat.clone());
+                } else {
+                    child.material = originalMaterial.clone();
+                }
+
+                child.material.needsUpdate = true;
+            }
+        });
     }
 
     addRigidBody(body: Ammo.btRigidBody, object: THREE.Object3D): void {
@@ -68,6 +122,7 @@ export class PhysicsWorld {
         this.objectMap.set(userIndex, object);
         this.rigidBodies.push(body);
         this.world.addRigidBody(body);
+        this.storeOriginalMaterial(object);
     }
 
 }
