@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { Room } from './room';
-import { RoomActors } from '../actor/roomActors';
+import { Actors } from '../entity/roomActors';
 import { Sky } from 'three/examples/jsm/Addons.js';
 
 export class SceneFactory {
     private room: Room;
-    private actors: RoomActors;
+    private actors: Actors;
 
-    constructor(room: Room, actors: RoomActors) {
+    constructor(room: Room, actors: Actors) {
         this.room = room;
         this.actors = actors;
     }

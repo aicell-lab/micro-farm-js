@@ -3,7 +3,7 @@ import { Action } from '../types/action';
 import { MovePayload, Actions, ActionPayload } from '../types/actionType';
 import { InputKey } from '../types/keys';
 import { DashboardController } from '../system/dashboardController';
-import { ArmCommand } from '../actor/armState';
+import { ArmCommand } from '../entity/armState';
 
 export class InputListener {
     keyboardListener: KeyboardListener;

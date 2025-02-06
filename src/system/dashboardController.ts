@@ -1,5 +1,5 @@
 import { GUI } from 'dat.gui'
-import { ArmCommand } from '../actor/armState';
+import { ArmCommand } from '../entity/armState';
 
 /* Must be instantiated after the CameraController class. */
 export class DashboardController {

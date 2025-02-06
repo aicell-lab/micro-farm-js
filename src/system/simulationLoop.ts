@@ -1,10 +1,10 @@
 import { Room } from '../setup/room';
-import { RoomActors } from '../actor/roomActors';
+import { Actors } from '../entity/roomActors';
 import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 
 interface SimState {
-    actors: RoomActors;
+    actors: Actors;
     room: Room;
 }
 
@@ -15,10 +15,10 @@ export function simPhysicsStep(state: SimState, delta: number): void {
 
 export class SimulationLoop {
     private room: Room;
-    private actors: RoomActors;
+    private actors: Actors;
     private world: PhysicsWorld;
 
-    constructor(room: Room, actors: RoomActors, world: PhysicsWorld) {
+    constructor(room: Room, actors: Actors, world: PhysicsWorld) {
         this.room = room;
         this.actors = actors;
         this.world = world;

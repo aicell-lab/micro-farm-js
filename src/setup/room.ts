@@ -1,4 +1,4 @@
-import { RoomObject } from '../object/roomObject';
+import { RoomObject } from '../entity/roomObject';
 
 export interface Room {
     floor: RoomObject;

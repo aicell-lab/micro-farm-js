@@ -1,12 +1,12 @@
 import { InputListener } from '../io/input';
-import { RoomActors } from '../actor/roomActors';
+import { Actors } from '../entity/roomActors';
 
 export class ActorController {
 
-    private actors: RoomActors;
+    private actors: Actors;
     private inputListener: InputListener;
 
-    constructor(actors: RoomActors, inputListener: InputListener) {
+    constructor(actors: Actors, inputListener: InputListener) {
         this.actors = actors;
         this.inputListener = inputListener;
     }

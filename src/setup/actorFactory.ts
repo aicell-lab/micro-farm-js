@@ -1,15 +1,15 @@
-import { Actor } from "../actor/actor";
+import { Entity } from "../entity/entity";
 import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
-import { RoomActors } from "../actor/roomActors";
+import { Actors } from "../entity/roomActors";
 import { MathUtils } from "three";
 import { MeshStandardMaterial } from 'three';
-import { PlayerController } from "../actor/playerController";
+import { PlayerController } from "../entity/playerController";
 import { Robots } from '../setup/constants';
 import { Assets } from '../res/assets';
-import { ArmController } from "../actor/armController";
+import { ArmController } from "../entity/armController";
 
-function setActorPosition(actor: Actor) {
+function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
     const minY = boundingBox.min.y;
     if (minY < FLOOR_Y_POSITION) {
@@ -42,16 +42,16 @@ export class ActorFactory {
 
     }
 
-    createHuman(): Actor {
+    createHuman(): Entity {
         let playerController = new PlayerController();
-        let human = new Actor(createDefaultActorMesh(), playerController, undefined);
+        let human = new Entity(createDefaultActorMesh(), playerController, undefined);
         setActorPosition(human);
         return human;
     }
 
-    createOpticalTable(): Actor {
+    createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let table = new Actor(tableRobot, undefined, new ArmController(tableRobot));
+        let table = new Entity(tableRobot, undefined, new ArmController(tableRobot));
         table.object.position.y += 0.855;
         table.object.position.x -= 2.0;
         table.object.position.z -= 0.7;
@@ -59,7 +59,7 @@ export class ActorFactory {
         return table;
     }
 
-    createActors(): RoomActors {
+    createActors(): Actors {
         return { player: this.createHuman(), table: this.createOpticalTable() };
     }
 }
