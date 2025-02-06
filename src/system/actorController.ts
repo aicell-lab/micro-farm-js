@@ -16,7 +16,7 @@ export class ActorController {
             action.execute(this.actors.player);
         });
         this.inputListener.getArmCommands().forEach(command => {
-            this.actors.table.handleArmCommand(command);
+            this.actors.table.armController.handleArmCommand(command);
         });
     }
 

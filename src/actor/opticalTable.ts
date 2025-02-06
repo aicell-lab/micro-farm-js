@@ -1,51 +1,17 @@
 import { Actor } from './actor';
-import { Robots } from '../setup/constants';
-import { Assets } from '../res/assets';
-import { URDFRobot, URDFJoint } from 'urdf-loader';
-import { ArmStateMachine, ArmCommand, ArmState } from './armState';
+import { ArmController } from './armController';
 
 export class OpticalTable extends Actor {
-    table!: URDFRobot;
-    slideJoint!: URDFJoint; // range [-3.5, 0]
-    armFSM: ArmStateMachine;
+    armController: ArmController;
 
     constructor() {
-        let table = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        super(table);
-        this.table = table;
-        this.slideJoint = table.joints["slide-j"];
-        this.armFSM = new ArmStateMachine();
-    }
-
-    getCurrentAngle(): number {
-        return this.slideJoint.angle as number;
-    }
-
-    public getArmState(): ArmState {
-        return this.armFSM.getState();
-    }
-
-    public handleArmCommand(newCommand: ArmCommand): void {
-        this.armFSM.transition(newCommand);
-    }
-
-    private getTargetAngle(): number {
-        return this.armFSM.getTargetAngle();
+        let armController = new ArmController();
+        super(armController.getObject());
+        this.armController = armController;
     }
 
     update(delta: number): void {
-        if (this.armFSM.getState() == ArmState.Idle) {
-            return;
-        }
-
-        const speed = 1.0;
-        const currentAngle = this.getCurrentAngle();
-        const angleDifference = this.getTargetAngle() - currentAngle;
-        const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * delta);
-        this.slideJoint.setJointValue(currentAngle + step);
-        if (Math.abs(angleDifference) < 0.01) {
-            this.slideJoint.setJointValue(this.getTargetAngle());
-        }
+        this.armController.update(delta);
     }
 }
 
