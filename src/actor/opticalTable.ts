@@ -1,5 +1,4 @@
 import { Actor } from './actor';
-import { MovePayload } from '../types/actionType';
 import { Robots } from '../setup/constants';
 import { Assets } from '../res/assets';
 import { URDFRobot, URDFJoint } from 'urdf-loader';
@@ -20,9 +19,6 @@ export class OpticalTable extends Actor {
 
     getCurrentAngle(): number {
         return this.slideJoint.angle as number;
-    }
-
-    handleMove(_: MovePayload): void {
     }
 
     public getArmState(): ArmState {

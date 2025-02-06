@@ -11,7 +11,9 @@ export class Action {
     execute(actor: Actor) {
         switch (this.action.type) {
             case Actions.PLAYER_MOVE:
-                actor.handleMove(this.action.payload);
+                if (actor.playerController) {
+                    actor.playerController.handleMove(this.action.payload);
+                }
                 break;
         }
     }

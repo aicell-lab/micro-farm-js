@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { MovePayload } from '../types/actionType';
 import { MeshStandardMaterial } from 'three';
+import { PlayerController } from './playerController';
 
 function createDefaultMaterial(): MeshStandardMaterial {
     const material = new MeshStandardMaterial({
@@ -23,30 +23,13 @@ export function createDefaultActorMesh(): THREE.Object3D {
 
 export abstract class Actor {
     object: THREE.Object3D;
-    velocity: THREE.Vector3;
-    acceleration: THREE.Vector3;
+    playerController?: PlayerController;
 
     constructor(object: THREE.Object3D) {
-        this.velocity = new THREE.Vector3();
-        this.acceleration = new THREE.Vector3();
         this.object = object;
     }
 
-    protected updatePosition(delta: number) {
-        this.velocity.add(this.acceleration.clone().multiplyScalar(delta));
-        this.object.position.add(this.velocity.clone().multiplyScalar(delta));
-
-        const dampingFactor = 1 - Math.min(1, 5 * delta);
-        this.velocity.multiplyScalar(dampingFactor);
-        const velocityThreshold = 0.01;
-        if (this.velocity.lengthSq() < velocityThreshold * velocityThreshold) {
-            this.velocity.set(0, 0, 0);
-        }
-    }
-
-
     abstract update(delta: number): void;
-    abstract handleMove(payload: MovePayload): void;
 
 }
 
