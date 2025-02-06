@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { PhysicsController } from './physicsController';
 
-export abstract class RoomObject {
+export class RoomObject {
     object: THREE.Object3D;
     physicsController?: PhysicsController;
 

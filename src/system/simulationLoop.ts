@@ -22,8 +22,6 @@ export class SimulationLoop {
         this.room = room;
         this.actors = actors;
         this.world = world;
-        //room.cube.physicsController?.addPhysics(1, this.world);
-        //room.floor.addPhysics(0, this.world);
         room.cube.physicsController?.applyImpulse(new THREE.Vector3(4.5, 0, 0));
     }
 
