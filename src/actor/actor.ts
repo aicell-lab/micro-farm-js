@@ -1,15 +1,26 @@
 import * as THREE from 'three';
 import { PlayerController } from './playerController';
+import { ArmController } from './armController';
 
-export abstract class Actor {
+export class Actor {
     object: THREE.Object3D;
     playerController?: PlayerController;
+    armController?: ArmController;
 
-    constructor(object: THREE.Object3D) {
+    constructor(object: THREE.Object3D, playerController?: PlayerController, armController?: ArmController) {
         this.object = object;
+        this.playerController = playerController;
+        this.armController = armController;
     }
 
-    abstract update(delta: number): void;
+    public update(delta: number): void {
+        if (this.playerController) {
+            this.playerController.update(this.object, delta);
+        }
+        if (this.armController) {
+            this.armController.update(delta);
+        }
+    }
 
 }
 

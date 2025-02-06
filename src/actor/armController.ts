@@ -1,5 +1,3 @@
-import { Robots } from '../setup/constants';
-import { Assets } from '../res/assets';
 import { URDFRobot, URDFJoint } from 'urdf-loader';
 import { ArmStateMachine, ArmCommand, ArmState } from './armState';
 import * as THREE from 'three';
@@ -9,8 +7,7 @@ export class ArmController {
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
 
-    constructor() {
-        let table = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
+    constructor(table: URDFRobot) {
         this.table = table;
         this.slideJoint = table.joints["slide-j"];
         this.armFSM = new ArmStateMachine();

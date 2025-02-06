@@ -1,8 +1,7 @@
-import { Human } from "./human";
-import { OpticalTable } from "./opticalTable";
+import { Actor } from "./actor";
 
 export interface RoomActors {
-    player: Human;
-    table: OpticalTable;
+    player: Actor;
+    table: Actor;
 }
 
