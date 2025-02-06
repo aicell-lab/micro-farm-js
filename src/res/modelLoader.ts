@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { FileCollections } from '../types/assetTypes';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
-import { Models } from '../types/models';
-import { modelFilepaths } from '../types/models';
+import { Models } from '../setup/enums';
+import { modelFilepaths } from '../setup/constants';
 
 function applyStandardMaterial(obj: THREE.Object3D) {
     obj.traverse((child) => {

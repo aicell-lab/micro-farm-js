@@ -1,13 +1,13 @@
 import { Entity, EntityOptions } from "../entity/entity";
 import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
-import { Actors } from "../entity/roomActors";
+import { Actors } from '../setup/room';
 import { MathUtils } from "three";
 import { MeshStandardMaterial } from 'three';
 import { PlayerController } from "../entity/playerController";
-import { Robots } from '../setup/constants';
 import { Assets } from '../res/assets';
 import { ArmController } from "../entity/armController";
+import { Robots } from "./enums";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);

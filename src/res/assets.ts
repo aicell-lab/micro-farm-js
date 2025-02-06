@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 import { FileCollections } from "../types/assetTypes";
 import { getFileCollectionsNoThrow } from "./assetOrganizer";
-import { Models } from "../types/models";
 import { loadModels } from './modelLoader';
 
 import { URDFRobot } from 'urdf-loader';
-import { Robots } from '../setup/constants';
 import { loadURDF } from './urdf';
+import { Robots, Models } from '../setup/enums';
 
 export class Assets {
 

@@ -1,6 +1,7 @@
 import { LoadingManager } from 'three';
 import URDFLoader, { URDFRobot } from 'urdf-loader';
-import { Robots, ROS_LAB_NAME, ROS_LAB_PKG_PATH, ROS_LAB_URDF_PATH } from '../setup/constants';
+import { ROS_LAB_NAME, ROS_LAB_PKG_PATH, ROS_LAB_URDF_PATH } from '../setup/constants';
+import { Robots } from '../setup/enums';
 
 export interface URDFPackage {
     packageName: string;

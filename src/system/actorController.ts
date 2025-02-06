@@ -1,5 +1,5 @@
 import { InputListener } from '../io/input';
-import { Actors } from '../entity/roomActors';
+import { Actors } from '../setup/room';
 
 export class ActorController {
 

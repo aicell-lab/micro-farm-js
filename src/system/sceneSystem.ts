@@ -4,10 +4,10 @@ import { SimulationLoop } from './simulationLoop';
 import { Room } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
-import { Actors } from '../entity/roomActors';
 import { DashboardController } from './dashboardController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
+import { Actors } from '../setup/room';
 
 export class SceneSystem {
   private dashboardController: DashboardController;

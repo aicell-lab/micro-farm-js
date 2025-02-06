@@ -1,14 +1,4 @@
-
-export enum ArmState {
-    Idle,
-    Moving,
-}
-
-export enum ArmCommand {
-    GOTO_A,
-    GOTO_B,
-    STOP
-}
+import { ArmState, ArmCommand } from "../setup/enums";
 
 export interface ArmTransition {
     from: ArmState;

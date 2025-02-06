@@ -1,6 +1,6 @@
 import { URDFRobot, URDFJoint } from 'urdf-loader';
-import { ArmStateMachine, ArmCommand, ArmState } from './armState';
-import * as THREE from 'three';
+import { ArmStateMachine } from './armState';
+import { ArmState, ArmCommand } from '../setup/enums';
 
 export class ArmController {
     table: URDFRobot;
@@ -11,10 +11,6 @@ export class ArmController {
         this.table = table;
         this.slideJoint = table.joints["slide-j"];
         this.armFSM = new ArmStateMachine();
-    }
-
-    public getObject(): THREE.Object3D {
-        return this.table;
     }
 
     getCurrentAngle(): number {

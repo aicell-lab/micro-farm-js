@@ -1,5 +1,5 @@
 import { GUI } from 'dat.gui'
-import { ArmCommand } from '../entity/armState';
+import { ArmCommand } from '../setup/enums';
 
 /* Must be instantiated after the CameraController class. */
 export class DashboardController {

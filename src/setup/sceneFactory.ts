@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { Room } from './room';
-import { Actors } from '../entity/roomActors';
+import { Room, Actors } from './room';
 import { Sky } from 'three/examples/jsm/Addons.js';
 
 export class SceneFactory {

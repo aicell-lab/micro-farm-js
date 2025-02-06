@@ -1,5 +1,5 @@
 import { Room } from '../setup/room';
-import { Actors } from '../entity/roomActors';
+import { Actors } from '../setup/room';
 import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 

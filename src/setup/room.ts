@@ -5,3 +5,8 @@ export interface Room {
     cube: Entity;
 }
 
+export interface Actors {
+    player: Entity;
+    table: Entity;
+}
+
