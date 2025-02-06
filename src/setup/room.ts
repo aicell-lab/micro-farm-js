@@ -1,7 +1,7 @@
-import { RoomObject } from '../entity/roomObject';
+import { Entity } from "../entity/entity";
 
 export interface Room {
-    floor: RoomObject;
-    cube: RoomObject;
+    floor: Entity;
+    cube: Entity;
 }
 

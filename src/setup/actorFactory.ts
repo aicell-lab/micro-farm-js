@@ -1,4 +1,4 @@
-import { Entity } from "../entity/entity";
+import { Entity, EntityOptions } from "../entity/entity";
 import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
 import { Actors } from "../entity/roomActors";
@@ -43,15 +43,22 @@ export class ActorFactory {
     }
 
     createHuman(): Entity {
-        let playerController = new PlayerController();
-        let human = new Entity(createDefaultActorMesh(), playerController, undefined);
+        const options: EntityOptions = {
+            object: createDefaultActorMesh(),
+            playerController: new PlayerController()
+        };
+        let human = new Entity(options);
         setActorPosition(human);
         return human;
     }
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let table = new Entity(tableRobot, undefined, new ArmController(tableRobot));
+        const options: EntityOptions = {
+            object: tableRobot,
+            armController: new ArmController(tableRobot)
+        };
+        let table = new Entity(options);
         table.object.position.y += 0.855;
         table.object.position.x -= 2.0;
         table.object.position.z -= 0.7;

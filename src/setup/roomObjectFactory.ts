@@ -5,7 +5,7 @@ import { createNoise2D } from 'simplex-noise';
 import { PhysicsController } from '../entity/physicsController';
 import { Material, MeshStandardMaterial, Mesh } from 'three';
 import { BoxGeometry } from 'three';
-import { Entity } from '../entity/entity';
+import { Entity, EntityOptions } from '../entity/entity';
 
 function createFloorMesh(): THREE.Mesh {
     const floorGeometry = new THREE.PlaneGeometry(10, 10);
@@ -59,8 +59,11 @@ export class RoomObjectFactory {
 
     createFloor(): Entity {
         let obj = createFloorMesh();
-        let physicsController = new PhysicsController(obj, 0, this.world);
-        return new Entity(obj, undefined, undefined, physicsController);
+        const options: EntityOptions = {
+            object: obj,
+            physicsController: new PhysicsController(obj, 0, this.world)
+        };
+        return new Entity(options);
     }
 
     createCube(): Entity {
@@ -70,8 +73,11 @@ export class RoomObjectFactory {
         cube.position.y = 0.5;
         cube.position.x = 1.0;
         cube.position.z = -4.5;
-        let physicsController = new PhysicsController(cube, 1, this.world);
-        return new Entity(cube, undefined, undefined, physicsController);
+        const options: EntityOptions = {
+            object: cube,
+            physicsController: new PhysicsController(cube, 1, this.world)
+        }
+        return new Entity(options);
     }
 
     createRoom(): Room {
