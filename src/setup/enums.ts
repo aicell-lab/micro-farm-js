@@ -16,3 +16,16 @@ export enum ArmCommand {
     GOTO_B,
     STOP
 }
+
+export enum InputKey {
+    ArrowUp = 'ArrowUp',
+    ArrowDown = 'ArrowDown',
+    ArrowLeft = 'ArrowLeft',
+    ArrowRight = 'ArrowRight',
+    Space = 'Space'
+}
+
+export enum Actions {
+    PLAYER_MOVE
+}
+

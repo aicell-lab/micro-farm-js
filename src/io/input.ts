@@ -1,9 +1,8 @@
 import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
-import { MovePayload, Actions, ActionPayload } from '../types/actionType';
-import { InputKey } from '../types/keys';
+import { MovePayload, ActionPayload } from '../types/actionType';
 import { DashboardController } from '../system/dashboardController';
-import { ArmCommand } from '../setup/enums';
+import { ArmCommand, Actions, InputKey } from '../setup/enums';
 
 export class InputListener {
     keyboardListener: KeyboardListener;

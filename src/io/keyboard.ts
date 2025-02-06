@@ -1,4 +1,4 @@
-import { InputKey } from "../types/keys";
+import { InputKey } from "../setup/enums";
 
 export class KeyboardState {
     private keys: { [key in InputKey]?: boolean };

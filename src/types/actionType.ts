@@ -1,7 +1,5 @@
-
-export enum Actions {
-    PLAYER_MOVE
-}
+import { Actions } from "../setup/enums";
+export { Actions }
 
 export interface MovePayload {
     forward: boolean;

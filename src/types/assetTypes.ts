@@ -4,8 +4,5 @@ export interface FileCollections {
     binaryFiles: Map<string, ArrayBuffer>;
 }
 
-export interface BlobCollections {
-    textFileURIs: Map<string, string>;
-    binaryFileURIs: Map<string, string>;
-}
+
 
