@@ -1,10 +1,14 @@
 import { RoomObject } from "./roomObject";
 import { createNoise2D } from 'simplex-noise';
 import * as THREE from 'three';
+import { PhysicsWorld } from "../system/physicsWorld";
+import { PhysicsController } from "./physicsController";
 
 export class Floor extends RoomObject {
-    constructor() {
-        super(createFloor());
+    constructor(world: PhysicsWorld) {
+        let obj = createFloor();
+        let physicsController = new PhysicsController(obj, 0, world);
+        super(obj, physicsController);
     }
 }
 

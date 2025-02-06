@@ -7,6 +7,7 @@ import { RenderController } from './renderController';
 import { RoomActors } from '../actor/roomActors';
 import { DashboardController } from './dashboardController';
 import { InputListener } from '../io/input';
+import { PhysicsWorld } from './physicsWorld';
 
 export class SceneSystem {
   private dashboardController: DashboardController;
@@ -16,12 +17,12 @@ export class SceneSystem {
   private simulationLoop: SimulationLoop;
   private clock: THREE.Clock;
 
-  constructor(room: Room, actors: RoomActors, scene: THREE.Scene) {
+  constructor(room: Room, actors: RoomActors, scene: THREE.Scene, physicsWorld : PhysicsWorld) {
     this.cameraController = new CameraController(actors.player.object);
     this.dashboardController = new DashboardController();
     this.renderController = new RenderController(scene, this.cameraController.getCamera());
     this.actorController = new ActorController(actors, new InputListener(this.dashboardController));
-    this.simulationLoop = new SimulationLoop(room, actors);
+    this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
   }
 

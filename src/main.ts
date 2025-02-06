@@ -4,6 +4,7 @@ import { ActorFactory } from './setup/actorFactory';
 import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
 import { AmmoSingleton } from './setup/ammoSingleton';
+import { PhysicsWorld } from './system/physicsWorld';
 
 async function init() {
     await AmmoSingleton.init();
@@ -11,10 +12,11 @@ async function init() {
 }
 
 function createSceneSystem(): SceneSystem {
-    let room = new RoomObjectFactory().createRoom();
+    let physicsWorld = new PhysicsWorld();
+    let room = new RoomObjectFactory(physicsWorld).createRoom();
     let actors = new ActorFactory().createActors();
     let scene = new SceneFactory(room, actors).createScene();
-    return new SceneSystem(room, actors, scene);
+    return new SceneSystem(room, actors, scene, physicsWorld);
 }
 
 async function runApp() {

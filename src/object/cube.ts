@@ -1,5 +1,7 @@
 import { RoomObject } from "./roomObject";
 import { BoxGeometry, MeshStandardMaterial, Mesh, Material } from "three";
+import { PhysicsWorld } from "../system/physicsWorld";
+import { PhysicsController } from "./physicsController";
 
 function createMaterial(): Material {
     const material = new MeshStandardMaterial({ 
@@ -12,13 +14,15 @@ function createMaterial(): Material {
 
 export class TCube extends RoomObject {
 
-    constructor() {
+    constructor(physicsWorld: PhysicsWorld) {
         const geometry = new BoxGeometry(1, 1, 1);
         const material = createMaterial();
         const cube = new Mesh(geometry, material);
         cube.position.y = 0.5;
         cube.position.x = 1.0;
         cube.position.z = -4.5;
-        super(cube);
+
+        let physicsController = new PhysicsController(cube, 1, physicsWorld); 
+        super(cube, physicsController);
     }
 }

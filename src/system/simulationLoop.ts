@@ -18,13 +18,13 @@ export class SimulationLoop {
     private actors: RoomActors;
     private world: PhysicsWorld;
 
-    constructor(room: Room, actors: RoomActors) {
+    constructor(room: Room, actors: RoomActors, world: PhysicsWorld) {
         this.room = room;
         this.actors = actors;
-        this.world = new PhysicsWorld();
-        room.cube.addPhysics(1, this.world);
-        room.floor.addPhysics(0, this.world);
-        room.cube.applyImpulse(new THREE.Vector3(4.5, 0, 0));
+        this.world = world;
+        //room.cube.physicsController?.addPhysics(1, this.world);
+        //room.floor.addPhysics(0, this.world);
+        room.cube.physicsController?.applyImpulse(new THREE.Vector3(4.5, 0, 0));
     }
 
     getSimState(): SimState {
@@ -34,6 +34,6 @@ export class SimulationLoop {
     step(dt: number): void {
         simPhysicsStep(this.getSimState(), dt);
         this.world.step(dt/2.0);
-        this.room.cube.updateFromPhysics();
+        this.room.cube.physicsController?.updateFromPhysics(this.room.cube.object);
     }
 } 
