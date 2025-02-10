@@ -17,15 +17,8 @@ export enum ArmCommand {
     STOP
 }
 
-export enum InputKey {
-    ArrowUp = 'ArrowUp',
-    ArrowDown = 'ArrowDown',
-    ArrowLeft = 'ArrowLeft',
-    ArrowRight = 'ArrowRight',
-    Space = 'Space'
-}
-
 export enum Actions {
-    PLAYER_MOVE
+    PLAYER_MOVE,
+    PLAYER_ROTATE,
 }
 

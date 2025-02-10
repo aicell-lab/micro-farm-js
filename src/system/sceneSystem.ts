@@ -17,7 +17,7 @@ export class SceneSystem {
   private simulationLoop: SimulationLoop;
   private clock: THREE.Clock;
 
-  constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld : PhysicsWorld) {
+  constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.cameraController = new CameraController(actors.player.object);
     this.dashboardController = new DashboardController();
     this.renderController = new RenderController(scene, this.cameraController.getCamera());
@@ -27,15 +27,15 @@ export class SceneSystem {
   }
 
   runSimulationLoop = () => {
-    this.cameraController.executeWithOffsetHandling(() => {
-      this.processNextFrame();
-    });
+    this.processNextFrame();
     requestAnimationFrame(this.runSimulationLoop);
   };
 
   processNextFrame() {
+    const dt = this.clock.getDelta();
+    this.cameraController.update(dt);
     this.actorController.handleUserInput();
-    this.simulationLoop.step(this.clock.getDelta());
+    this.simulationLoop.step(dt);
     this.renderController.render();
   }
 

@@ -1,8 +1,8 @@
 import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
-import { MovePayload, ActionPayload } from '../types/actionType';
+import { MovePayload, ActionPayload, RotatePayload } from '../types/actionType';
 import { DashboardController } from '../system/dashboardController';
-import { ArmCommand, Actions, InputKey } from '../setup/enums';
+import { ArmCommand, Actions } from '../setup/enums';
 
 export class InputListener {
     keyboardListener: KeyboardListener;
@@ -21,21 +21,40 @@ export class InputListener {
             right: false
         };
 
-        const keys = this.keyboardListener.getKeyboardState();
-
-        if (keys.isPressed(InputKey.ArrowUp)) {
+        const keys = this.keyboardListener.keyDown;
+        if (keys["ArrowUp"] || keys["w"]) {
             dir.forward = true;
         }
-        if (keys.isPressed(InputKey.ArrowDown)) {
+        if (keys["ArrowDown"] || keys["s"]) {
             dir.backward = true;
         }
-        if (keys.isPressed(InputKey.ArrowLeft)) {
+        if (keys["ArrowLeft"] || keys["a"]) {
             dir.left = true;
         }
-        if (keys.isPressed(InputKey.ArrowRight)) {
+        if (keys["ArrowRight"] || keys["d"]) {
             dir.right = true;
         }
+
         const actionPayload: ActionPayload = { type: Actions.PLAYER_MOVE, payload: dir };
+
+        return new Action(actionPayload);
+    }
+
+    getRotateAction(): Action {
+        const rot: RotatePayload = {
+            left: false,
+            right: false
+        };
+
+        const keys = this.keyboardListener.keyDown;
+        if (keys["q"]) {
+            rot.left = true;
+        }
+        if (keys["e"]) {
+            rot.right = true;
+        }
+
+        const actionPayload: ActionPayload = { type: Actions.PLAYER_ROTATE, payload: rot };
 
         return new Action(actionPayload);
     }
@@ -43,6 +62,7 @@ export class InputListener {
     getPlayerActions(): Action[] {
         const actions: Action[] = [];
         actions.push(this.getMoveAction());
+        actions.push(this.getRotateAction());
         return actions;
     }
 

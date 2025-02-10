@@ -9,12 +9,17 @@ export class Action {
     }
 
     execute(actor: Entity) {
+        if (!actor.playerController) {
+            return;
+        }
+        let ctrl = actor.playerController;
+
         switch (this.action.type) {
             case Actions.PLAYER_MOVE:
-                if (actor.playerController) {
-                    actor.playerController.handleMove(this.action.payload);
-                }
+                ctrl.handleMove(this.action.payload);
                 break;
+            case Actions.PLAYER_ROTATE:
+                ctrl.handleRotation(this.action.payload);
         }
     }
 }

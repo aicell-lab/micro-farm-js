@@ -1,16 +1,14 @@
 import * as THREE from 'three';
-import { CameraSetup } from '../setup/cameraSetup';
 
 let rendererInstance: THREE.WebGLRenderer | null = null;
 
-export function setResizeListener(cameraSetup: CameraSetup) {
+export function setResizeListener(camera: THREE.PerspectiveCamera) {
   window.addEventListener('resize', () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
     getRenderer().setSize(width, height);
-    cameraSetup.camera.aspect = width / height;
-    cameraSetup.camera.updateProjectionMatrix();
-    cameraSetup.cameraCtrl.update();
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
   });
 }
 

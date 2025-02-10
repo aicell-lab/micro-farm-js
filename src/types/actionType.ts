@@ -8,5 +8,11 @@ export interface MovePayload {
     right: boolean;
 }
 
+export interface RotatePayload {
+    left: boolean;
+    right: boolean;
+}
+
 export type ActionPayload =
-    | { type: Actions.PLAYER_MOVE; payload: MovePayload };
+    | { type: Actions.PLAYER_MOVE; payload: MovePayload }
+    | { type: Actions.PLAYER_ROTATE; payload: RotatePayload };
