@@ -68,10 +68,10 @@ export class PlayerController {
         const speed = 2.0;
 
         if (p.left) {
-            this.rotationSpeed = speed;
+            this.rotationSpeed = -speed;
         }
         if (p.right) {
-            this.rotationSpeed = -speed;
+            this.rotationSpeed = speed;
         }
     }
 }
