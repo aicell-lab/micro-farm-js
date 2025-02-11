@@ -1,30 +1,60 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Micro Farm Demo</title>
-  </head>
 
-  <style>
-    /* Ensures the body and html occupy the full viewport without scrollbars */
-    body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Micro Farm Demo</title>
+</head>
 
-    /* Makes the Three.js canvas fit the entire window */
-    canvas {
-      display: block; /* Removes inline spacing */
-      position: fixed; /* Sticks to the viewport */
-      top: 0;
-      left: 0;
-    }
-  </style>
+<style>
+  /* Ensures the body and html occupy the full viewport without scrollbars */
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
 
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  /* Makes the Three.js canvas fit the entire window */
+  canvas {
+    display: block;
+    /* Removes inline spacing */
+    position: fixed;
+    /* Sticks to the viewport */
+    top: 0;
+    left: 0;
+  }
+
+  #ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  #ui.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+
+  <div id="ui">
+    <h2>Controls</h2>
+    <p><strong>W A S D</strong> - Move</p>
+    <p><strong>Q / E</strong> - Rotate</p>
+    <p><strong>H</strong> - Hide/Show</p>
+  </div>
+</body>
+
 </html>
