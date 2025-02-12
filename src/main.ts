@@ -5,12 +5,10 @@ import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
 import { AmmoSingleton } from './setup/ammoSingleton';
 import { PhysicsWorld } from './system/physicsWorld';
-import { initHTMLUI } from './system/uiController';
 
 async function init() {
     await AmmoSingleton.init();
     await Assets.init();
-    await initHTMLUI();
 }
 
 function createSceneSystem(): SceneSystem {

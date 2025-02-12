@@ -1,15 +1,15 @@
 import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
 import { MovePayload, ActionPayload, RotatePayload } from '../types/actionType';
-import { DashboardController } from '../system/dashboardController';
 import { ArmCommand, Actions } from '../setup/enums';
+import { UIController } from '../system/uiController';
 
 export class InputListener {
     keyboardListener: KeyboardListener;
-    dashboardController: DashboardController;
+    uiController: UIController;
 
-    constructor(dashboardController: DashboardController) {
-        this.dashboardController = dashboardController;
+    constructor(uiController: UIController) {
+        this.uiController = uiController;
         this.keyboardListener = new KeyboardListener();
     }
 
@@ -67,7 +67,7 @@ export class InputListener {
     }
 
     getArmCommands(): ArmCommand[] {
-        return this.dashboardController.getAndClearQueue();
+        return this.uiController.getArmCommands();
     }
 
 }

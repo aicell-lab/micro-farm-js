@@ -4,14 +4,12 @@ import { SimulationLoop } from './simulationLoop';
 import { Room } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
-import { DashboardController } from './dashboardController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { Actors } from '../setup/room';
 import { UIController } from './uiController';
 
 export class SceneSystem {
-  private dashboardController: DashboardController;
   private uiController: UIController;
   private actorController: ActorController;
   private cameraController: CameraController;
@@ -21,12 +19,12 @@ export class SceneSystem {
 
   constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.cameraController = new CameraController(actors.player.object);
-    this.dashboardController = new DashboardController();
-    this.renderController = new RenderController(scene, this.cameraController.getCamera());
-    this.actorController = new ActorController(actors, new InputListener(this.dashboardController));
+    let camera = this.cameraController.getCamera();
+    this.uiController = new UIController(camera, room, actors);
+    this.renderController = new RenderController(scene, camera);
+    this.actorController = new ActorController(actors, new InputListener(this.uiController));
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
-    this.uiController = new UIController(this.cameraController.getCamera(), room, actors);
   }
 
   runSimulationLoop = () => {
