@@ -5,17 +5,7 @@ import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
 import { AmmoSingleton } from './setup/ammoSingleton';
 import { PhysicsWorld } from './system/physicsWorld';
-
-async function initHTMLUI() {
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.key.toLowerCase() === "h") {
-            const uiElement = document.getElementById("ui");
-            if (uiElement) {
-                uiElement.classList.toggle("hidden");
-            }
-        }
-    });
-}
+import { initHTMLUI } from './system/uiController';
 
 async function init() {
     await AmmoSingleton.init();

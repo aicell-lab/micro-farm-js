@@ -8,9 +8,11 @@ import { DashboardController } from './dashboardController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { Actors } from '../setup/room';
+import { UIController } from './uiController';
 
 export class SceneSystem {
   private dashboardController: DashboardController;
+  private uiController: UIController;
   private actorController: ActorController;
   private cameraController: CameraController;
   private renderController: RenderController;
@@ -24,6 +26,7 @@ export class SceneSystem {
     this.actorController = new ActorController(actors, new InputListener(this.dashboardController));
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
+    this.uiController = new UIController(this.cameraController.getCamera(), room, actors);
   }
 
   runSimulationLoop = () => {
@@ -36,6 +39,7 @@ export class SceneSystem {
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
     this.simulationLoop.step(dt);
+    this.uiController.updateDiegeticUI();
     this.renderController.render();
   }
 

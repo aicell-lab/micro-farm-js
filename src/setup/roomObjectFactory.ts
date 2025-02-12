@@ -75,7 +75,8 @@ export class RoomObjectFactory {
         cube.position.z = -4.5;
         const options: EntityOptions = {
             object: cube,
-            physicsController: new PhysicsController(cube, 1, this.world)
+            physicsController: new PhysicsController(cube, 1, this.world),
+            nametag: "TEST"
         }
         return new Entity(options);
     }

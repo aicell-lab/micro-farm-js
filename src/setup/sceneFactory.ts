@@ -38,6 +38,9 @@ export class SceneFactory {
         scene.add(this.actors.table.object);
         scene.add(this.room.floor.object);
         scene.add(this.room.cube.object);
+        if (this.room.cube.nametagMesh) {
+            scene.add(this.room.cube.nametagMesh);
+        }
     }
 }
 
