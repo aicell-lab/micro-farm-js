@@ -1,3 +1,5 @@
+import "./styles.css";
+
 import { SceneSystem } from './system/sceneSystem';
 import { Assets } from './res/assets';
 import { ActorFactory } from './setup/actorFactory';

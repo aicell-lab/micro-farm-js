@@ -1,0 +1,64 @@
+/* Ensures the body and html occupy the full viewport without scrollbars */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Makes the Three.js canvas fit the entire window */
+canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out;
+}
+
+#ui.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#ui-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 12px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Button Styling */
+.ui-button {
+    background: #536a4c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.ui-button:hover {
+    background: #457d45;
+}
