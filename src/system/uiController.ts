@@ -54,23 +54,27 @@ export class ArmCommandUI {
     }
 }
 
-
+/*
+Types of UI
+Diegetic UI – Exists within the world and can be seen by characters (e.g., in-game screens, holographic displays).
+Non-diegetic (Extradiegetic) UI – Exists outside the world and is only visible to the user (e.g., minimaps, crosshairs, Heards-Up Display (HUD)).
+Spatial UI – 3D UI elements that are anchored to objects but aren’t "physically" part of the world (e.g., floating nameplates in MMORPGs).
+Meta UI – UI that represents abstract information but is stylized to fit the environments theme (e.g., rain on screen for weather).
+*/
 export class UIController {
 
     private camera: THREE.PerspectiveCamera;
     private room: Room;
-    //private actors: Actors;
     private armCommandUI: ArmCommandUI;
 
     constructor(camera: THREE.PerspectiveCamera, room: Room, _actors: Actors) {
         this.camera = camera;
         this.room = room;
-        //this.actors = actors;
         this.armCommandUI = new ArmCommandUI();
         initToolTip();
     }
 
-    public updateDiegeticUI(): void {
+    public updateSpatialUI(): void {
         this.room.cube.updateNameplate(this.camera);
     }
 

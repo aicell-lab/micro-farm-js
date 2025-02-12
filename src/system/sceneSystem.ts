@@ -37,7 +37,7 @@ export class SceneSystem {
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
     this.simulationLoop.step(dt);
-    this.uiController.updateDiegeticUI();
+    this.uiController.updateSpatialUI();
     this.renderController.render();
   }
 
