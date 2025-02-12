@@ -6,8 +6,12 @@ export const ROS_LAB_NAME = 'digital_twin_lab-4';
 export const ROS_LAB_PKG_PATH = './packages/digital_twin_lab-4';
 export const ROS_LAB_URDF_PATH = './packages/digital_twin_lab-4/urdf/robot_arm.urdf';
 
-import { Models } from "./enums";
+import { Models, Animations } from "./enums";
 export const modelFilepaths: { [key in Models]: string } = {
     [Models.OpticalTable]: "assets/objs/optical_table.obj",
+};
+
+export const animationFilepaths: { [key in Animations]: string } = {
+    [Animations.Human]: "assets/gltfs/CesiumMan.glb",
 };
 

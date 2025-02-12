@@ -6,6 +6,10 @@ export enum Models {
     OpticalTable
 }
 
+export enum Animations {
+    Human
+}
+
 export enum ArmState {
     Idle,
     Moving,

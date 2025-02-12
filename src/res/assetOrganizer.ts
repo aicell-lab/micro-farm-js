@@ -34,7 +34,7 @@ async function getTextFiles(): Promise<Map<string, string>> {
 }
 
 async function getBinaryFiles(): Promise<Map<string, ArrayBuffer>> {
-    const fileExtensions = [".png", ".STL"];
+    const fileExtensions = [".png", ".STL", ".glb"];
     return await retrieveMergedMap(ZIPPED_ASSETS_PATH, fileExtensions, loadAndExtractZipBinaryFiles);
 }
 
