@@ -17,7 +17,9 @@ export class SceneSystem {
   private simulationLoop: SimulationLoop;
   private clock: THREE.Clock;
 
-  private animationMixer?: THREE.AnimationMixer;
+  private scene: THREE.Scene;
+  private counter: number = 0.0;
+  private room: Room;
 
   constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.cameraController = new CameraController(actors.player.object);
@@ -27,6 +29,8 @@ export class SceneSystem {
     this.actorController = new ActorController(actors, new InputListener(this.uiController));
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
+    this.scene = scene;
+    this.room = room;
   }
 
   runSimulationLoop = () => {
@@ -36,16 +40,17 @@ export class SceneSystem {
 
   processNextFrame() {
     const dt = this.clock.getDelta();
-
-    if (this.animationMixer) {
-      this.animationMixer.update(dt);
-    }
-
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
     this.simulationLoop.step(dt);
     this.uiController.updateSpatialUI();
     this.renderController.render();
+
+    this.counter += dt;
+    this.scene.remove(this.room.cube.getNametagMesh()!);
+    this.room.cube.setNametag(`value ${Math.floor(this.counter)}`);
+    this.scene.add(this.room.cube.getNametagMesh()!);
+
   }
 
 }

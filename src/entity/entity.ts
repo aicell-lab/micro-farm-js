@@ -28,9 +28,13 @@ export class Entity {
             this.setNametag(nametag);
     }
 
-    private setNametag(_nametag: string) {
+    public setNametag(text: string) {
         //this.nametagMesh = createNameplate({ text: nametag, font: '50px Verdana', color: 'yellow' });
-        this.nametagMesh = createBubbleStatus({text: "processing...", font: '50px Verdana', color: 'black'})
+        this.nametagMesh = createBubbleStatus({ text: text, font: '50px Verdana', color: 'black' })
+    }
+
+    public getNametagMesh(): THREE.Mesh | undefined {
+        return this.nametagMesh;
     }
 
     public update(delta: number): void {

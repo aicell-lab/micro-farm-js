@@ -31,7 +31,7 @@ export class SimulationLoop {
 
     step(dt: number): void {
         simPhysicsStep(this.getSimState(), dt);
-        this.world.step(dt/3.0);
+        this.world.step(dt / 40.0);
         this.room.cube.physicsController?.updateFromPhysics(this.room.cube.object);
     }
 } 
