@@ -6,6 +6,13 @@ export enum Models {
     OpticalTable
 }
 
+export enum Textures {
+    Error,
+    PhotoCamera,
+    Timelapse,
+    Timer,
+}
+
 export enum Animations {
     Human
 }
