@@ -8,8 +8,6 @@ import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { Actors } from '../setup/room';
 import { UIController } from './uiController';
-import { Assets } from '../res/assets';
-import { Animations } from '../setup/enums';
 
 export class SceneSystem {
   private uiController: UIController;
@@ -29,19 +27,6 @@ export class SceneSystem {
     this.actorController = new ActorController(actors, new InputListener(this.uiController));
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
-    this.loadAnimationTest(scene);
-  }
-
-  private loadAnimationTest(scene: THREE.Scene) {
-    let animationAssets = Assets.getInstance().getAnimations();
-    let animationAsset = animationAssets.get(Animations.Human)!;
-    const model = animationAsset.model;
-    const animations = animationAsset.animations;
-    this.animationMixer = new THREE.AnimationMixer(model);
-    animations.forEach((clip) => {
-      this.animationMixer!.clipAction(clip).play();
-    });
-    scene.add(model);
   }
 
   runSimulationLoop = () => {

@@ -7,7 +7,8 @@ import { MeshStandardMaterial } from 'three';
 import { PlayerController } from "../entity/playerController";
 import { Assets } from '../res/assets';
 import { ArmController } from "../entity/armController";
-import { Robots } from "./enums";
+import { Robots, Animations } from "./enums";
+import { AnimatedObject } from "../entity/playerController";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -43,9 +44,10 @@ export class ActorFactory {
     }
 
     createHuman(): Entity {
+        let animObj = new AnimatedObject(Animations.Human);
         const options: EntityOptions = {
             object: createDefaultActorMesh(),
-            playerController: new PlayerController()
+            playerController: new PlayerController(animObj)
         };
         let human = new Entity(options);
         

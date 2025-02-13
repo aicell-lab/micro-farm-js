@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import { MovePayload, RotatePayload } from '../types/actionType';
+import { AnimationAsset } from '../res/animationLoader';
+import { Assets } from '../res/assets';
+import { Animations } from '../setup/enums';
 
 // Player Kinematic State (Unrealistic physics)
 interface PKinematicState {
@@ -7,7 +10,7 @@ interface PKinematicState {
     acceleration: THREE.Vector3;
 }
 
-export class PlayerController {
+class PlayerPhysicsController {
     private kinState: PKinematicState;
     private rotationSpeed: number;
 
@@ -74,4 +77,73 @@ export class PlayerController {
             this.rotationSpeed = speed;
         }
     }
+}
+
+export class AnimatedObject {
+
+    object: THREE.Object3D;
+    animations: THREE.AnimationClip[];
+
+    constructor(type: Animations) {
+        let animationAsset = this.loadAnimatioAsset(type);
+        this.object = animationAsset.model;
+        this.animations = animationAsset.animations;
+        this.object.rotateY(THREE.MathUtils.degToRad(90));
+    }
+
+    private loadAnimatioAsset(animationType: Animations): AnimationAsset {
+        let animationAssets = Assets.getInstance().getAnimations();
+        return animationAssets.get(animationType)!;
+    }
+}
+
+class PlayerAnimationController {
+
+    private animationMixer: THREE.AnimationMixer;
+    private object: THREE.Object3D;
+    private animations: THREE.AnimationClip[];
+
+    constructor(animatedObject: AnimatedObject) {
+        this.object = animatedObject.object;
+        this.animations = animatedObject.animations;
+        this.animationMixer = this.loadAnimationMixer(this.animations);
+    }
+
+    private loadAnimationMixer(animations: THREE.AnimationClip[]): THREE.AnimationMixer {
+        let mixer = new THREE.AnimationMixer(this.object);
+        animations.forEach((clip) => {
+            mixer!.clipAction(clip).play();
+        });
+        return mixer;
+    }
+
+    public update(dt: number): void {
+        this.animationMixer.update(dt);
+    }
+}
+
+export class PlayerController {
+    private phyicsCtrl: PlayerPhysicsController;
+    //private animationCtrl: PlayerAnimationController;
+    //private object: THREE.Object3D;
+
+    constructor(_: AnimatedObject) {
+        this.phyicsCtrl = new PlayerPhysicsController();
+        //this.animationCtrl = new PlayerAnimationController(animatedObject);
+        //this.object = animatedObject.object;
+    }
+
+    public update(object: THREE.Object3D, dt: number) {
+        this.phyicsCtrl.update(object, dt);
+        //this.animationCtrl.update(dt);
+    }
+
+    public handleMove(p: MovePayload) {
+        this.phyicsCtrl.handleMove(p);
+    }
+
+    public handleRotation(p: RotatePayload) {
+        this.phyicsCtrl.handleRotation(p);
+    }
+
 }
