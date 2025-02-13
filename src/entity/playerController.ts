@@ -97,7 +97,7 @@ export class AnimatedObject {
     }
 }
 
-class PlayerAnimationController {
+/*class PlayerAnimationController {
 
     private animationMixer: THREE.AnimationMixer;
     private object: THREE.Object3D;
@@ -120,7 +120,7 @@ class PlayerAnimationController {
     public update(dt: number): void {
         this.animationMixer.update(dt);
     }
-}
+}*/
 
 export class PlayerController {
     private phyicsCtrl: PlayerPhysicsController;

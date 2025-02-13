@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PlayerController } from './playerController';
 import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
-import { createNameplate, createBubbleStatus } from './nameplate';
+import { createBubbleStatus } from './nameplate';
 
 export interface EntityOptions {
     object: THREE.Object3D;
@@ -28,7 +28,7 @@ export class Entity {
             this.setNametag(nametag);
     }
 
-    private setNametag(nametag: string) {
+    private setNametag(_nametag: string) {
         //this.nametagMesh = createNameplate({ text: nametag, font: '50px Verdana', color: 'yellow' });
         this.nametagMesh = createBubbleStatus({text: "processing...", font: '50px Verdana', color: 'black'})
     }
