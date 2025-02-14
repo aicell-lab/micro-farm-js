@@ -33,3 +33,10 @@ export enum Actions {
     PLAYER_ROTATE,
 }
 
+export enum OpticsState {
+    ERROR,
+    CAPTURING,
+    STANDBY,
+    LOADING
+}
+

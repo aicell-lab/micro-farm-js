@@ -1,16 +1,33 @@
-import { URDFRobot, URDFJoint } from 'urdf-loader';
+import { URDFRobot, URDFJoint, URDFVisual } from 'urdf-loader';
 import { ArmStateMachine } from './armState';
 import { ArmState, ArmCommand } from '../setup/enums';
+import { OpticsController } from './opticsController';
+import * as THREE from 'three';
 
 export class ArmController {
     table: URDFRobot;
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
+    opticsController: OpticsController;
 
-    constructor(table: URDFRobot) {
+    constructor(table: URDFRobot, bubbleMeshes: THREE.Mesh[]) {
+
+        const numOptics = 1;
+        if (bubbleMeshes.length !== numOptics) {
+            throw new Error(`Expected exactly ${numOptics} meshes.`);
+        }
+
         this.table = table;
         this.slideJoint = table.joints["slide-j"];
         this.armFSM = new ArmStateMachine();
+        this.opticsController = new OpticsController(this.table.links["squid"], bubbleMeshes[0]);
+
+    }
+
+    public createStatusBubbles(): THREE.Mesh[] {
+        let bubbles: THREE.Mesh[] = [];
+
+        return bubbles;
     }
 
     getCurrentAngle(): number {

@@ -54,7 +54,7 @@ export function createBubbleStatus(options: Partial<NameplateOptions> = {}): THR
     return new THREE.Mesh(textGeometry, textMaterial);
 }
 
-function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', imageTexture?: THREE.Texture): THREE.CanvasTexture {
+export function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', imageTexture?: THREE.Texture): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
 

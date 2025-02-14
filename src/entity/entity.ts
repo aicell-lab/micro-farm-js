@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { PlayerController } from './playerController';
 import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
-import { createBubbleStatus } from './nameplate';
+import { createNameplate, createBubbleStatus, createSpeechBubbleTexture, NameplateOptions } from './nameplate';
+import { Assets } from '../res/assets';
+import { Textures } from '../setup/enums';
 
 export interface EntityOptions {
     object: THREE.Object3D;
@@ -18,8 +20,10 @@ export class Entity {
     armController?: ArmController;
     physicsController?: PhysicsController;
     nametagMesh?: THREE.Mesh;
+    bubbles: THREE.Mesh[];
 
     constructor({ object, playerController, armController, physicsController, nametag }: EntityOptions) {
+        this.bubbles = [];
         this.object = object;
         this.playerController = playerController;
         this.armController = armController;
@@ -28,9 +32,20 @@ export class Entity {
             this.setNametag(nametag);
     }
 
+    private getNametagTexture(text: string): THREE.CanvasTexture {
+        let options: NameplateOptions = { text: text, font: '50px Verdana', color: 'black' };
+        const testImg = Assets.getInstance().getTextures().get(Textures.Error);
+        return createSpeechBubbleTexture(options.text, options.font, options.color, testImg);
+    }
+
     public setNametag(text: string) {
-        //this.nametagMesh = createNameplate({ text: nametag, font: '50px Verdana', color: 'yellow' });
-        this.nametagMesh = createBubbleStatus({ text: text, font: '50px Verdana', color: 'black' })
+        if (this.nametagMesh) {
+            const textMaterial = this.nametagMesh.material as THREE.MeshBasicMaterial;
+            textMaterial.map = this.getNametagTexture(text);
+            textMaterial.needsUpdate = true;
+        } else {
+            this.nametagMesh = createBubbleStatus({ text: text, font: '50px Verdana', color: 'yellow' });
+        }
     }
 
     public getNametagMesh(): THREE.Mesh | undefined {
@@ -50,6 +65,15 @@ export class Entity {
         const cameraPosition = camera.position.clone();
         cameraPosition.y = nameplatePosition.y;
         this.nametagMesh.lookAt(cameraPosition);
+    }
+
+    public rotateBubbles(camera: THREE.PerspectiveCamera) {
+        for (const mesh of this.bubbles) {
+            const bubblePosition = mesh.position;
+            const cameraPosition = camera.position.clone();
+            cameraPosition.y = bubblePosition.y;
+            mesh.lookAt(cameraPosition);
+        }
     }
 
 }

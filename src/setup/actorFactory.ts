@@ -9,6 +9,7 @@ import { Assets } from '../res/assets';
 import { ArmController } from "../entity/armController";
 import { Robots, Animations } from "./enums";
 import { AnimatedObject } from "../entity/playerController";
+import { createBubbleStatus } from "../entity/nameplate";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -50,7 +51,7 @@ export class ActorFactory {
             playerController: new PlayerController(animObj)
         };
         let human = new Entity(options);
-        
+
         const rot = THREE.MathUtils.degToRad(180.0);
         human.object.rotateY(rot);
         setActorPosition(human);
@@ -61,11 +62,14 @@ export class ActorFactory {
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
+        let bubble = createBubbleStatus();
+        let bubbles = [bubble];
         const options: EntityOptions = {
             object: tableRobot,
-            armController: new ArmController(tableRobot)
+            armController: new ArmController(tableRobot, bubbles)
         };
         let table = new Entity(options);
+        table.bubbles = bubbles;
         table.object.position.y += 0.855;
         table.object.position.x -= 2.0;
         table.object.position.z -= 0.7;

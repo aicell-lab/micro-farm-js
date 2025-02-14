@@ -41,6 +41,10 @@ export class SceneFactory {
         if (this.room.cube.nametagMesh) {
             scene.add(this.room.cube.nametagMesh);
         }
+
+        for (const bubble of this.actors.table.bubbles) {
+            scene.add(bubble);
+        }
     }
 }
 

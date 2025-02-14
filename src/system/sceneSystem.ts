@@ -31,6 +31,8 @@ export class SceneSystem {
     this.clock = new THREE.Clock();
     this.scene = scene;
     this.room = room;
+
+    this.scene.add(this.room.cube.getNametagMesh()!);
   }
 
   runSimulationLoop = () => {
@@ -47,9 +49,9 @@ export class SceneSystem {
     this.renderController.render();
 
     this.counter += dt;
-    this.scene.remove(this.room.cube.getNametagMesh()!);
+    //this.scene.remove(this.room.cube.getNametagMesh()!);
     this.room.cube.setNametag(`value ${Math.floor(this.counter)}`);
-    this.scene.add(this.room.cube.getNametagMesh()!);
+    //this.scene.add(this.room.cube.getNametagMesh()!);
 
   }
 

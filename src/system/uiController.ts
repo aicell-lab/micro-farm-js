@@ -66,16 +66,19 @@ export class UIController {
     private camera: THREE.PerspectiveCamera;
     private room: Room;
     private armCommandUI: ArmCommandUI;
+    private actors: Actors;
 
-    constructor(camera: THREE.PerspectiveCamera, room: Room, _actors: Actors) {
+    constructor(camera: THREE.PerspectiveCamera, room: Room, actors: Actors) {
         this.camera = camera;
         this.room = room;
         this.armCommandUI = new ArmCommandUI();
+        this.actors = actors;
         initToolTip();
     }
 
     public updateSpatialUI(): void {
         this.room.cube.updateNameplate(this.camera);
+        this.actors.table.rotateBubbles(this.camera);
     }
 
     public getArmCommands(): Array<ArmCommand> {
