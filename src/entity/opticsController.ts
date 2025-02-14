@@ -13,7 +13,7 @@ export class OpticsController {
         this.microscope = microscope;
         this.bubbleMesh = bubbleMesh;
 
-        this.bubbleMesh.position.copy(new THREE.Vector3(-1.8, 1.5, 0.8));
+        this.bubbleMesh.position.copy(new THREE.Vector3(-1.8, 1.7, 0.8));
 
     }
 

@@ -48,11 +48,18 @@ export function createNameplate(options: Partial<NameplateOptions> = {}): THREE.
 
 export function createBubbleStatus(options: Partial<NameplateOptions> = {}): THREE.Mesh {
     const finalOptions: NameplateOptions = { ...defaultNameplateOptions, ...options };
-    const textGeometry = new THREE.PlaneGeometry(2.5, 0.5);
+    const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
     const testImg = Assets.getInstance().getTextures().get(Textures.Error);
     const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, testImg), transparent: true });
-    return new THREE.Mesh(textGeometry, textMaterial);
+    const mesh = new THREE.Mesh(textGeometry, textMaterial);
+
+    const canvas = createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, testImg).image; // Get the canvas
+    const maxDimension = Math.max(canvas.width, canvas.height); // Find the larger dimension
+    mesh.scale.set(maxDimension / 500, maxDimension / 500, 1); // Scale it. Adjust 500 as needed
+
+    return mesh;
 }
+
 
 export function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', imageTexture?: THREE.Texture): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
