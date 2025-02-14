@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PlayerController } from './playerController';
 import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
-import { createNameplate, createBubbleStatus, createSpeechBubbleTexture, NameplateOptions } from './nameplate';
+import { createBubbleStatus, createSpeechBubbleTexture, NameplateOptions } from './nameplate';
 import { Assets } from '../res/assets';
 import { Textures } from '../setup/enums';
 

@@ -1,4 +1,4 @@
-import { URDFRobot, URDFJoint, URDFVisual } from 'urdf-loader';
+import { URDFRobot, URDFJoint } from 'urdf-loader';
 import { ArmStateMachine } from './armState';
 import { ArmState, ArmCommand } from '../setup/enums';
 import { OpticsController } from './opticsController';

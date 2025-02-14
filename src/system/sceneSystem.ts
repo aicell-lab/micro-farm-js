@@ -18,7 +18,6 @@ export class SceneSystem {
   private clock: THREE.Clock;
 
   private scene: THREE.Scene;
-  private counter: number = 0.0;
   private room: Room;
 
   constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
@@ -48,10 +47,7 @@ export class SceneSystem {
     this.uiController.updateSpatialUI();
     this.renderController.render();
 
-    this.counter += dt;
-    //this.scene.remove(this.room.cube.getNametagMesh()!);
-    this.room.cube.setNametag(`value ${Math.floor(this.counter)}`);
-    //this.scene.add(this.room.cube.getNametagMesh()!);
+    this.room.cube.setNametag(`value ${this.room.cube.object.position.x.toFixed(2)}`);
 
   }
 
