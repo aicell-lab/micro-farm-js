@@ -44,6 +44,33 @@ export class Bubble {
         }
     }
 
+    private getBubbleOptions(state: OpticsState): BubbleOptions {
+        let options: BubbleOptions = defaultBubbleOptions;
+        options.color = 'black';
+        options.font = 'bold 50px Arial';
+        options.textureColor = 'black';
+        switch (state) {
+            case OpticsState.STANDBY:
+                options.texture = Textures.Timer;
+                options.text = "Idle";
+                break;
+            case OpticsState.CAPTURING:
+                options.texture = Textures.PhotoCamera;
+                options.text = "Capturing";
+                break;
+            case OpticsState.ERROR:
+                options.texture = Textures.Error;
+                options.text = "Error";
+                options.textureColor = 'red';
+                break;
+            case OpticsState.LOADING:
+                options.texture = Textures.Timelapse;
+                options.text = "Loading";
+                break;
+        }
+        return options;
+    }
+
     public getMesh(): THREE.Mesh {
         return this.mesh;
     }
@@ -53,7 +80,7 @@ export class Bubble {
     }
 
     private createMesh(): THREE.Mesh {
-        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: 'bold 50px Arial', texture: Textures.Timer, textureColor: 'black' };
+        let bubbleOptions = this.getBubbleOptions(OpticsState.STANDBY);
         return createBubbleStatus(bubbleOptions);
     }
 
