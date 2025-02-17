@@ -18,10 +18,19 @@ export class ArmController {
         }
 
         this.table = table;
+        table.updateMatrixWorld(true);
         this.slideJoint = table.joints["slide-j"];
+        let squid = this.table.links["squid"];
         this.armFSM = new ArmStateMachine();
-        this.opticsController = new OpticsController(this.table.links["squid"], bubbleMeshes[0]);
+        this.opticsController = new OpticsController(squid, bubbleMeshes[0]);
+    }
 
+    extraInit(): void {
+        let pos = new THREE.Vector3();
+        this.table.getWorldPosition(pos);
+        console.log(pos);
+
+        this.opticsController.update(0);
     }
 
     public createStatusBubbles(): THREE.Mesh[] {

@@ -15,6 +15,23 @@ const defaultNameplateOptions: NameplateOptions = {
     color: 'white',
 }
 
+export interface BubbleOptions {
+    text: string,
+    font: string,
+    color: string,
+    texture: Textures,
+    textureColor: string,
+}
+
+const defaultBubbleOptions: BubbleOptions = {
+    text: '<Insert Text>',
+    font: '30px Arial',
+    color: 'white',
+    texture: Textures.Error,
+    textureColor: 'black',
+}
+
+
 function createTextTexture(text: string, font: string = '30px Arial', color: string = 'white'): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
@@ -46,22 +63,22 @@ export function createNameplate(options: Partial<NameplateOptions> = {}): THREE.
     return new THREE.Mesh(textGeometry, textMaterial);
 }
 
-export function createBubbleStatus(options: Partial<NameplateOptions> = {}): THREE.Mesh {
-    const finalOptions: NameplateOptions = { ...defaultNameplateOptions, ...options };
+export function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.Mesh {
+    const finalOptions: BubbleOptions = { ...defaultBubbleOptions, ...options };
     const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
-    const testImg = Assets.getInstance().getTextures().get(Textures.Error);
-    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, testImg), transparent: true });
+    const img = Assets.getInstance().getTextures().get(finalOptions.texture);
+    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, img!, finalOptions.textureColor), transparent: true });
     const mesh = new THREE.Mesh(textGeometry, textMaterial);
 
-    const canvas = createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, testImg).image; // Get the canvas
-    const maxDimension = Math.max(canvas.width, canvas.height); // Find the larger dimension
-    mesh.scale.set(maxDimension / 500, maxDimension / 500, 1); // Scale it. Adjust 500 as needed
+    const targetWidth = 0.4;
+    const targetHeight = 0.4;
+    mesh.scale.set(targetWidth, targetHeight, 1); // Scale it. Adjust 500 as needed
 
     return mesh;
 }
 
 
-export function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', imageTexture?: THREE.Texture): THREE.CanvasTexture {
+export function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', img: THREE.Texture, imgColor: string): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
 
@@ -100,22 +117,22 @@ export function createSpeechBubbleTexture(text: string, font: string = '30px Ari
     ctx.fill();
     ctx.stroke();
 
-    if (imageTexture) {
+    if (img) {
         const imageCanvas = document.createElement('canvas');
         const imageCtx = imageCanvas.getContext('2d')!;
-        imageCanvas.width = imageTexture.image.width;
-        imageCanvas.height = imageTexture.image.height;
-        imageCtx.drawImage(imageTexture.image, 0, 0);
+        imageCanvas.width = img.image.width;
+        imageCanvas.height = img.image.height;
+        imageCtx.drawImage(img.image, 0, 0);
 
         imageCtx.globalCompositeOperation = 'source-atop';
-        imageCtx.fillStyle = 'red';
+        imageCtx.fillStyle = imgColor;
         imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
         imageCtx.globalCompositeOperation = 'source-over';
 
         const imageWidth = 80;
-        const imageHeight = 80;  
+        const imageHeight = 80;
         const imageX = (canvas.width - imageWidth) / 2;
-        const imageY = padding + 10; 
+        const imageY = padding + 10;
 
         ctx.drawImage(imageCanvas, imageX, imageY, imageWidth, imageHeight);
     }

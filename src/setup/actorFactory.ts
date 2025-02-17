@@ -7,9 +7,9 @@ import { MeshStandardMaterial } from 'three';
 import { PlayerController } from "../entity/playerController";
 import { Assets } from '../res/assets';
 import { ArmController } from "../entity/armController";
-import { Robots, Animations } from "./enums";
+import { Robots, Animations, Textures } from "./enums";
 import { AnimatedObject } from "../entity/playerController";
-import { createBubbleStatus } from "../entity/nameplate";
+import { createBubbleStatus, BubbleOptions } from "../entity/nameplate";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -55,18 +55,20 @@ export class ActorFactory {
         const rot = THREE.MathUtils.degToRad(180.0);
         human.object.rotateY(rot);
         setActorPosition(human);
-        human.object.position.z = -2.0;
-        human.object.position.x = 2.0;
+        human.object.position.z = 3.0;
+        human.object.position.x = -0.5;
         return human;
     }
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let bubble = createBubbleStatus();
+        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: '30px Arial', texture: Textures.Timer };
+        let bubble = createBubbleStatus(bubbleOptions);
         let bubbles = [bubble];
+        let armController = new ArmController(tableRobot, bubbles);
         const options: EntityOptions = {
             object: tableRobot,
-            armController: new ArmController(tableRobot, bubbles)
+            armController: armController
         };
         let table = new Entity(options);
         table.bubbles = bubbles;
@@ -74,6 +76,7 @@ export class ActorFactory {
         table.object.position.x -= 2.0;
         table.object.position.z -= 0.7;
         table.object.rotation.x = MathUtils.degToRad(270.0);
+        armController.extraInit();
         return table;
     }
 

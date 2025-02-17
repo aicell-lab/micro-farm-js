@@ -12,13 +12,25 @@ export class OpticsController {
     constructor(microscope: URDFLink, bubbleMesh: THREE.Mesh) {
         this.microscope = microscope;
         this.bubbleMesh = bubbleMesh;
+        //  xyz="-0.145539076490268 -1.09899662017959 0.107670525984125"
 
-        this.bubbleMesh.position.copy(new THREE.Vector3(-1.8, 1.7, 0.8));
-
+        //bubbleMesh.position.add(new THREE.Vector3(0, 0, 0.5));
+        //this.bubbleMesh.position.copy(new THREE.Vector3(-1.8, 1.7, 0.8));
+        //this.bubbleMesh.position.copy(pos);
+        //this.bubbleMesh.position.copy(new THREE.Vector3(0, 0, 0.5));
     }
 
     update(_dt: number): void {
-        this.bubbleMesh.position.copy(this.microscope.position).add(new THREE.Vector3(0, 1, 0));
+        let pos = new THREE.Vector3();
+        this.microscope.getWorldPosition(pos);
+        pos.z = pos.z * -2.0;
+        this.bubbleMesh.position.copy(pos);
+        this.bubbleMesh.position.add(new THREE.Vector3(0, 0.7, 0.0));
+
+
+        //this.bubbleMesh.position.copy(new THREE.Vector3(0, 0, 0.5));
+
+        //this.bubbleMesh.position.copy(this.microscope.position).add(new THREE.Vector3(0, 1, 0));
     }
 
     /*public rotateBubbles(camera: THREE.PerspectiveCamera) {
