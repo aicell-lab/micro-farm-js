@@ -146,6 +146,13 @@ export function createSpeechBubbleTexture(text: string, font: string = '30px Ari
         ctx.fillStyle = color;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+        ctx.shadowBlur = 3;
+        ctx.shadowOffsetX = 2;
+        ctx.shadowOffsetY = 2;
+        
+
         ctx.fillText(text, textX, textY);
     } else {
         ctx.font = font;
