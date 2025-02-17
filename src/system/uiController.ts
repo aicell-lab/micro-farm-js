@@ -77,7 +77,9 @@ export class UIController {
     }
 
     public updateSpatialUI(): void {
-        this.actors.table.rotateBubbles(this.camera);
+        for (const bubble of this.actors.table.bubbles) {
+            bubble.update(this.camera);
+        }
     }
 
     public getArmCommands(): Array<ArmCommand> {

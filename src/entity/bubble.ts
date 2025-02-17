@@ -1,9 +1,9 @@
 
 import * as THREE from 'three';
 import { Assets } from '../res/assets';
-import { Textures } from '../setup/enums';
+import { Textures, OpticsState } from '../setup/enums';
 
-export interface BubbleOptions {
+interface BubbleOptions {
     text: string,
     font: string,
     color: string,
@@ -19,7 +19,54 @@ const defaultBubbleOptions: BubbleOptions = {
     textureColor: 'black',
 }
 
-export function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.Mesh {
+export class Bubble {
+
+    private mesh: THREE.Mesh;
+
+    constructor() {
+        this.mesh = this.createMesh();
+    }
+
+    private setStandbyBubble(): void {
+
+    }
+
+    public setState(state: OpticsState) {
+        switch (state) {
+            case OpticsState.STANDBY:
+                return this.setStandbyBubble();
+            case OpticsState.CAPTURING:
+                return this.setStandbyBubble();
+            case OpticsState.ERROR:
+                return this.setStandbyBubble();
+            case OpticsState.LOADING:
+                return this.setStandbyBubble();
+        }
+    }
+
+    public getMesh(): THREE.Mesh {
+        return this.mesh;
+    }
+
+    public setPosition(position: THREE.Vector3): void {
+        this.mesh.position.copy(position);
+    }
+
+    private createMesh(): THREE.Mesh {
+        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: 'bold 50px Arial', texture: Textures.Timer, textureColor: 'black' };
+        return createBubbleStatus(bubbleOptions);
+    }
+
+    public update(camera: THREE.PerspectiveCamera) {
+        const bubblePosition = this.mesh.position;
+        const cameraPosition = camera.position.clone();
+        cameraPosition.y = bubblePosition.y;
+        this.mesh.lookAt(cameraPosition);
+    }
+
+}
+
+function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.Mesh {
     const finalOptions: BubbleOptions = { ...defaultBubbleOptions, ...options };
     const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
     const img = Assets.getInstance().getTextures().get(finalOptions.texture);
@@ -33,7 +80,7 @@ export function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.
     return mesh;
 }
 
-export function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', img: THREE.Texture, imgColor: string): THREE.CanvasTexture {
+function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', img: THREE.Texture, imgColor: string): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
 
@@ -106,7 +153,7 @@ export function createSpeechBubbleTexture(text: string, font: string = '30px Ari
         ctx.shadowBlur = 3;
         ctx.shadowOffsetX = 2;
         ctx.shadowOffsetY = 2;
-        
+
 
         ctx.fillText(text, textX, textY);
     } else {

@@ -3,17 +3,18 @@ import { ArmStateMachine } from './armState';
 import { ArmState, ArmCommand } from '../setup/enums';
 import { OpticsController } from './opticsController';
 import * as THREE from 'three';
+import { Bubble } from './bubble';
 
-export class ArmController {
+export class TableController {
     table: URDFRobot;
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
     opticsController: OpticsController;
 
-    constructor(table: URDFRobot, bubbleMeshes: THREE.Mesh[]) {
+    constructor(table: URDFRobot, bubbles: Bubble[]) {
 
         const numOptics = 1;
-        if (bubbleMeshes.length !== numOptics) {
+        if (bubbles.length !== numOptics) {
             throw new Error(`Expected exactly ${numOptics} meshes.`);
         }
 
@@ -22,7 +23,7 @@ export class ArmController {
         this.slideJoint = table.joints["slide-j"];
         let squid = this.table.links["squid"];
         this.armFSM = new ArmStateMachine();
-        this.opticsController = new OpticsController(squid, bubbleMeshes[0]);
+        this.opticsController = new OpticsController(squid, bubbles[0]);
     }
 
     adjustBubblePositions(): void {

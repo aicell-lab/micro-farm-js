@@ -1,4 +1,4 @@
-import { ArmController } from '../entity/armController';
+import { TableController } from '../entity/tableController';
 import { PlayerController } from '../entity/playerController';
 import { InputListener } from '../io/input';
 import { Actors } from '../setup/room';
@@ -8,13 +8,13 @@ export class ActorController {
     private actors: Actors;
     private inputListener: InputListener;
     private playerController: PlayerController;
-    private armController: ArmController;
+    private tableController: TableController;
 
-    constructor(actors: Actors, inputListener: InputListener, playerController: PlayerController, armController: ArmController) {
+    constructor(actors: Actors, inputListener: InputListener, playerController: PlayerController, tableController: TableController) {
         this.actors = actors;
         this.inputListener = inputListener;
         this.playerController = playerController;
-        this.armController = armController;
+        this.tableController = tableController;
     }
 
     handleUserInput() {
@@ -22,7 +22,7 @@ export class ActorController {
             action.execute(this.actors.player, this.playerController);
         });
         this.inputListener.getArmCommands().forEach(command => {
-            this.armController.handleArmCommand(command);
+            this.tableController.handleArmCommand(command);
         });
     }
 

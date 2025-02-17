@@ -9,7 +9,7 @@ import { PhysicsWorld } from './physicsWorld';
 import { Actors } from '../setup/room';
 import { UIController } from './uiController';
 import { PlayerController } from '../entity/playerController';
-import { ArmController } from '../entity/armController';
+import { TableController } from '../entity/tableController';
 import { URDFRobot } from 'urdf-loader';
 
 export class SceneSystem {
@@ -19,7 +19,7 @@ export class SceneSystem {
   private renderController: RenderController;
   private simulationLoop: SimulationLoop;
   private playerController: PlayerController;
-  private armController: ArmController;
+  private tableController: TableController;
   private clock: THREE.Clock;
 
   private scene: THREE.Scene;
@@ -28,12 +28,12 @@ export class SceneSystem {
 
   constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.playerController = new PlayerController();
-    this.armController = new ArmController(actors.table.object as URDFRobot, actors.table.bubbles);
+    this.tableController = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
     this.cameraController = new CameraController(actors.player.object);
     let camera = this.cameraController.getCamera();
     this.uiController = new UIController(camera, room, actors);
     this.renderController = new RenderController(scene, camera);
-    this.actorController = new ActorController(actors, new InputListener(this.uiController), this.playerController, this.armController);
+    this.actorController = new ActorController(actors, new InputListener(this.uiController), this.playerController, this.tableController);
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
     this.scene = scene;
@@ -51,7 +51,7 @@ export class SceneSystem {
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
     this.playerController.update(this.actors.player.object, dt);
-    this.armController.update(dt);
+    this.tableController.update(dt);
     this.simulationLoop.step(dt);
     this.uiController.updateSpatialUI();
     this.renderController.render();

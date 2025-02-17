@@ -5,10 +5,10 @@ import { Actors } from '../setup/room';
 import { MathUtils } from "three";
 import { MeshStandardMaterial } from 'three';
 import { Assets } from '../res/assets';
-import { ArmController } from "../entity/armController";
+import { TableController } from "../entity/tableController";
 import { Robots, Animations, Textures } from "./enums";
 import { AnimatedObject } from "../entity/playerController";
-import { createBubbleStatus, BubbleOptions } from "../entity/bubble";
+import { Bubble } from "../entity/bubble";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -61,10 +61,9 @@ export class ActorFactory {
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: 'bold 50px Arial', texture: Textures.Timer, textureColor: 'black' };
-        let bubble = createBubbleStatus(bubbleOptions);
+        let bubble = new Bubble();
         let bubbles = [bubble];
-        let armController = new ArmController(tableRobot, bubbles);
+        let armController = new TableController(tableRobot, bubbles);
         const options: EntityOptions = {
             object: tableRobot
         };

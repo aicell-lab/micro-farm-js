@@ -1,17 +1,18 @@
 import { URDFLink } from 'urdf-loader';
 import * as THREE from 'three';
 import { OpticsState } from '../setup/enums';
+import { Bubble } from './bubble';
 //import { createBubbleStatus } from './nameplate';
 
 
 export class OpticsController {
     microscope: URDFLink;
-    bubbleMesh: THREE.Mesh;
+    bubble: Bubble;
     state: OpticsState = OpticsState.STANDBY;
 
-    constructor(microscope: URDFLink, bubbleMesh: THREE.Mesh) {
+    constructor(microscope: URDFLink, bubble: Bubble) {
         this.microscope = microscope;
-        this.bubbleMesh = bubbleMesh;
+        this.bubble = bubble;
         //  xyz="-0.145539076490268 -1.09899662017959 0.107670525984125"
 
         //bubbleMesh.position.add(new THREE.Vector3(0, 0, 0.5));
@@ -24,14 +25,13 @@ export class OpticsController {
         let pos = new THREE.Vector3();
         this.microscope.getWorldPosition(pos);
         pos.z = pos.z * -2.0;
-        this.bubbleMesh.position.copy(pos);
-        this.bubbleMesh.position.add(new THREE.Vector3(0, 0.7, 0.0));
+        const offset = new THREE.Vector3(0, 0.7, 0.0);
+        pos.add(offset);
+        this.bubble.setPosition(pos);
     }
 
     update(_dt: number): void {
-
         //this.bubbleMesh.position.copy(new THREE.Vector3(0, 0, 0.5));
-
         //this.bubbleMesh.position.copy(this.microscope.position).add(new THREE.Vector3(0, 1, 0));
     }
 
