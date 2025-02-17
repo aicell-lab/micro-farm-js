@@ -62,7 +62,7 @@ export class ActorFactory {
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: '30px Arial', texture: Textures.Timer };
+        let bubbleOptions: BubbleOptions = { text: 'Idle', color: 'black', font: '50px Arial', texture: Textures.Timer, textureColor: 'black' };
         let bubble = createBubbleStatus(bubbleOptions);
         let bubbles = [bubble];
         let armController = new ArmController(tableRobot, bubbles);
@@ -76,7 +76,7 @@ export class ActorFactory {
         table.object.position.x -= 2.0;
         table.object.position.z -= 0.7;
         table.object.rotation.x = MathUtils.degToRad(270.0);
-        armController.extraInit();
+        armController.adjustBubblePositions();
         return table;
     }
 

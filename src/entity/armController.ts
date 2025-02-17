@@ -25,12 +25,12 @@ export class ArmController {
         this.opticsController = new OpticsController(squid, bubbleMeshes[0]);
     }
 
-    extraInit(): void {
+    adjustBubblePositions(): void {
         let pos = new THREE.Vector3();
         this.table.getWorldPosition(pos);
         console.log(pos);
 
-        this.opticsController.update(0);
+        this.opticsController.adjustBubblePosition();
     }
 
     public createStatusBubbles(): THREE.Mesh[] {

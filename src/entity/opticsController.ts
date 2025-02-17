@@ -20,13 +20,15 @@ export class OpticsController {
         //this.bubbleMesh.position.copy(new THREE.Vector3(0, 0, 0.5));
     }
 
-    update(_dt: number): void {
+    adjustBubblePosition(): void {
         let pos = new THREE.Vector3();
         this.microscope.getWorldPosition(pos);
         pos.z = pos.z * -2.0;
         this.bubbleMesh.position.copy(pos);
         this.bubbleMesh.position.add(new THREE.Vector3(0, 0.7, 0.0));
+    }
 
+    update(_dt: number): void {
 
         //this.bubbleMesh.position.copy(new THREE.Vector3(0, 0, 0.5));
 

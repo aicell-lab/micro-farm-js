@@ -72,7 +72,7 @@ export function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.
 
     const targetWidth = 0.4;
     const targetHeight = 0.4;
-    mesh.scale.set(targetWidth, targetHeight, 1); // Scale it. Adjust 500 as needed
+    mesh.scale.set(targetWidth, targetHeight, 1);
 
     return mesh;
 }
@@ -129,19 +129,31 @@ export function createSpeechBubbleTexture(text: string, font: string = '30px Ari
         imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
         imageCtx.globalCompositeOperation = 'source-over';
 
-        const imageWidth = 80;
-        const imageHeight = 80;
+        const imageWidth = 140;
+        const imageHeight = 140;
         const imageX = (canvas.width - imageWidth) / 2;
-        const imageY = padding + 10;
+        const imageY = padding / 2 + (bubbleHeight - imageHeight) / 2;
 
         ctx.drawImage(imageCanvas, imageX, imageY, imageWidth, imageHeight);
-    }
 
-    ctx.font = font;
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 30);
+
+        const metrics = ctx.measureText(text); // Measure text width for centering
+        const textHeight = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent; // Get accurate text height
+
+        const textX = canvas.width / 2;
+        const textY = imageY + imageHeight + 15 + textHeight / 2;
+        ctx.font = font;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(text, textX, textY);
+    } else {
+        ctx.font = font;
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 30);
+    }
 
     return new THREE.CanvasTexture(canvas);
 }
