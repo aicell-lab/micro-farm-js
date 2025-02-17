@@ -67,8 +67,7 @@ export class ActorFactory {
         let bubbles = [bubble];
         let armController = new ArmController(tableRobot, bubbles);
         const options: EntityOptions = {
-            object: tableRobot,
-            armController: armController
+            object: tableRobot
         };
         let table = new Entity(options);
         table.bubbles = bubbles;

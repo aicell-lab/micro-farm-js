@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
 import { createBubbleStatus, createSpeechBubbleTexture, BubbleOptions } from './nameplate';
 import { Assets } from '../res/assets';
@@ -7,7 +6,6 @@ import { Textures } from '../setup/enums';
 
 export interface EntityOptions {
     object: THREE.Object3D;
-    armController?: ArmController;
     physicsController?: PhysicsController;
     nametag?: string;
     animations?: THREE.AnimationClip[];
@@ -16,15 +14,13 @@ export interface EntityOptions {
 export class Entity {
     object: THREE.Object3D;
     animations?: THREE.AnimationClip[];
-    armController?: ArmController;
     physicsController?: PhysicsController;
     nametagMesh?: THREE.Mesh;
     bubbles: THREE.Mesh[];
 
-    constructor({ object, armController, physicsController, nametag, animations }: EntityOptions) {
+    constructor({ object, physicsController, nametag, animations }: EntityOptions) {
         this.bubbles = [];
         this.object = object;
-        this.armController = armController;
         this.physicsController = physicsController;
         this.animations = animations;
         if (nametag)
@@ -49,10 +45,6 @@ export class Entity {
 
     public getNametagMesh(): THREE.Mesh | undefined {
         return this.nametagMesh;
-    }
-
-    public update(delta: number): void {
-        this.armController?.update(delta);
     }
 
     public updateNameplate(camera: THREE.PerspectiveCamera) {
