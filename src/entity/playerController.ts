@@ -127,7 +127,7 @@ export class PlayerController {
     //private animationCtrl: PlayerAnimationController;
     //private object: THREE.Object3D;
 
-    constructor(_: AnimatedObject) {
+    constructor() {
         this.phyicsCtrl = new PlayerPhysicsController();
         //this.animationCtrl = new PlayerAnimationController(animatedObject);
         //this.object = animatedObject.object;

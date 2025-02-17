@@ -8,6 +8,7 @@ import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { Actors } from '../setup/room';
 import { UIController } from './uiController';
+import { PlayerController } from '../entity/playerController';
 
 export class SceneSystem {
   private uiController: UIController;
@@ -15,21 +16,25 @@ export class SceneSystem {
   private cameraController: CameraController;
   private renderController: RenderController;
   private simulationLoop: SimulationLoop;
+  private playerController: PlayerController;
   private clock: THREE.Clock;
 
   private scene: THREE.Scene;
   private room: Room;
+  private actors: Actors;
 
   constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
+    this.playerController = new PlayerController();
     this.cameraController = new CameraController(actors.player.object);
     let camera = this.cameraController.getCamera();
     this.uiController = new UIController(camera, room, actors);
     this.renderController = new RenderController(scene, camera);
-    this.actorController = new ActorController(actors, new InputListener(this.uiController));
+    this.actorController = new ActorController(actors, new InputListener(this.uiController), this.playerController);
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
     this.scene = scene;
     this.room = room;
+    this.actors = actors;
 
     this.scene.add(this.room.cube.getNametagMesh()!);
   }
@@ -43,6 +48,7 @@ export class SceneSystem {
     const dt = this.clock.getDelta();
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
+    this.playerController.update(this.actors.player.object, dt);
     this.simulationLoop.step(dt);
     this.uiController.updateSpatialUI();
     this.renderController.render();

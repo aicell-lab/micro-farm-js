@@ -1,5 +1,6 @@
 import { ActionPayload, Actions } from "./actionType";
 import { Entity } from "../entity/entity";
+import { PlayerController } from "../entity/playerController";
 
 export class Action {
     private action: ActionPayload;
@@ -8,12 +9,7 @@ export class Action {
         this.action = action;
     }
 
-    execute(actor: Entity) {
-        if (!actor.playerController) {
-            return;
-        }
-        let ctrl = actor.playerController;
-
+    execute(_: Entity, ctrl: PlayerController) {
         switch (this.action.type) {
             case Actions.PLAYER_MOVE:
                 ctrl.handleMove(this.action.payload);

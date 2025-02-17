@@ -48,7 +48,7 @@ export class ActorFactory {
         let animObj = new AnimatedObject(Animations.Human);
         const options: EntityOptions = {
             object: createDefaultActorMesh(),
-            playerController: new PlayerController(animObj)
+            animations: animObj.animations,
         };
         let human = new Entity(options);
 

@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { PlayerController } from './playerController';
 import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
 import { createBubbleStatus, createSpeechBubbleTexture, BubbleOptions } from './nameplate';
@@ -8,26 +7,26 @@ import { Textures } from '../setup/enums';
 
 export interface EntityOptions {
     object: THREE.Object3D;
-    playerController?: PlayerController;
     armController?: ArmController;
     physicsController?: PhysicsController;
     nametag?: string;
+    animations?: THREE.AnimationClip[];
 }
 
 export class Entity {
     object: THREE.Object3D;
-    playerController?: PlayerController;
+    animations?: THREE.AnimationClip[];
     armController?: ArmController;
     physicsController?: PhysicsController;
     nametagMesh?: THREE.Mesh;
     bubbles: THREE.Mesh[];
 
-    constructor({ object, playerController, armController, physicsController, nametag }: EntityOptions) {
+    constructor({ object, armController, physicsController, nametag, animations }: EntityOptions) {
         this.bubbles = [];
         this.object = object;
-        this.playerController = playerController;
         this.armController = armController;
         this.physicsController = physicsController;
+        this.animations = animations;
         if (nametag)
             this.setNametag(nametag);
     }
@@ -53,7 +52,6 @@ export class Entity {
     }
 
     public update(delta: number): void {
-        this.playerController?.update(this.object, delta);
         this.armController?.update(delta);
     }
 
