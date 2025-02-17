@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { PlayerController } from './playerController';
 import { ArmController } from './armController';
 import { PhysicsController } from './physicsController';
-import { createBubbleStatus, createSpeechBubbleTexture, NameplateOptions } from './nameplate';
+import { createBubbleStatus, createSpeechBubbleTexture, BubbleOptions } from './nameplate';
 import { Assets } from '../res/assets';
 import { Textures } from '../setup/enums';
 
@@ -33,9 +33,9 @@ export class Entity {
     }
 
     private getNametagTexture(text: string): THREE.CanvasTexture {
-        let options: NameplateOptions = { text: text, font: '50px Verdana', color: 'black' };
-        const testImg = Assets.getInstance().getTextures().get(Textures.Error);
-        return createSpeechBubbleTexture(options.text, options.font, options.color, testImg);
+        let options: BubbleOptions = { text: text, font: '50px Verdana', color: 'black', texture: Textures.Error, textureColor: 'red' };
+        const img = Assets.getInstance().getTextures().get(options.texture)!;
+        return createSpeechBubbleTexture(options.text, options.font, options.color, img, options.textureColor);
     }
 
     public setNametag(text: string) {
