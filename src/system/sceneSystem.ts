@@ -39,8 +39,6 @@ export class SceneSystem {
     this.scene = scene;
     this.room = room;
     this.actors = actors;
-
-    this.scene.add(this.room.cube.getNametagMesh()!);
   }
 
   runSimulationLoop = () => {
@@ -57,8 +55,6 @@ export class SceneSystem {
     this.simulationLoop.step(dt);
     this.uiController.updateSpatialUI();
     this.renderController.render();
-
-    this.room.cube.setNametag(`value ${this.room.cube.object.position.x.toFixed(2)}`);
 
   }
 

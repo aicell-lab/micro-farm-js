@@ -76,7 +76,6 @@ export class RoomObjectFactory {
         const options: EntityOptions = {
             object: cube,
             physicsController: new PhysicsController(cube, 1, this.world),
-            nametag: "TEST"
         }
         return new Entity(options);
     }

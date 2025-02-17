@@ -77,7 +77,6 @@ export class UIController {
     }
 
     public updateSpatialUI(): void {
-        this.room.cube.updateNameplate(this.camera);
         this.actors.table.rotateBubbles(this.camera);
     }
 

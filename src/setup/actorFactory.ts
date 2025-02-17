@@ -4,12 +4,11 @@ import { FLOOR_Y_POSITION } from "./constants";
 import { Actors } from '../setup/room';
 import { MathUtils } from "three";
 import { MeshStandardMaterial } from 'three';
-import { PlayerController } from "../entity/playerController";
 import { Assets } from '../res/assets';
 import { ArmController } from "../entity/armController";
 import { Robots, Animations, Textures } from "./enums";
 import { AnimatedObject } from "../entity/playerController";
-import { createBubbleStatus, BubbleOptions } from "../entity/nameplate";
+import { createBubbleStatus, BubbleOptions } from "../entity/bubble";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
