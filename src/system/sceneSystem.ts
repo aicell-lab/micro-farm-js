@@ -11,31 +11,51 @@ import { TableController } from '../entity/tableController';
 import { URDFRobot } from 'urdf-loader';
 import { EntityCollection } from '../setup/entityCollection';
 
+interface Controllers {
+  ui: UIController;
+  camera: CameraController;
+  render: RenderController;
+  actor: ActorController;
+  player: PlayerController;
+  table: TableController;
+}
+
 export class SceneSystem {
-  private uiController: UIController;
-  private actorController: ActorController;
-  private cameraController: CameraController;
-  private renderController: RenderController;
   private simulationLoop: SimulationLoop;
-  private playerController: PlayerController;
-  private tableController: TableController;
   private clock: THREE.Clock;
   private entities: EntityCollection;
+  private controllers: Controllers;
 
   constructor(entities: EntityCollection, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.entities = entities;
     let actors = entities.getActors();
     let room = entities.getRoom();
-
-    this.playerController = new PlayerController();
-    this.tableController = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
-    this.cameraController = new CameraController(actors.player.object);
-    let camera = this.cameraController.getCamera();
-    this.uiController = new UIController(camera, room, actors);
-    this.renderController = new RenderController(scene, camera);
-    this.actorController = new ActorController(actors, new InputListener(this.uiController), this.playerController, this.tableController);
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
+    this.controllers = this.createControllers(entities, scene);
+  }
+
+  private createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
+    let actors = entities.getActors();
+    let room = entities.getRoom();
+    let cameraController = new CameraController(actors.player.object);
+    let camera = cameraController.getCamera();
+
+    let player = new PlayerController();
+    let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
+    let ui = new UIController(camera, room, actors);
+    let input = new InputListener(ui);
+    let render = new RenderController(scene, camera);
+    let actor = new ActorController(actors, input, player, table);
+
+    return {
+      player: player,
+      table: table,
+      camera: cameraController,
+      ui: ui,
+      render: render,
+      actor: actor,
+    };
   }
 
   runSimulationLoop = () => {
@@ -43,16 +63,23 @@ export class SceneSystem {
     requestAnimationFrame(this.runSimulationLoop);
   };
 
+  private updatePreSimulationStepControllers(dt: number, ctrl: Controllers): void {
+    ctrl.camera.update(dt);
+    ctrl.actor.handleUserInput();
+    ctrl.player.update(this.entities.getActors().player.object, dt);
+    ctrl.table.update(dt);
+  }
+
+  private updatePostSimulationStepControllers(ctrl: Controllers): void {
+    ctrl.ui.updateSpatialUI();
+    ctrl.render.render();
+  }
+
   processNextFrame() {
     const dt = this.clock.getDelta();
-    this.cameraController.update(dt);
-    this.actorController.handleUserInput();
-    this.playerController.update(this.entities.getActors().player.object, dt);
-    this.tableController.update(dt);
+    this.updatePreSimulationStepControllers(dt, this.controllers);
     this.simulationLoop.step(dt);
-    this.uiController.updateSpatialUI();
-    this.renderController.render();
-
+    this.updatePostSimulationStepControllers(this.controllers);
   }
 
 }
