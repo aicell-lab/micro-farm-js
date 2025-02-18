@@ -1,7 +1,7 @@
 import { TableController } from '../entity/tableController';
 import { PlayerController } from '../entity/playerController';
 import { InputListener } from '../io/input';
-import { Actors } from '../setup/room';
+import { Actors } from '../setup/entityCollection';
 
 export class ActorController {
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Room } from './room';
+import { Room } from './entityCollection';
 import { PhysicsWorld } from '../system/physicsWorld';
 import { createNoise2D } from 'simplex-noise';
 import { PhysicsController } from '../entity/physicsController';

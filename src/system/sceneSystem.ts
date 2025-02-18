@@ -1,16 +1,15 @@
 import * as THREE from 'three';
 import { CameraController } from './cameraController';
 import { SimulationLoop } from './simulationLoop';
-import { Room } from '../setup/room';
 import { ActorController } from './actorController';
 import { RenderController } from './renderController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
-import { Actors } from '../setup/room';
 import { UIController } from './uiController';
 import { PlayerController } from '../entity/playerController';
 import { TableController } from '../entity/tableController';
 import { URDFRobot } from 'urdf-loader';
+import { EntityCollection } from '../setup/entityCollection';
 
 export class SceneSystem {
   private uiController: UIController;
@@ -21,12 +20,13 @@ export class SceneSystem {
   private playerController: PlayerController;
   private tableController: TableController;
   private clock: THREE.Clock;
+  private entities: EntityCollection;
 
-  private scene: THREE.Scene;
-  private room: Room;
-  private actors: Actors;
+  constructor(entities: EntityCollection, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
+    this.entities = entities;
+    let actors = entities.getActors();
+    let room = entities.getRoom();
 
-  constructor(room: Room, actors: Actors, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.playerController = new PlayerController();
     this.tableController = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
     this.cameraController = new CameraController(actors.player.object);
@@ -36,9 +36,6 @@ export class SceneSystem {
     this.actorController = new ActorController(actors, new InputListener(this.uiController), this.playerController, this.tableController);
     this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
     this.clock = new THREE.Clock();
-    this.scene = scene;
-    this.room = room;
-    this.actors = actors;
   }
 
   runSimulationLoop = () => {
@@ -50,7 +47,7 @@ export class SceneSystem {
     const dt = this.clock.getDelta();
     this.cameraController.update(dt);
     this.actorController.handleUserInput();
-    this.playerController.update(this.actors.player.object, dt);
+    this.playerController.update(this.entities.getActors().player.object, dt);
     this.tableController.update(dt);
     this.simulationLoop.step(dt);
     this.uiController.updateSpatialUI();

@@ -7,6 +7,7 @@ import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';
 import { AmmoSingleton } from './setup/ammoSingleton';
 import { PhysicsWorld } from './system/physicsWorld';
+import { EntityCollection } from "./setup/entityCollection";
 
 async function init() {
     await AmmoSingleton.init();
@@ -17,8 +18,9 @@ function createSceneSystem(): SceneSystem {
     let physicsWorld = new PhysicsWorld();
     let room = new RoomObjectFactory(physicsWorld).createRoom();
     let actors = new ActorFactory().createActors();
-    let scene = new SceneFactory(room, actors).createScene();
-    return new SceneSystem(room, actors, scene, physicsWorld);
+    const entities = new EntityCollection(room, actors);
+    let scene = new SceneFactory(entities).createScene();
+    return new SceneSystem(entities, scene, physicsWorld);
 }
 
 async function runApp() {

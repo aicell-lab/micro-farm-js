@@ -1,7 +1,7 @@
 import { Entity, EntityOptions } from "../entity/entity";
 import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
-import { Actors } from '../setup/room';
+import { Actors } from './entityCollection';
 import { MathUtils } from "three";
 import { MeshStandardMaterial } from 'three';
 import { Assets } from '../res/assets';

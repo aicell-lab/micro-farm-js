@@ -1,14 +1,12 @@
 import * as THREE from 'three';
-import { Room, Actors } from './room';
+import { EntityCollection } from './entityCollection';
 import { Sky } from 'three/examples/jsm/Addons.js';
 
 export class SceneFactory {
-    private room: Room;
-    private actors: Actors;
+    private entities: EntityCollection;
 
-    constructor(room: Room, actors: Actors) {
-        this.room = room;
-        this.actors = actors;
+    constructor(entities: EntityCollection) {
+        this.entities = entities;
     }
 
     createSky(): Sky {
@@ -34,13 +32,11 @@ export class SceneFactory {
     }
 
     private populateScene(scene: THREE.Scene): void {
-        scene.add(this.actors.player.object);
-        scene.add(this.actors.table.object);
-        scene.add(this.room.floor.object);
-        scene.add(this.room.cube.object);
-
-        for (const bubble of this.actors.table.bubbles) {
-            scene.add(bubble.getMesh());
+        for (const e of this.entities.getEntities()) {
+            scene.add(e.object);
+        }
+        for (const b of this.entities.getBubbles()) {
+            scene.add(b.getMesh());
         }
     }
 }
