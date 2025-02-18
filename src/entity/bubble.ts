@@ -27,21 +27,20 @@ export class Bubble {
         this.mesh = this.createMesh();
     }
 
-    private setStandbyBubble(): void {
-
-    }
-
     public setState(state: OpticsState) {
-        switch (state) {
-            case OpticsState.STANDBY:
-                return this.setStandbyBubble();
-            case OpticsState.CAPTURING:
-                return this.setStandbyBubble();
-            case OpticsState.ERROR:
-                return this.setStandbyBubble();
-            case OpticsState.LOADING:
-                return this.setStandbyBubble();
-        }
+        const bubbleOptions = this.getBubbleOptions(state);
+        const iconTexture = Assets.getInstance().getTextures().get(bubbleOptions.texture)!;
+        const newTexture = createSpeechBubbleTexture(
+            bubbleOptions.text,
+            bubbleOptions.font,
+            bubbleOptions.color,
+            iconTexture,
+            bubbleOptions.textureColor
+        );
+
+        const material = this.mesh.material as THREE.MeshBasicMaterial;
+        material.map = newTexture;
+        material.needsUpdate = true;
     }
 
     private getBubbleOptions(state: OpticsState): BubbleOptions {
@@ -146,50 +145,41 @@ function createSpeechBubbleTexture(text: string, font: string = '30px Arial', co
     ctx.fill();
     ctx.stroke();
 
-    if (img) {
-        const imageCanvas = document.createElement('canvas');
-        const imageCtx = imageCanvas.getContext('2d')!;
-        imageCanvas.width = img.image.width;
-        imageCanvas.height = img.image.height;
-        imageCtx.drawImage(img.image, 0, 0);
 
-        imageCtx.globalCompositeOperation = 'source-atop';
-        imageCtx.fillStyle = imgColor;
-        imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
-        imageCtx.globalCompositeOperation = 'source-over';
+    //img
+    const imageCanvas = document.createElement('canvas');
+    const imageCtx = imageCanvas.getContext('2d')!;
+    imageCanvas.width = img.image.width;
+    imageCanvas.height = img.image.height;
+    imageCtx.drawImage(img.image, 0, 0);
 
-        const imageWidth = 140;
-        const imageHeight = 140;
-        const imageX = (canvas.width - imageWidth) / 2;
-        const imageY = padding / 2 + (bubbleHeight - imageHeight) / 2;
+    imageCtx.globalCompositeOperation = 'source-atop';
+    imageCtx.fillStyle = imgColor;
+    imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
+    imageCtx.globalCompositeOperation = 'source-over';
 
-        ctx.drawImage(imageCanvas, imageX, imageY, imageWidth, imageHeight);
+    const imageWidth = 140;
+    const imageHeight = 140;
+    const imageX = (canvas.width - imageWidth) / 2;
+    const imageY = padding / 2 + (bubbleHeight - imageHeight) / 2;
 
+    ctx.drawImage(imageCanvas, imageX, imageY, imageWidth, imageHeight);
 
-        const metrics = ctx.measureText(text); // Measure text width for centering
-        const textHeight = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent; // Get accurate text height
+    //text
+    const metrics = ctx.measureText(text); // Measure text width for centering
+    const textHeight = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent; // Get accurate text height
+    const textX = canvas.width / 2;
+    const textY = imageY + imageHeight + 10 + textHeight / 2;
+    ctx.font = font;
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
 
-        const textX = canvas.width / 2;
-        const textY = imageY + imageHeight + 15 + textHeight / 2;
-        ctx.font = font;
-        ctx.fillStyle = color;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-        ctx.shadowBlur = 3;
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
-
-
-        ctx.fillText(text, textX, textY);
-    } else {
-        ctx.font = font;
-        ctx.fillStyle = color;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'bottom';
-        ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 30);
-    }
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+    ctx.shadowBlur = 3;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    ctx.fillText(text, textX, textY);
 
     return new THREE.CanvasTexture(canvas);
 }
