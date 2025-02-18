@@ -51,16 +51,7 @@ export class Bubble {
     }
 
     public setState(state: OpticsState) {
-        const bubbleOptions = bubbleOptionsByState[state];
-        const iconTexture = Assets.getInstance().getTextures().get(bubbleOptions.texture)!;
-        const newTexture = createSpeechBubbleTexture(
-            bubbleOptions.text,
-            bubbleOptions.font,
-            bubbleOptions.color,
-            iconTexture,
-            bubbleOptions.textureColor
-        );
-
+        const newTexture = createSpeechBubbleTexture(bubbleOptionsByState[state]);
         const material = this.mesh.material as THREE.MeshBasicMaterial;
         material.map = newTexture;
         material.needsUpdate = true;
@@ -89,18 +80,17 @@ export class Bubble {
 
 function createBubbleStatus(options: BubbleOptions): THREE.Mesh {
     const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
-    const img = Assets.getInstance().getTextures().get(options.texture)!;
-    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(options.text, options.font, options.color, img, options.textureColor), transparent: true });
+    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(options), transparent: true });
     const mesh = new THREE.Mesh(textGeometry, textMaterial);
-
     const targetWidth = 0.4;
     const targetHeight = 0.4;
     mesh.scale.set(targetWidth, targetHeight, 1);
-
     return mesh;
 }
 
-function createSpeechBubbleTexture(text: string, font: string = '30px Arial', color: string = 'black', img: THREE.Texture, imgColor: string): THREE.CanvasTexture {
+function createSpeechBubbleTexture(options: BubbleOptions): THREE.CanvasTexture {
+    const { text, font, color, texture, textureColor } = options;
+
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d')!;
 
@@ -139,16 +129,16 @@ function createSpeechBubbleTexture(text: string, font: string = '30px Arial', co
     ctx.fill();
     ctx.stroke();
 
-
     //img
     const imageCanvas = document.createElement('canvas');
     const imageCtx = imageCanvas.getContext('2d')!;
+    const img = Assets.getInstance().getTextures().get(texture)!;
     imageCanvas.width = img.image.width;
     imageCanvas.height = img.image.height;
     imageCtx.drawImage(img.image, 0, 0);
 
     imageCtx.globalCompositeOperation = 'source-atop';
-    imageCtx.fillStyle = imgColor;
+    imageCtx.fillStyle = textureColor;
     imageCtx.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
     imageCtx.globalCompositeOperation = 'source-over';
 
