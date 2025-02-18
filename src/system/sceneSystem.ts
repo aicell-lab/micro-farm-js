@@ -20,6 +20,41 @@ interface Controllers {
   table: TableController;
 }
 
+function createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
+  let actors = entities.getActors();
+  let cameraController = new CameraController(actors.player.object);
+  let camera = cameraController.getCamera();
+
+  let player = new PlayerController();
+  let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
+  let ui = new UIController(camera, entities);
+  let input = new InputListener(ui);
+  let render = new RenderController(scene, camera);
+  let actor = new ActorController(actors, input, player, table);
+
+  return {
+    player: player,
+    table: table,
+    camera: cameraController,
+    ui: ui,
+    render: render,
+    actor: actor,
+  };
+}
+
+function updatePreSimulationStepControllers(dt: number, ctrl: Controllers, entities: EntityCollection): void {
+  ctrl.camera.update(dt);
+  ctrl.actor.handleUserInput();
+  ctrl.player.update(entities.getActors().player.object, dt);
+  ctrl.table.update(dt);
+}
+
+function updatePostSimulationStepControllers(ctrl: Controllers): void {
+  ctrl.ui.updateSpatialUI();
+  ctrl.render.render();
+}
+
+
 export class SceneSystem {
   private simulationLoop: SimulationLoop;
   private clock: THREE.Clock;
@@ -30,29 +65,7 @@ export class SceneSystem {
     this.entities = entities;
     this.simulationLoop = new SimulationLoop(entities, physicsWorld);
     this.clock = new THREE.Clock();
-    this.controllers = this.createControllers(entities, scene);
-  }
-
-  private createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
-    let actors = entities.getActors();
-    let cameraController = new CameraController(actors.player.object);
-    let camera = cameraController.getCamera();
-
-    let player = new PlayerController();
-    let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
-    let ui = new UIController(camera, entities);
-    let input = new InputListener(ui);
-    let render = new RenderController(scene, camera);
-    let actor = new ActorController(actors, input, player, table);
-
-    return {
-      player: player,
-      table: table,
-      camera: cameraController,
-      ui: ui,
-      render: render,
-      actor: actor,
-    };
+    this.controllers = createControllers(entities, scene);
   }
 
   runSimulationLoop = () => {
@@ -60,23 +73,11 @@ export class SceneSystem {
     requestAnimationFrame(this.runSimulationLoop);
   };
 
-  private updatePreSimulationStepControllers(dt: number, ctrl: Controllers): void {
-    ctrl.camera.update(dt);
-    ctrl.actor.handleUserInput();
-    ctrl.player.update(this.entities.getActors().player.object, dt);
-    ctrl.table.update(dt);
-  }
-
-  private updatePostSimulationStepControllers(ctrl: Controllers): void {
-    ctrl.ui.updateSpatialUI();
-    ctrl.render.render();
-  }
-
   processNextFrame() {
     const dt = this.clock.getDelta();
-    this.updatePreSimulationStepControllers(dt, this.controllers);
+    updatePreSimulationStepControllers(dt, this.controllers, this.entities);
     this.simulationLoop.step(dt);
-    this.updatePostSimulationStepControllers(this.controllers);
+    updatePostSimulationStepControllers(this.controllers);
   }
 
 }

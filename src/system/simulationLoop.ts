@@ -1,9 +1,9 @@
 import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
-import { Room, Actors, EntityCollection } from '../setup/entityCollection';
+import { EntityCollection } from '../setup/entityCollection';
 
 
-export function simPhysicsStep(world: PhysicsWorld, entities: EntityCollection, dt: number): void {
+function simPhysicsStep(world: PhysicsWorld, entities: EntityCollection, dt: number): void {
     let room = entities.getRoom();
     let stepDT = dt / 40.0;
     world.step(stepDT);
