@@ -11,13 +11,36 @@ interface BubbleOptions {
     textureColor: string,
 }
 
-const defaultBubbleOptions: BubbleOptions = {
-    text: '<Insert Text>',
-    font: '30px Arial',
-    color: 'white',
-    texture: Textures.Error,
-    textureColor: 'black',
-}
+const bubbleOptionsByState: Record<OpticsState, BubbleOptions> = {
+    [OpticsState.STANDBY]: {
+        text: 'Idle',
+        font: 'bold 50px Arial',
+        color: 'black',
+        texture: Textures.Timer,
+        textureColor: 'black',
+    },
+    [OpticsState.CAPTURING]: {
+        text: 'Capturing',
+        font: 'bold 50px Arial',
+        color: 'black',
+        texture: Textures.PhotoCamera,
+        textureColor: 'black',
+    },
+    [OpticsState.ERROR]: {
+        text: 'Error',
+        font: 'bold 50px Arial',
+        color: 'black',
+        texture: Textures.Error,
+        textureColor: 'red',
+    },
+    [OpticsState.LOADING]: {
+        text: 'Loading',
+        font: 'bold 50px Arial',
+        color: 'black',
+        texture: Textures.Timelapse,
+        textureColor: 'black',
+    },
+};
 
 export class Bubble {
 
@@ -28,7 +51,7 @@ export class Bubble {
     }
 
     public setState(state: OpticsState) {
-        const bubbleOptions = this.getBubbleOptions(state);
+        const bubbleOptions = bubbleOptionsByState[state];
         const iconTexture = Assets.getInstance().getTextures().get(bubbleOptions.texture)!;
         const newTexture = createSpeechBubbleTexture(
             bubbleOptions.text,
@@ -43,33 +66,6 @@ export class Bubble {
         material.needsUpdate = true;
     }
 
-    private getBubbleOptions(state: OpticsState): BubbleOptions {
-        let options: BubbleOptions = defaultBubbleOptions;
-        options.color = 'black';
-        options.font = 'bold 50px Arial';
-        options.textureColor = 'black';
-        switch (state) {
-            case OpticsState.STANDBY:
-                options.texture = Textures.Timer;
-                options.text = "Idle";
-                break;
-            case OpticsState.CAPTURING:
-                options.texture = Textures.PhotoCamera;
-                options.text = "Capturing";
-                break;
-            case OpticsState.ERROR:
-                options.texture = Textures.Error;
-                options.text = "Error";
-                options.textureColor = 'red';
-                break;
-            case OpticsState.LOADING:
-                options.texture = Textures.Timelapse;
-                options.text = "Loading";
-                break;
-        }
-        return options;
-    }
-
     public getMesh(): THREE.Mesh {
         return this.mesh;
     }
@@ -79,8 +75,7 @@ export class Bubble {
     }
 
     private createMesh(): THREE.Mesh {
-        let bubbleOptions = this.getBubbleOptions(OpticsState.STANDBY);
-        return createBubbleStatus(bubbleOptions);
+        return createBubbleStatus(bubbleOptionsByState[OpticsState.STANDBY]);
     }
 
     public update(camera: THREE.PerspectiveCamera) {
@@ -92,11 +87,10 @@ export class Bubble {
 
 }
 
-function createBubbleStatus(options: Partial<BubbleOptions> = {}): THREE.Mesh {
-    const finalOptions: BubbleOptions = { ...defaultBubbleOptions, ...options };
+function createBubbleStatus(options: BubbleOptions): THREE.Mesh {
     const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
-    const img = Assets.getInstance().getTextures().get(finalOptions.texture);
-    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(finalOptions.text, finalOptions.font, finalOptions.color, img!, finalOptions.textureColor), transparent: true });
+    const img = Assets.getInstance().getTextures().get(options.texture)!;
+    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(options.text, options.font, options.color, img, options.textureColor), transparent: true });
     const mesh = new THREE.Mesh(textGeometry, textMaterial);
 
     const targetWidth = 0.4;
@@ -166,11 +160,11 @@ function createSpeechBubbleTexture(text: string, font: string = '30px Arial', co
     ctx.drawImage(imageCanvas, imageX, imageY, imageWidth, imageHeight);
 
     //text
+    ctx.font = font;
     const metrics = ctx.measureText(text); // Measure text width for centering
     const textHeight = metrics.actualBoundingBoxDescent + metrics.actualBoundingBoxAscent; // Get accurate text height
     const textX = canvas.width / 2;
-    const textY = imageY + imageHeight + 10 + textHeight / 2;
-    ctx.font = font;
+    const textY = imageY + imageHeight + textHeight / 2;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
