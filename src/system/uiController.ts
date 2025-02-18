@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { Room } from '../setup/entityCollection';
+import { EntityCollection, Room } from '../setup/entityCollection';
 import { Actors } from '../setup/entityCollection';
 import { ArmCommand } from '../setup/enums';
 
@@ -64,20 +64,18 @@ Meta UI – UI that represents abstract information but is stylized to fit the e
 export class UIController {
 
     private camera: THREE.PerspectiveCamera;
-    private room: Room;
     private armCommandUI: ArmCommandUI;
-    private actors: Actors;
+    private entities: EntityCollection;
 
-    constructor(camera: THREE.PerspectiveCamera, room: Room, actors: Actors) {
+    constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection) {
         this.camera = camera;
-        this.room = room;
+        this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
-        this.actors = actors;
         initToolTip();
     }
 
     public updateSpatialUI(): void {
-        for (const bubble of this.actors.table.bubbles) {
+        for (const bubble of this.entities.getBubbles()) {
             bubble.update(this.camera);
         }
     }

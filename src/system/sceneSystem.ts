@@ -28,22 +28,19 @@ export class SceneSystem {
 
   constructor(entities: EntityCollection, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.entities = entities;
-    let actors = entities.getActors();
-    let room = entities.getRoom();
-    this.simulationLoop = new SimulationLoop(room, actors, physicsWorld);
+    this.simulationLoop = new SimulationLoop(entities, physicsWorld);
     this.clock = new THREE.Clock();
     this.controllers = this.createControllers(entities, scene);
   }
 
   private createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
     let actors = entities.getActors();
-    let room = entities.getRoom();
     let cameraController = new CameraController(actors.player.object);
     let camera = cameraController.getCamera();
 
     let player = new PlayerController();
     let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
-    let ui = new UIController(camera, room, actors);
+    let ui = new UIController(camera, entities);
     let input = new InputListener(ui);
     let render = new RenderController(scene, camera);
     let actor = new ActorController(actors, input, player, table);
