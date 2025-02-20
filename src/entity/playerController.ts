@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 import { MovePayload, RotatePayload } from '../types/actionType';
-import { AnimationAsset } from '../res/animationLoader';
-import { Assets } from '../res/assets';
-import { Animations } from '../setup/enums';
 import { Entity } from './entity';
 
 // Player Kinematic State (Unrealistic physics)
@@ -50,7 +47,6 @@ class PlayerPhysicsController {
             }
         }
 
-        //object.rotation.y += this.rotationSpeed * delta;
         const quaternion = new THREE.Quaternion();
         quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationSpeed * delta);
         object.quaternion.multiplyQuaternions(quaternion, object.quaternion);
@@ -81,6 +77,14 @@ class PlayerPhysicsController {
             this.rotationSpeed = -speed;
         }
     }
+
+    public getVelocity(): THREE.Vector3 {
+        return this.kinState.velocity.clone();
+    }
+
+    public getRelativeVelocity(object: THREE.Object3D): THREE.Vector3 {
+        return object.worldToLocal(this.kinState.velocity.clone().add(object.position));
+    }
 }
 
 
@@ -89,35 +93,46 @@ class PlayerAnimationController {
     private animationMixer: THREE.AnimationMixer;
     private object: THREE.Object3D;
     private animations: THREE.AnimationClip[];
+    private walkAction: THREE.AnimationAction;
+    private physicsCtrl: PlayerPhysicsController;
 
-    constructor(entity: Entity) {
+    constructor(entity: Entity, phyicsCtrl: PlayerPhysicsController) {
         this.object = entity.object;
         this.animations = entity.animations!;
-        this.animationMixer = this.loadAnimationMixer(this.animations);
-    }
-
-    private loadAnimationMixer(animations: THREE.AnimationClip[]): THREE.AnimationMixer {
-        let mixer = new THREE.AnimationMixer(this.object);
-        animations.forEach((clip) => {
-            mixer!.clipAction(clip).play();
-        });
-        return mixer;
+        this.animationMixer = new THREE.AnimationMixer(this.object);
+        this.walkAction = this.animationMixer.clipAction(this.animations[0]); //Assume first animation is walk
+        this.walkAction.play();
+        this.walkAction.paused = true;
+        this.physicsCtrl = phyicsCtrl;
     }
 
     public update(dt: number): void {
+        const velocity = this.physicsCtrl.getVelocity();
+        const speed = velocity.length();
+        const localVelocity = this.physicsCtrl.getRelativeVelocity(this.object);
+
+        if (speed > 0.01) {
+            this.walkAction.paused = false;
+            let timeScale = Math.min(2.0, speed * 0.5);
+            if (localVelocity.z < 0) {
+                timeScale = timeScale * -1.0;
+            }
+            this.walkAction.timeScale = timeScale;
+        } else {
+            this.walkAction.paused = true;
+        }
+
         this.animationMixer.update(dt);
     }
 }
 
 export class PlayerController {
     private phyicsCtrl: PlayerPhysicsController;
-    //private animationCtrl: PlayerAnimationController;
-    //private object: THREE.Object3D;
+    private animationCtrl: PlayerAnimationController;
 
     constructor(entity: Entity) {
         this.phyicsCtrl = new PlayerPhysicsController();
-        //this.animationCtrl = new PlayerAnimationController(entity);
-        //this.object = animatedObject.object;
+        this.animationCtrl = new PlayerAnimationController(entity, this.phyicsCtrl);
     }
 
     public update(object: THREE.Object3D, dt: number) {
