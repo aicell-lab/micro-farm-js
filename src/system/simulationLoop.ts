@@ -12,13 +12,18 @@ export class SimulationLoop {
         this.entities = entities;
         this.world = world;
         let room = this.entities.getRoom();
-        this.physicsCtrl = new PhysicsController(room.cube.object, 1.0, this.world);
+        this.physicsCtrl = new PhysicsController();
+        this.physicsCtrl.addObject(room.cube.object, 1.0);
+        this.physicsCtrl.addObject(room.floor.object, 0.0);
         this.physicsCtrl.applyImpulse(new THREE.Vector3(4.5, 0, 0));
+        this.physicsCtrl.getPhysicsData().forEach(([object, data]) => {
+            this.world.addRigidBody(data.body, object);
+        });
     }
 
     step(dt: number): void {
         let slowedDT = dt / 10.0;
         this.world.step(slowedDT);
-        this.physicsCtrl.updateObjectFromPhysics();
+        this.physicsCtrl.update();
     }
 } 
