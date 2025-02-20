@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { EntityCollection, Room } from '../setup/entityCollection';
-import { Actors } from '../setup/entityCollection';
+import { EntityCollection } from '../setup/entityCollection';
 import { ArmCommand } from '../setup/enums';
 
 function initToolTip() {

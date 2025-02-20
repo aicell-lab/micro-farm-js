@@ -3,10 +3,9 @@ import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
 import { Actors } from './entityCollection';
 import { MathUtils } from "three";
-import { MeshStandardMaterial } from 'three';
 import { Assets } from '../res/assets';
 import { TableController } from "../entity/tableController";
-import { Robots, Animations, Textures } from "./enums";
+import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 
@@ -16,25 +15,6 @@ function setActorPosition(actor: Entity) {
     if (minY < FLOOR_Y_POSITION) {
         actor.object.position.y -= minY;
     }
-}
-
-function createDefaultMaterial(): MeshStandardMaterial {
-    const material = new MeshStandardMaterial({
-        color: 0x008822,
-        metalness: 0.3,
-        roughness: 0.7
-    });
-    return material;
-}
-
-function createDefaultActorMesh(): THREE.Object3D {
-    let object = new THREE.Object3D();
-    const geometry = new THREE.BoxGeometry(0.5, 1.0, 0.5);
-    const material = createDefaultMaterial();
-    let mesh = new THREE.Mesh(geometry, material);
-
-    object.add(mesh);
-    return object;
 }
 
 function loadAnimatioAsset(animationType: Animations): AnimationAsset {
