@@ -126,18 +126,38 @@ class PlayerAnimationController {
     }
 }
 
+
+
 export class PlayerController {
     private phyicsCtrl: PlayerPhysicsController;
     private animationCtrl: PlayerAnimationController;
+    private bounds: THREE.Box2;
 
     constructor(entity: Entity) {
         this.phyicsCtrl = new PlayerPhysicsController();
         this.animationCtrl = new PlayerAnimationController(entity, this.phyicsCtrl);
+
+        const len: number = 5.0;
+        this.bounds = new THREE.Box2(new THREE.Vector2(-len, -len), new THREE.Vector2(len, len));
     }
 
     public update(object: THREE.Object3D, dt: number) {
         this.phyicsCtrl.update(object, dt);
         this.animationCtrl.update(dt);
+        this.setWithinBounds(object);
+    }
+
+    private setWithinBounds(object: THREE.Object3D): void {
+        if (this.isOutOfBounds(object)) {
+            const minPos = new THREE.Vector3(this.bounds.min.x, -9999.0, this.bounds.min.y);
+            const maxPos = new THREE.Vector3(this.bounds.max.x, 9999.0, this.bounds.max.y);
+            object.position.clamp(minPos, maxPos);
+        }
+    }
+
+    private isOutOfBounds(object: THREE.Object3D): boolean {
+        const pos = object.position.clone();
+        return this.bounds.containsPoint(new THREE.Vector2(pos.x, pos.z)) == false;
     }
 
     public handleMove(p: MovePayload) {
@@ -146,6 +166,13 @@ export class PlayerController {
 
     public handleRotation(p: RotatePayload) {
         this.phyicsCtrl.handleRotation(p);
+    }
+
+    public addCollider(_object: THREE.Object3D) {
+
+    }
+    public setBounds(bounds: THREE.Box2) {
+        this.bounds = bounds;
     }
 
 }
