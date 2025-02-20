@@ -1,31 +1,24 @@
 import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-
-
-function simPhysicsStep(world: PhysicsWorld, entities: EntityCollection, dt: number): void {
-    let room = entities.getRoom();
-    let stepDT = dt / 40.0;
-    world.step(stepDT);
-    room.cube.physicsController?.updateFromPhysics(room.cube.object);
-}
+import { PhysicsController } from '../entity/physicsController';
 
 export class SimulationLoop {
     private entities: EntityCollection;
     private world: PhysicsWorld;
+    private physicsCtrl: PhysicsController;
 
     constructor(entities: EntityCollection, world: PhysicsWorld) {
         this.entities = entities;
         this.world = world;
-        this.initPhysics();
-    }
-
-    private initPhysics(): void {
         let room = this.entities.getRoom();
-        room.cube.physicsController?.applyImpulse(new THREE.Vector3(4.5, 0, 0));
+        this.physicsCtrl = new PhysicsController(room.cube.object, 1.0, this.world);
+        this.physicsCtrl.applyImpulse(new THREE.Vector3(4.5, 0, 0));
     }
 
     step(dt: number): void {
-        simPhysicsStep(this.world, this.entities, dt);
+        let slowedDT = dt / 10.0;
+        this.world.step(slowedDT);
+        this.physicsCtrl.updateObjectFromPhysics();
     }
 } 

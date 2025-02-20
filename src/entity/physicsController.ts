@@ -36,20 +36,22 @@ function createBody(object: THREE.Object3D, mass: number): Ammo.btRigidBody {
 export class PhysicsController {
 
     body: Ammo.btRigidBody;
+    object: THREE.Object3D;
 
     constructor(object: THREE.Object3D, mass: number, physicsWorld: PhysicsWorld) {
+        this.object = object;
         this.body = createBody(object, mass);
         physicsWorld.addRigidBody(this.body, object);
     }
 
-    updateFromPhysics(object: THREE.Object3D,): void {
+    updateObjectFromPhysics(): void {
         const Ammo = AmmoSingleton.get();
         const transform = new Ammo.btTransform();
         this.body.getMotionState().getWorldTransform(transform);
         const origin = transform.getOrigin();
-        object.position.set(origin.x(), origin.y(), origin.z());
+        this.object.position.set(origin.x(), origin.y(), origin.z());
         const rotation = transform.getRotation();
-        object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+        this.object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
     }
 
     applyImpulse(force: THREE.Vector3, relativePosition?: THREE.Vector3): void {

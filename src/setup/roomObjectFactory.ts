@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { Room } from './entityCollection';
 import { PhysicsWorld } from '../system/physicsWorld';
 import { createNoise2D } from 'simplex-noise';
-import { PhysicsController } from '../entity/physicsController';
 import { Material, MeshStandardMaterial, Mesh } from 'three';
 import { BoxGeometry } from 'three';
 import { Entity, EntityOptions } from '../entity/entity';
@@ -60,8 +59,7 @@ export class RoomObjectFactory {
     createFloor(): Entity {
         let obj = createFloorMesh();
         const options: EntityOptions = {
-            object: obj,
-            physicsController: new PhysicsController(obj, 0, this.world)
+            object: obj
         };
         return new Entity(options);
     }
@@ -74,8 +72,7 @@ export class RoomObjectFactory {
         cube.position.x = 1.0;
         cube.position.z = -4.5;
         const options: EntityOptions = {
-            object: cube,
-            physicsController: new PhysicsController(cube, 1, this.world),
+            object: cube
         }
         return new Entity(options);
     }
