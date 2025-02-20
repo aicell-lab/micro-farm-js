@@ -13,7 +13,7 @@ export const modelFilepaths: { [key in Models]: string } = {
     [Models.OpticalTable]: "assets/objs/optical_table.obj",
 };
 export const animationFilepaths: { [key in Animations]: string } = {
-    [Animations.Human]: "assets/gltfs/CesiumMan.glb",
+    [Animations.Human]: "assets/gltfs/CesiumMan2.glb",
 };
 export const textureFilepaths: { [key in Textures]: string } = {
     [Textures.Error]:       "assets/imgs/error.png",

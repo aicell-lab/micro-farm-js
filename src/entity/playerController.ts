@@ -3,6 +3,7 @@ import { MovePayload, RotatePayload } from '../types/actionType';
 import { AnimationAsset } from '../res/animationLoader';
 import { Assets } from '../res/assets';
 import { Animations } from '../setup/enums';
+import { Entity } from './entity';
 
 // Player Kinematic State (Unrealistic physics)
 interface PKinematicState {
@@ -49,7 +50,10 @@ class PlayerPhysicsController {
             }
         }
 
-        object.rotation.y += this.rotationSpeed * delta;
+        //object.rotation.y += this.rotationSpeed * delta;
+        const quaternion = new THREE.Quaternion();
+        quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), this.rotationSpeed * delta);
+        object.quaternion.multiplyQuaternions(quaternion, object.quaternion);
     }
 
     public handleMove(p: MovePayload) {
@@ -71,41 +75,24 @@ class PlayerPhysicsController {
         const speed = 2.0;
 
         if (p.left) {
-            this.rotationSpeed = -speed;
-        }
-        if (p.right) {
             this.rotationSpeed = speed;
         }
+        if (p.right) {
+            this.rotationSpeed = -speed;
+        }
     }
 }
 
-export class AnimatedObject {
 
-    object: THREE.Object3D;
-    animations: THREE.AnimationClip[];
-
-    constructor(type: Animations) {
-        let animationAsset = this.loadAnimatioAsset(type);
-        this.object = animationAsset.model;
-        this.animations = animationAsset.animations;
-        this.object.rotateY(THREE.MathUtils.degToRad(90));
-    }
-
-    private loadAnimatioAsset(animationType: Animations): AnimationAsset {
-        let animationAssets = Assets.getInstance().getAnimations();
-        return animationAssets.get(animationType)!;
-    }
-}
-
-/*class PlayerAnimationController {
+class PlayerAnimationController {
 
     private animationMixer: THREE.AnimationMixer;
     private object: THREE.Object3D;
     private animations: THREE.AnimationClip[];
 
-    constructor(animatedObject: AnimatedObject) {
-        this.object = animatedObject.object;
-        this.animations = animatedObject.animations;
+    constructor(entity: Entity) {
+        this.object = entity.object;
+        this.animations = entity.animations!;
         this.animationMixer = this.loadAnimationMixer(this.animations);
     }
 
@@ -120,22 +107,22 @@ export class AnimatedObject {
     public update(dt: number): void {
         this.animationMixer.update(dt);
     }
-}*/
+}
 
 export class PlayerController {
     private phyicsCtrl: PlayerPhysicsController;
     //private animationCtrl: PlayerAnimationController;
     //private object: THREE.Object3D;
 
-    constructor() {
+    constructor(entity: Entity) {
         this.phyicsCtrl = new PlayerPhysicsController();
-        //this.animationCtrl = new PlayerAnimationController(animatedObject);
+        //this.animationCtrl = new PlayerAnimationController(entity);
         //this.object = animatedObject.object;
     }
 
     public update(object: THREE.Object3D, dt: number) {
         this.phyicsCtrl.update(object, dt);
-        //this.animationCtrl.update(dt);
+        this.animationCtrl.update(dt);
     }
 
     public handleMove(p: MovePayload) {

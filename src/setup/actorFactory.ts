@@ -7,8 +7,8 @@ import { MeshStandardMaterial } from 'three';
 import { Assets } from '../res/assets';
 import { TableController } from "../entity/tableController";
 import { Robots, Animations, Textures } from "./enums";
-import { AnimatedObject } from "../entity/playerController";
 import { Bubble } from "../entity/bubble";
+import { AnimationAsset } from "../res/animationLoader";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -37,6 +37,11 @@ function createDefaultActorMesh(): THREE.Object3D {
     return object;
 }
 
+function loadAnimatioAsset(animationType: Animations): AnimationAsset {
+    let animationAssets = Assets.getInstance().getAnimations();
+    return animationAssets.get(animationType)!;
+}
+
 export class ActorFactory {
 
     constructor() {
@@ -44,15 +49,15 @@ export class ActorFactory {
     }
 
     createHuman(): Entity {
-        let animObj = new AnimatedObject(Animations.Human);
+        let animAsset = loadAnimatioAsset(Animations.Human);
         const options: EntityOptions = {
-            object: createDefaultActorMesh(),
-            animations: animObj.animations,
+            object: animAsset.model,
+            animations: animAsset.animations,
         };
         let human = new Entity(options);
-
-        const rot = THREE.MathUtils.degToRad(180.0);
-        human.object.rotateY(rot);
+        const rotY = THREE.MathUtils.degToRad(90.0);
+        human.object.rotateY(rotY);
+        
         setActorPosition(human);
         human.object.position.z = 3.0;
         human.object.position.x = -0.5;
