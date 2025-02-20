@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import { setResizeListener } from './window';
-import { ThirdPersonCamera } from './thirdPersonCamera';
+import { setResizeListener } from '../system/window';
+import { ThirdPersonCamera } from '../system/thirdPersonCamera';
 
 export class CameraController {
     private camera: THREE.PerspectiveCamera;

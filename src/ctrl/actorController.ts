@@ -1,5 +1,5 @@
-import { TableController } from '../entity/tableController';
-import { PlayerController } from '../entity/playerController';
+import { TableController } from './tableController';
+import { PlayerController } from './playerController';
 import { InputListener } from '../io/input';
 import { Actors } from '../setup/entityCollection';
 

@@ -1,6 +1,6 @@
 import { ActionPayload, Actions } from "./actionType";
 import { Entity } from "../entity/entity";
-import { PlayerController } from "../entity/playerController";
+import { PlayerController } from "../ctrl/playerController";
 
 export class Action {
     private action: ActionPayload;

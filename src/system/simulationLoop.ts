@@ -1,7 +1,7 @@
 import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-import { PhysicsController } from '../entity/physicsController';
+import { PhysicsController } from '../ctrl/physicsController';
 
 function createPhysicsController(entities: EntityCollection): PhysicsController {
     let room = entities.getRoom();

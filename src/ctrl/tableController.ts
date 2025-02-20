@@ -1,9 +1,9 @@
 import { URDFRobot, URDFJoint } from 'urdf-loader';
-import { ArmStateMachine } from './armState';
+import { ArmStateMachine } from '../entity/armState';
 import { ArmState, ArmCommand } from '../setup/enums';
 import { OpticsController } from './opticsController';
 import * as THREE from 'three';
-import { Bubble } from './bubble';
+import { Bubble } from '../entity/bubble';
 
 export class TableController {
     table: URDFRobot;

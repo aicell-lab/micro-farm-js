@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { getRenderer } from './window';
+import { getRenderer } from '../system/window';
 
 export class RenderController {
 

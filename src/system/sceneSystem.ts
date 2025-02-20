@@ -1,13 +1,13 @@
 import * as THREE from 'three';
-import { CameraController } from './cameraController';
+import { CameraController } from '../ctrl/cameraController';
 import { SimulationLoop } from './simulationLoop';
-import { ActorController } from './actorController';
-import { RenderController } from './renderController';
+import { ActorController } from '../ctrl/actorController';
+import { RenderController } from '../ctrl/renderController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
-import { UIController } from './uiController';
-import { PlayerController } from '../entity/playerController';
-import { TableController } from '../entity/tableController';
+import { UIController } from '../ctrl/uiController';
+import { PlayerController } from '../ctrl/playerController';
+import { TableController } from '../ctrl/tableController';
 import { URDFRobot } from 'urdf-loader';
 import { EntityCollection } from '../setup/entityCollection';
 

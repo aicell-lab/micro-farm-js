@@ -1,7 +1,7 @@
 import { URDFLink } from 'urdf-loader';
 import * as THREE from 'three';
 import { OpticsState } from '../setup/enums';
-import { Bubble } from './bubble';
+import { Bubble } from '../entity/bubble';
 //import { createBubbleStatus } from './nameplate';
 
 

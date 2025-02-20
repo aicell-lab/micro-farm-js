@@ -2,7 +2,7 @@ import { KeyboardListener } from './keyboard';
 import { Action } from '../types/action';
 import { MovePayload, ActionPayload, RotatePayload } from '../types/actionType';
 import { ArmCommand, Actions } from '../setup/enums';
-import { UIController } from '../system/uiController';
+import { UIController } from '../ctrl/uiController';
 
 export class InputListener {
     keyboardListener: KeyboardListener;

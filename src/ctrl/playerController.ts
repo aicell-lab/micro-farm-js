@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { MovePayload, RotatePayload } from '../types/actionType';
-import { Entity } from './entity';
+import { Entity } from '../entity/entity';
 
 // Player Kinematic State (Unrealistic physics)
 interface PKinematicState {
