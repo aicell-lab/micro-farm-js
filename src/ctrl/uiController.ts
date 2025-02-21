@@ -68,13 +68,13 @@ Meta UI – UI that represents abstract information but is stylized to fit the e
 */
 export class UIController {
 
-    private camera: THREE.PerspectiveCamera;
+    //private camera: THREE.PerspectiveCamera;
     private armCommandUI: ArmCommandUI;
-    private entities: EntityCollection;
+    //private entities: EntityCollection;
 
-    constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection) {
-        this.camera = camera;
-        this.entities = entities;
+    constructor(_camera: THREE.PerspectiveCamera, _entities: EntityCollection) {
+        //this.camera = camera;
+        //this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
         initToolTip();
     }

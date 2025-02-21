@@ -4,7 +4,6 @@ import { FLOOR_Y_POSITION } from "./constants";
 import { Actors } from './entityCollection';
 import { MathUtils } from "three";
 import { Assets } from '../res/assets';
-import { TableController } from "../ctrl/tableController";
 import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
