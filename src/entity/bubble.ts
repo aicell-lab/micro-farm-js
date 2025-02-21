@@ -76,10 +76,10 @@ export class Bubble {
 
 function createBubbleMesh(options: BubbleOptions): THREE.Mesh {
     const textGeometry = new THREE.PlaneGeometry(1, 1); // Use 1x1 for square
-    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(options), transparent: true });
+    const textMaterial = new THREE.MeshBasicMaterial({ map: createSpeechBubbleTexture(options), transparent: true, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(textGeometry, textMaterial);
-    const targetWidth = 0.4;
-    const targetHeight = 0.4;
+    const targetWidth = 0.35;
+    const targetHeight = 0.35;
     mesh.scale.set(targetWidth, targetHeight, 1);
     return mesh;
 }

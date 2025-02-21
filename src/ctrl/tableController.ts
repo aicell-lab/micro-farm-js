@@ -15,24 +15,14 @@ export class TableController {
 
         const numOptics = 1;
         if (bubbles.length !== numOptics) {
-            throw new Error(`Expected exactly ${numOptics} meshes.`);
+            throw new Error(`Expected exactly ${numOptics} speech buubles.`);
         }
 
         this.table = table;
         table.updateMatrixWorld(true);
         this.slideJoint = table.joints["slide-j"];
-        //console.log(`joint: ${this.slideJoint.limit.lower}`);
-        let squid = this.table.links["squid"];
         this.armFSM = new ArmStateMachine();
-        this.opticsController = new OpticsController(squid, bubbles[0]);
-    }
-
-    adjustBubblePositions(): void {
-        let pos = new THREE.Vector3();
-        this.table.getWorldPosition(pos);
-        console.log(pos);
-
-        this.opticsController.adjustBubblePosition();
+        this.opticsController = new OpticsController(bubbles[0], new THREE.Vector3(-1.3, 1.5, -0.5));
     }
 
     public createStatusBubbles(): THREE.Mesh[] {

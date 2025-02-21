@@ -80,9 +80,9 @@ export class UIController {
     }
 
     public updateSpatialUI(): void {
-        for (const bubble of this.entities.getBubbles()) {
+        /*for (const bubble of this.entities.getBubbles()) {
             bubble.update(this.camera);
-        }
+        }*/
     }
 
     public getArmCommands(): Array<ArmCommand> {
