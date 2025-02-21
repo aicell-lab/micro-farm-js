@@ -39,7 +39,7 @@ export class ActorFactory {
         human.object.rotateY(rotY);
         const rotX = THREE.MathUtils.degToRad(-90.0);
         human.object.rotateX(rotX);
-        
+
         setActorPosition(human);
         human.object.position.z = 3.0;
         human.object.position.x = -0.5;
@@ -48,8 +48,7 @@ export class ActorFactory {
 
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
-        let bubble = new Bubble();
-        let bubbles = [bubble];
+        const bubbles = Array.from({ length: 10 }, () => new Bubble());
         const options: EntityOptions = {
             object: tableRobot
         };

@@ -9,11 +9,11 @@ export class TableController {
     table: URDFRobot;
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
-    opticsController: OpticsController;
+    opticsControllers: OpticsController[];
 
     constructor(table: URDFRobot, bubbles: Bubble[]) {
 
-        const numOptics = 1;
+        const numOptics = 10;
         if (bubbles.length !== numOptics) {
             throw new Error(`Expected exactly ${numOptics} speech buubles.`);
         }
@@ -22,7 +22,16 @@ export class TableController {
         table.updateMatrixWorld(true);
         this.slideJoint = table.joints["slide-j"];
         this.armFSM = new ArmStateMachine();
-        this.opticsController = new OpticsController(bubbles[0], new THREE.Vector3(-1.3, 1.5, -0.5));
+        this.opticsControllers = [];
+        for (let i = 0; i < 10; i++) {
+            const pos = new THREE.Vector3(-1.3 + i * 0.57, 1.5, -0.5);
+            if (i > 4) {
+                pos.x -= 5 * 0.57;
+                pos.z = 0.5;
+            }
+            let opticsController = new OpticsController(bubbles[i], pos);
+            this.opticsControllers.push(opticsController);
+        }
     }
 
     public createStatusBubbles(): THREE.Mesh[] {
