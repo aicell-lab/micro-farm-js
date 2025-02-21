@@ -50,17 +50,15 @@ export class ActorFactory {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
         let bubble = new Bubble();
         let bubbles = [bubble];
-        let armController = new TableController(tableRobot, bubbles);
         const options: EntityOptions = {
             object: tableRobot
         };
         let table = new Entity(options);
         table.bubbles = bubbles;
         table.object.position.y += 0.855;
-        table.object.position.x -= 2.0;
-        table.object.position.z -= 0.7;
+        //table.object.position.x -= 2.0;
+        //table.object.position.z -= 0.7;
         table.object.rotation.x = MathUtils.degToRad(270.0);
-        armController.adjustBubblePositions();
         return table;
     }
 

@@ -32,6 +32,8 @@ canvas {
     pointer-events: none;
 }
 
+
+
 #ui-buttons {
     position: absolute;
     top: 10px;
@@ -42,9 +44,10 @@ canvas {
     color: white;
     font-family: Arial, sans-serif;
     z-index: 10;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
     gap: 8px;
+    text-align: center;
 }
 
 /* Button Styling */
@@ -52,13 +55,31 @@ canvas {
     background: #536a4c;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.1s;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
+/* Hover and Click Effects */
 .ui-button:hover {
     background: #457d45;
+}
+
+.ui-button:active {
+    transform: scale(0.95);
+}
+
+#btn7 {
+    background: #8b0000;
+    color: white;
+    font-weight: bold;
+    grid-column: 2 / 3; /* Center STOP button */
+}
+
+#btn7:hover {
+    background: #ff0000;
 }

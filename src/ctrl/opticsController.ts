@@ -22,12 +22,12 @@ export class OpticsController {
     }
 
     adjustBubblePosition(): void {
-        let pos = new THREE.Vector3();
+        /*let pos = new THREE.Vector3();
         this.microscope.getWorldPosition(pos);
         pos.z = pos.z * -2.0;
         const offset = new THREE.Vector3(0, 0.7, 0.0);
         pos.add(offset);
-        this.bubble.setPosition(pos);
+        this.bubble.setPosition(pos);*/
     }
 
     update(_dt: number): void {

@@ -23,8 +23,12 @@ export enum ArmState {
 }
 
 export enum ArmCommand {
-    GOTO_A,
-    GOTO_B,
+    GOTO_1,
+    GOTO_2,
+    GOTO_3,
+    GOTO_4,
+    GOTO_5,
+    GOTO_6,
     STOP
 }
 

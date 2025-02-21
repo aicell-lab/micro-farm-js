@@ -21,28 +21,33 @@ export class ArmCommandUI {
     }
 
     private initButtons(): void {
-        const btnA = document.getElementById("btn1");
-        const btnB = document.getElementById("btn2");
-        const btnStop = document.getElementById("btn3");
+        const commands: { id: string; command: ArmCommand }[] = [
+            { id: "btn1", command: ArmCommand.GOTO_1 },
+            { id: "btn2", command: ArmCommand.GOTO_2 },
+            { id: "btn3", command: ArmCommand.GOTO_3 },
+            { id: "btn4", command: ArmCommand.GOTO_4 },
+            { id: "btn5", command: ArmCommand.GOTO_5 },
+            { id: "btn6", command: ArmCommand.GOTO_6 },
+        ];
 
-        if (btnA) btnA.addEventListener("click", () => this.armGotoA());
-        if (btnB) btnB.addEventListener("click", () => this.armGotoB());
+        commands.forEach(({ id, command }) => {
+            const button = document.getElementById(id);
+            if (button) {
+                button.addEventListener("click", () => this.queueCommand(command));
+            }
+        });
+
+        const btnStop = document.getElementById("btn7");
         if (btnStop) btnStop.addEventListener("click", () => this.armStop());
     }
 
-
-    private armGotoA() {
-        console.log('armGotoA command');
-        this.actionQueue.push(ArmCommand.GOTO_A);
-    }
-
-    private armGotoB() {
-        console.log('armGotoB command');
-        this.actionQueue.push(ArmCommand.GOTO_B);
+    private queueCommand(command: ArmCommand) {
+        console.log(`Command: ${command}`);
+        this.actionQueue.push(command);
     }
 
     private armStop() {
-        console.log('armStop command');
+        console.log("armStop command");
         this.actionQueue.push(ArmCommand.STOP);
     }
 
@@ -52,6 +57,7 @@ export class ArmCommandUI {
         return queue;
     }
 }
+
 
 /*
 Types of UI

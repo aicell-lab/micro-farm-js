@@ -21,6 +21,7 @@ export class TableController {
         this.table = table;
         table.updateMatrixWorld(true);
         this.slideJoint = table.joints["slide-j"];
+        //console.log(`joint: ${this.slideJoint.limit.lower}`);
         let squid = this.table.links["squid"];
         this.armFSM = new ArmStateMachine();
         this.opticsController = new OpticsController(squid, bubbles[0]);
