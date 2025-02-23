@@ -34,11 +34,11 @@ export class ActorFactory {
             animations: animAsset.animations,
         };
         let human = new Entity(options);
-        const rotY = THREE.MathUtils.degToRad(90.0);
+        const rotY = THREE.MathUtils.degToRad(180.0);
         human.object.rotateY(rotY);
-        const rotX = THREE.MathUtils.degToRad(-90.0);
-        human.object.rotateX(rotX);
-
+        //const rotX = THREE.MathUtils.degToRad(-90.0);
+        //human.object.rotateX(rotX);
+        human.object.scale.set(0.2,0.2,0.2);
         setActorPosition(human);
         human.object.position.z = 3.0;
         human.object.position.x = -0.5;

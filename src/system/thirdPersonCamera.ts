@@ -7,7 +7,7 @@ export class ThirdPersonCamera {
     private camera: THREE.PerspectiveCamera;
 
     private getIdealOffset(): THREE.Vector3 {
-        const idealOffset = new THREE.Vector3(-1.6, 0.7, -2.5);
+        const idealOffset = new THREE.Vector3(-1.6, 1.7, -2.5);
         idealOffset.applyQuaternion(this.targetObject.quaternion);
         idealOffset.add(this.targetObject.position);
         return idealOffset;
