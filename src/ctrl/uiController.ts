@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import { ArmCommand } from '../setup/enums';
+import { Entity } from '../entity/entity';
+import { TableController } from './tableController';
+import { OpticsController } from './opticsController';
 
 function initToolTip() {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
@@ -67,22 +70,35 @@ Spatial UI – 3D UI elements that are anchored to objects but aren’t "physica
 Meta UI – UI that represents abstract information but is stylized to fit the environments theme (e.g., rain on screen for weather).
 */
 export class UIController {
-
-    //private camera: THREE.PerspectiveCamera;
     private armCommandUI: ArmCommandUI;
+    private player: Entity;
     //private entities: EntityCollection;
+    private tableController: TableController;
 
-    constructor(_camera: THREE.PerspectiveCamera, _entities: EntityCollection) {
-        //this.camera = camera;
+    constructor(_camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
+        this.tableController = tableController;
         //this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
+        this.player = entities.getActors().player;
         initToolTip();
     }
 
     public updateSpatialUI(): void {
-        /*for (const bubble of this.entities.getBubbles()) {
-            bubble.update(this.camera);
-        }*/
+        let minDist = 9999.9;
+        let minDistCtrl: OpticsController | null = null;
+        for (const ctrl of this.tableController.getOpticalControllers()) {
+            ctrl.selectBox.setVisible(false);
+            let dist = ctrl.getDistanceScalar(this.player);
+            if (dist < minDist && dist < 2.0) {
+                minDistCtrl = ctrl;
+                minDist = dist;
+            }
+        }
+
+        if (minDistCtrl) {
+            minDistCtrl.selectBox.setVisible(true);
+        }
+
     }
 
     public getArmCommands(): Array<ArmCommand> {

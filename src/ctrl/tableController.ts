@@ -38,12 +38,6 @@ export class TableController {
         }
     }
 
-    public createStatusBubbles(): THREE.Mesh[] {
-        let bubbles: THREE.Mesh[] = [];
-
-        return bubbles;
-    }
-
     getCurrentAngle(): number {
         return this.slideJoint.angle as number;
     }
@@ -58,6 +52,10 @@ export class TableController {
 
     private getTargetAngle(): number {
         return this.armFSM.getTargetAngle();
+    }
+
+    public getOpticalControllers(): OpticsController[] {
+        return this.opticsControllers;
     }
 
     update(delta: number): void {
