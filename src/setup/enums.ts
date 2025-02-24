@@ -44,3 +44,9 @@ export enum OpticsState {
     LOADING
 }
 
+export enum UIState {
+    DEFAULT,
+    SELECTED,
+    HOVER,
+    DISABLED,
+}

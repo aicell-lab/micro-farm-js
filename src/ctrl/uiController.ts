@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-import { ArmCommand } from '../setup/enums';
+import { ArmCommand, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
 import { OpticsController } from './opticsController';
@@ -70,17 +70,23 @@ Spatial UI – 3D UI elements that are anchored to objects but aren’t "physica
 Meta UI – UI that represents abstract information but is stylized to fit the environments theme (e.g., rain on screen for weather).
 */
 export class UIController {
+    private camera: THREE.Camera;
     private armCommandUI: ArmCommandUI;
     private player: Entity;
-    //private entities: EntityCollection;
+    private entities: EntityCollection;
     private tableController: TableController;
+    private mouse: THREE.Vector2 = new THREE.Vector2();
+    private raycaster: THREE.Raycaster = new THREE.Raycaster();
 
-    constructor(_camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
+    constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
+        this.camera = camera;
         this.tableController = tableController;
-        //this.entities = entities;
+        this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
         this.player = entities.getActors().player;
         initToolTip();
+
+        document.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
 
     public updateSpatialUI(): void {
@@ -88,21 +94,43 @@ export class UIController {
         let minDistCtrl: OpticsController | null = null;
         for (const ctrl of this.tableController.getOpticalControllers()) {
             ctrl.selectBox.setVisible(false);
+            ctrl.selectBox.update();
             let dist = ctrl.getDistanceScalar(this.player);
-            if (dist < minDist && dist < 2.0) {
+            const visibilityDist = 2.0;
+            if (dist < minDist && dist < visibilityDist) {
                 minDistCtrl = ctrl;
                 minDist = dist;
             }
         }
-
         if (minDistCtrl) {
             minDistCtrl.selectBox.setVisible(true);
         }
-
     }
 
     public getArmCommands(): Array<ArmCommand> {
         return this.armCommandUI.getAndClearQueue();
+    }
+
+    public onMouseMove(event: MouseEvent) {
+        let table = this.entities.getActors().table;
+        let mouse = this.mouse;
+        let camera = this.camera;
+        let raycaster = this.raycaster;
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        if (camera) {
+            raycaster.setFromCamera(mouse, camera);
+            table.selectBoxes.forEach(selectBox => selectBox.setState(UIState.DEFAULT));
+            const meshes = table.selectBoxes.filter(selectBox => selectBox.isVisible()).map(box => box.getMesh());
+            const intersects = raycaster.intersectObjects(meshes);
+            if (intersects.length > 0) {
+                const intersectedMesh = intersects[0].object;
+                const selectBox = table.selectBoxes.find(sb => sb.getMesh() === intersectedMesh);
+                if (selectBox) {
+                    selectBox.setState(UIState.HOVER);
+                }
+            }
+        }
     }
 
 }

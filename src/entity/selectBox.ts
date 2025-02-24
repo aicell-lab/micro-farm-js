@@ -1,8 +1,15 @@
 import * as THREE from 'three';
+import { UIState } from '../setup/enums';
 
 export class SelectBox {
     private box: THREE.Mesh;
     private static readonly DEFAULT_SIZE = 0.25;
+    private state: UIState = UIState.DEFAULT;
+
+    public static readonly COLOR_DEFAULT = 0xaaee00;
+    public static readonly COLOR_HOVER = 0xffaa00;
+    public static readonly COLOR_SELECTED = 0x00aaff;
+    public static readonly COLOR_DISABLED = 0x555555;
 
     constructor(bounds: THREE.Box3 = SelectBox.getDefaultBounds()) {
         const geometry = new THREE.BoxGeometry(
@@ -46,5 +53,37 @@ export class SelectBox {
     public setVisible(visible: boolean): void {
         this.box.visible = visible;
     }
+
+    private setColor(color: number): void {
+        (this.box.material as THREE.MeshBasicMaterial).color.set(color);
+    }
+
+    public setState(state: UIState): void {
+        this.state = state;
+    }
+
+    private getStateColor(state: UIState): number {
+        switch (state) {
+            case UIState.DEFAULT:
+                return SelectBox.COLOR_DEFAULT;
+            case UIState.SELECTED:
+                return SelectBox.COLOR_SELECTED;
+            case UIState.HOVER:
+                return SelectBox.COLOR_HOVER;
+            case UIState.DISABLED:
+                return SelectBox.COLOR_DISABLED;
+            default:
+                return 0;
+        }
+    }
+
+    public update(): void {
+        this.setColor(this.getStateColor(this.state));
+    }
+
+    public isVisible(): boolean {
+        return this.getMesh().visible;
+    }
+
 
 }
