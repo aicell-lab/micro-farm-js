@@ -4,6 +4,7 @@ import { ArmState, ArmCommand } from '../setup/enums';
 import { OpticsController } from './opticsController';
 import * as THREE from 'three';
 import { Bubble } from '../entity/bubble';
+import { SelectBox } from '../entity/selectBox';
 
 export class TableController {
     table: URDFRobot;
@@ -11,11 +12,14 @@ export class TableController {
     armFSM: ArmStateMachine;
     opticsControllers: OpticsController[];
 
-    constructor(table: URDFRobot, bubbles: Bubble[]) {
+    constructor(table: URDFRobot, bubbles: Bubble[], selBoxes: SelectBox[]) {
 
         const numOptics = 10;
         if (bubbles.length !== numOptics) {
             throw new Error(`Expected exactly ${numOptics} speech buubles.`);
+        }
+        if (selBoxes.length !== numOptics) {
+            throw new Error(`Expected exactly ${numOptics} selection boxes.`);
         }
 
         this.table = table;
@@ -29,7 +33,7 @@ export class TableController {
                 pos.x -= 5 * 0.57;
                 pos.z = 0.5;
             }
-            let opticsController = new OpticsController(bubbles[i], pos);
+            let opticsController = new OpticsController(bubbles[i], pos, selBoxes[i]);
             this.opticsControllers.push(opticsController);
         }
     }

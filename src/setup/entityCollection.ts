@@ -1,5 +1,6 @@
 import { Bubble } from "../entity/bubble";
 import { Entity } from "../entity/entity";
+import { SelectBox } from "../entity/selectBox";
 
 export interface Room {
     floor: Entity;
@@ -31,6 +32,15 @@ export class EntityCollection {
             allBubbles.push(...entity.bubbles);
         }
         return allBubbles;
+    }
+
+    getSelectBoxes(): SelectBox[] {
+        const entities = this.getEntities();
+        const allBoxes: SelectBox[] = [];
+        for (const entity of entities) {
+            allBoxes.push(...entity.selectBoxes);
+        }
+        return allBoxes;
     }
 
     getRoom(): Room {

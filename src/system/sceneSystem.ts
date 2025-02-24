@@ -26,7 +26,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   let camera = cameraController.getCamera();
 
   let player = new PlayerController(entities.getActors().player);
-  let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles);
+  let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles, actors.table.selectBoxes);
   let ui = new UIController(camera, entities);
   let input = new InputListener(ui);
   let render = new RenderController(scene, camera);

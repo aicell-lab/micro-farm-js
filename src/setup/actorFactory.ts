@@ -7,6 +7,7 @@ import { Assets } from '../res/assets';
 import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
+import { SelectBox } from "../entity/selectBox";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -36,9 +37,7 @@ export class ActorFactory {
         let human = new Entity(options);
         const rotY = THREE.MathUtils.degToRad(180.0);
         human.object.rotateY(rotY);
-        //const rotX = THREE.MathUtils.degToRad(-90.0);
-        //human.object.rotateX(rotX);
-        human.object.scale.set(0.2,0.2,0.2);
+        human.object.scale.set(0.2, 0.2, 0.2);
         setActorPosition(human);
         human.object.position.z = 3.0;
         human.object.position.x = -0.5;
@@ -48,14 +47,14 @@ export class ActorFactory {
     createOpticalTable(): Entity {
         let tableRobot = Assets.getInstance().getRobots().get(Robots.OpticalTable)!;
         const bubbles = Array.from({ length: 10 }, () => new Bubble());
+        const selectBoxes = Array.from({ length: 10 }, () => new SelectBox());
         const options: EntityOptions = {
             object: tableRobot
         };
         let table = new Entity(options);
         table.bubbles = bubbles;
+        table.selectBoxes = selectBoxes;
         table.object.position.y += 0.855;
-        //table.object.position.x -= 2.0;
-        //table.object.position.z -= 0.7;
         table.object.rotation.x = MathUtils.degToRad(270.0);
         return table;
     }

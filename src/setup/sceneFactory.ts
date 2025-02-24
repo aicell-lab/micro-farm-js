@@ -38,6 +38,9 @@ export class SceneFactory {
         for (const b of this.entities.getBubbles()) {
             scene.add(b.getMesh());
         }
+        for (const s of this.entities.getSelectBoxes()) {
+            scene.add(s.getMesh());
+        }
     }
 }
 
