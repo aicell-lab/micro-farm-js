@@ -132,6 +132,7 @@ export class PlayerController {
     private phyicsCtrl: PlayerPhysicsController;
     private animationCtrl: PlayerAnimationController;
     private bounds: THREE.Box2;
+    private tableCollider: THREE.Box3;
 
     constructor(entity: Entity) {
         this.phyicsCtrl = new PlayerPhysicsController();
@@ -139,6 +140,7 @@ export class PlayerController {
 
         const len: number = 5.0;
         this.bounds = new THREE.Box2(new THREE.Vector2(-len, -len), new THREE.Vector2(len, len));
+        this.tableCollider = new THREE.Box3(new THREE.Vector3(-2, -1, -1.1), new THREE.Vector3(2, 1, 1.1));
     }
 
     public update(object: THREE.Object3D, dt: number) {
@@ -148,10 +150,32 @@ export class PlayerController {
     }
 
     private setWithinBounds(object: THREE.Object3D): void {
+        this.keepWithinRoom(object);
+        this.moveOutOfTable(object);
+    }
+
+    private keepWithinRoom(object: THREE.Object3D) {
         if (this.isOutOfBounds(object)) {
             const minPos = new THREE.Vector3(this.bounds.min.x, -9999.0, this.bounds.min.y);
             const maxPos = new THREE.Vector3(this.bounds.max.x, 9999.0, this.bounds.max.y);
             object.position.clamp(minPos, maxPos);
+        }
+    }
+
+    private moveOutOfTable(object: THREE.Object3D): void {
+        const pos = object.position;
+        if (this.tableCollider.containsPoint(pos)) {
+            const min = this.tableCollider.min;
+            const max = this.tableCollider.max;
+            const dLeft = Math.abs(pos.x - min.x);
+            const dRight = Math.abs(pos.x - max.x);
+            const dFront = Math.abs(pos.z - min.z);
+            const dBack = Math.abs(pos.z - max.z);
+            const minDist = Math.min(dLeft, dRight, dFront, dBack);
+            if (minDist === dLeft) pos.x = min.x;
+            else if (minDist === dRight) pos.x = max.x;
+            else if (minDist === dFront) pos.z = min.z;
+            else if (minDist === dBack) pos.z = max.z;
         }
     }
 
@@ -168,9 +192,6 @@ export class PlayerController {
         this.phyicsCtrl.handleRotation(p);
     }
 
-    public addCollider(_object: THREE.Object3D) {
-
-    }
     public setBounds(bounds: THREE.Box2) {
         this.bounds = bounds;
     }
