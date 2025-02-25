@@ -28,7 +28,7 @@ function loadOBJ(collection: FileCollections, filepath: string): THREE.Object3D 
 
 export function loadModels(collection: FileCollections): Map<Models, THREE.Object3D> {
     let modelMap: Map<Models, THREE.Object3D> = new Map();
-    const keys: Models[] = [Models.OpticalTable];
+    const keys: Models[] = [];
     for (const key of keys) {
         var obj = loadOBJ(collection, modelFilepaths[key]);
         if (obj)

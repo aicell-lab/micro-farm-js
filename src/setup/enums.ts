@@ -1,9 +1,9 @@
 export enum Robots {
-    OpticalTable
+    OpticalTable,
+    Arm
 }
 
 export enum Models {
-    OpticalTable
 }
 
 export enum Textures {

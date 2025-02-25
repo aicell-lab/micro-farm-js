@@ -107,9 +107,7 @@ export class UIController {
         this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
         this.player = entities.getActors().player;
-
         this.dialogController = new DialogController();
-        //this.dialogController.showDialog("Microscope #1", `This is a microscope panel...`);
     }
 
     public update(input: Input): void {
