@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
 import { SimulationLoop } from './simulationLoop';
 import { ActorController } from '../ctrl/actorController';
-import { RenderController } from '../ctrl/renderController';
+import { RenderController, createCamera } from '../ctrl/renderController';
 import { InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { UIController } from '../ctrl/uiController';
@@ -20,12 +20,6 @@ interface Controllers {
   actor: ActorController;
   player: PlayerController;
   table: TableController;
-}
-
-function createCamera(): THREE.PerspectiveCamera {
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 5);
-  return camera
 }
 
 function createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
@@ -75,16 +69,21 @@ export class SceneSystem {
     this.controllers = createControllers(entities, scene);
   }
 
-  runSimulationLoop = () => {
+  runSimulationLoop() {
     this.processNextFrame();
-    requestAnimationFrame(this.runSimulationLoop);
-  };
+    requestAnimationFrame(this.runSimulationLoop.bind(this));
+  }
+
+  private getInputs(): { keys: KeyboardInput; mouse: MouseInput } {
+    return {
+      keys: this.inputListener.getKeyboardInput(),
+      mouse: this.inputListener.getMouseInput(),
+    };
+  }
 
   processNextFrame() {
     const dt = this.clock.getDelta();
-    const keys = this.inputListener.getKeyboardInput();
-    const mouse = this.inputListener.getMouseInput();
-
+    const { keys, mouse } = this.getInputs();
     updatePreSimulationStepControllers(dt, this.controllers, this.entities, keys);
     this.simulationLoop.step(dt);
     updatePostSimulationStepControllers(this.controllers, mouse);
