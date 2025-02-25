@@ -1,28 +1,42 @@
 
+export interface KeyboardInput {
+    pressed: Set<string>;
+    released: Set<string>;
+    held: Set<string>;
+}
+
+
 export class KeyboardListener {
-    public keyDown: { [key: string]: boolean };
+    private keyboardInput: KeyboardInput = {
+        pressed: new Set(),
+        released: new Set(),
+        held: new Set(),
+    };
 
     constructor() {
-        window.addEventListener('keydown', (event) => this.onKeyDown(event));
-        window.addEventListener('keyup', (event) => this.onKeyUp(event));
-        this.keyDown = {
-            'ArrowUp': false,
-            'ArrowDown': false,
-            'ArrowLeft': false,
-            'ArrowRight': false,
-            ' ': false,
-            'w': false
-        };
-
+        window.addEventListener("keydown", this.onKeyDown.bind(this));
+        window.addEventListener("keyup", this.onKeyUp.bind(this));
     }
 
     private onKeyDown(event: KeyboardEvent) {
-        this.keyDown[event.key] = true;
+        if (!this.keyboardInput.held.has(event.key)) {
+            this.keyboardInput.pressed.add(event.key); // Mark as newly pressed
+        }
+        this.keyboardInput.held.add(event.key); // Mark as held
     }
 
     private onKeyUp(event: KeyboardEvent) {
-        this.keyDown[event.key] = false;
+        this.keyboardInput.held.delete(event.key);
+        this.keyboardInput.pressed.delete(event.key);
+        this.keyboardInput.released.add(event.key);
     }
 
+    public getKeyboardInput(): KeyboardInput {
+        return {
+            pressed: new Set(this.keyboardInput.pressed),
+            released: new Set(this.keyboardInput.released),
+            held: new Set(this.keyboardInput.held),
+        };
+    }
 
 }

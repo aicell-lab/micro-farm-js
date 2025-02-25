@@ -4,6 +4,7 @@ import { ArmCommand, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
 import { OpticsController } from './opticsController';
+import { MouseInput } from '../io/mouse';
 
 function initToolTip() {
     document.addEventListener("keydown", (event: KeyboardEvent) => {
@@ -75,7 +76,6 @@ export class UIController {
     private player: Entity;
     private entities: EntityCollection;
     private tableController: TableController;
-    private mouse: THREE.Vector2 = new THREE.Vector2();
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
 
     constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
@@ -85,11 +85,18 @@ export class UIController {
         this.armCommandUI = new ArmCommandUI();
         this.player = entities.getActors().player;
         initToolTip();
-
-        document.addEventListener("mousemove", this.onMouseMove.bind(this));
     }
 
-    public updateSpatialUI(): void {
+    public update(mouse: MouseInput): void {
+        this.updateSpatialUI();
+        this.handleMouse(mouse);
+    }
+
+    public getArmCommands(): Array<ArmCommand> {
+        return this.armCommandUI.getAndClearQueue();
+    }
+
+    private updateSpatialUI(): void {
         let minDist = 9999.9;
         let minDistCtrl: OpticsController | null = null;
         for (const ctrl of this.tableController.getOpticalControllers()) {
@@ -107,30 +114,26 @@ export class UIController {
         }
     }
 
-    public getArmCommands(): Array<ArmCommand> {
-        return this.armCommandUI.getAndClearQueue();
-    }
-
-    public onMouseMove(event: MouseEvent) {
+    private handleMouse(mouse: MouseInput): void {
         let table = this.entities.getActors().table;
-        let mouse = this.mouse;
         let camera = this.camera;
         let raycaster = this.raycaster;
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        if (camera) {
-            raycaster.setFromCamera(mouse, camera);
-            table.selectBoxes.forEach(selectBox => selectBox.setState(UIState.DEFAULT));
-            const meshes = table.selectBoxes.filter(selectBox => selectBox.isVisible()).map(box => box.getMesh());
-            const intersects = raycaster.intersectObjects(meshes);
-            if (intersects.length > 0) {
-                const intersectedMesh = intersects[0].object;
-                const selectBox = table.selectBoxes.find(sb => sb.getMesh() === intersectedMesh);
-                if (selectBox) {
-                    selectBox.setState(UIState.HOVER);
-                }
+        const x = mouse.x;
+        const y = mouse.y;
+        const mouseCoords = new THREE.Vector2(x, y);
+
+        raycaster.setFromCamera(mouseCoords, camera);
+        table.selectBoxes.forEach(selectBox => selectBox.setState(UIState.DEFAULT));
+        const meshes = table.selectBoxes.filter(selectBox => selectBox.isVisible()).map(box => box.getMesh());
+        const intersects = raycaster.intersectObjects(meshes);
+        if (intersects.length > 0) {
+            const intersectedMesh = intersects[0].object;
+            const selectBox = table.selectBoxes.find(sb => sb.getMesh() === intersectedMesh);
+            if (selectBox) {
+                selectBox.setState(UIState.HOVER);
             }
         }
+
     }
 
 }

@@ -1,29 +1,41 @@
 import { TableController } from './tableController';
 import { PlayerController } from './playerController';
-import { InputListener } from '../io/input';
 import { Actors } from '../setup/entityCollection';
+import { ActionProcessor } from '../io/actionProcessor';
+import { KeyboardInput } from '../io/keyboard';
+import { ArmCommand } from '../setup/enums';
 
 export class ActorController {
 
     private actors: Actors;
-    private inputListener: InputListener;
     private playerController: PlayerController;
     private tableController: TableController;
 
-    constructor(actors: Actors, inputListener: InputListener, playerController: PlayerController, tableController: TableController) {
+    constructor(actors: Actors, playerController: PlayerController, tableController: TableController) {
         this.actors = actors;
-        this.inputListener = inputListener;
         this.playerController = playerController;
         this.tableController = tableController;
     }
 
-    handleUserInput() {
-        this.inputListener.getPlayerActions().forEach(action => {
+    public processActions(keys: KeyboardInput, armCommands: Array<ArmCommand>) {
+        const playerActions = ActionProcessor.getPlayerActions(keys);
+        playerActions.forEach(action => {
             action.execute(this.actors.player, this.playerController);
         });
-        this.inputListener.getArmCommands().forEach(command => {
+        armCommands.forEach(command => {
             this.tableController.handleArmCommand(command);
         });
     }
+
+    /*handleUserInput() {
+        const keys = this.inputListener.getKeyboardInput();
+        const playerActions = ActionProcessor.getPlayerActions(keys);
+        playerActions.forEach(action => {
+            action.execute(this.actors.player, this.playerController);
+        });
+        this.uiController.getArmCommands().forEach(command => {
+            this.tableController.handleArmCommand(command);
+        });
+    }*/
 
 }
