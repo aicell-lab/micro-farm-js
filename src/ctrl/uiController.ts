@@ -121,26 +121,34 @@ export class UIController {
         }
     }
 
-    private handleMouse(mouse: MouseInput): void {
-        let table = this.entities.getActors().table;
-        let camera = this.camera;
-        let raycaster = this.raycaster;
-        const x = mouse.x;
-        const y = mouse.y;
-        const mouseCoords = new THREE.Vector2(x, y);
+    private getVisibleMeshes(table: Entity): THREE.Mesh[] {
+        return table.selectBoxes
+            .filter(selectBox => selectBox.isVisible())
+            .map(selectBox => selectBox.getMesh());
+    }
 
-        raycaster.setFromCamera(mouseCoords, camera);
+    private getIntersectedMesh(mouse: MouseInput, meshes: THREE.Mesh[]): THREE.Object3D | null {
+        const mouseCoords = new THREE.Vector2(mouse.x, mouse.y);
+        this.raycaster.setFromCamera(mouseCoords, this.camera);
+        const intersects = this.raycaster.intersectObjects(meshes);
+        return intersects.length > 0 ? intersects[0].object : null;
+    }
+
+    private updateMouseUIState(table: Entity, intersectedMesh: THREE.Object3D | null): void {
         table.selectBoxes.forEach(selectBox => selectBox.setState(UIState.DEFAULT));
-        const meshes = table.selectBoxes.filter(selectBox => selectBox.isVisible()).map(box => box.getMesh());
-        const intersects = raycaster.intersectObjects(meshes);
-        if (intersects.length > 0) {
-            const intersectedMesh = intersects[0].object;
+        if (intersectedMesh) {
             const selectBox = table.selectBoxes.find(sb => sb.getMesh() === intersectedMesh);
             if (selectBox) {
                 selectBox.setState(UIState.HOVER);
             }
         }
+    }
 
+    private handleMouse(mouse: MouseInput): void {
+        const table = this.entities.getActors().table;
+        const meshes = this.getVisibleMeshes(table);
+        const intersectedMesh = this.getIntersectedMesh(mouse, meshes);
+        this.updateMouseUIState(table, intersectedMesh);
     }
 
 }
