@@ -62,6 +62,10 @@ export class SelectBox {
         this.state = state;
     }
 
+    public getState(): UIState {
+        return this.state;
+    }
+
     private getStateColor(state: UIState): number {
         switch (state) {
             case UIState.DEFAULT:

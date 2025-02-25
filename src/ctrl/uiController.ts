@@ -7,6 +7,7 @@ import { OpticsController } from './opticsController';
 import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
+import { MouseButton } from '../setup/enums';
 
 export class ArmCommandUI {
     private actionQueue: Array<ArmCommand> = [];
@@ -53,6 +54,35 @@ export class ArmCommandUI {
     }
 }
 
+export class DialogController {
+    private dialog: HTMLElement | null;
+    private dialogTitle: HTMLElement | null;
+    private dialogMessage: HTMLElement | null;
+    private dialogClose: HTMLElement | null;
+
+    constructor() {
+        this.dialog = document.getElementById("dialog");
+        this.dialogTitle = document.getElementById("dialog-title");
+        this.dialogMessage = document.getElementById("dialog-message");
+        this.dialogClose = document.getElementById("dialog-close");
+        this.dialogClose?.addEventListener("click", () => this.hideDialog());
+    }
+
+    public showDialog(title: string, message: string): void {
+        if (this.dialog && this.dialogTitle && this.dialogMessage) {
+            this.dialogTitle.textContent = title;
+            this.dialogMessage.textContent = message;
+            this.dialog.classList.remove("dialog-hidden");
+        }
+    }
+
+    public hideDialog(): void {
+        if (this.dialog) {
+            this.dialog.classList.add("dialog-hidden");
+        }
+    }
+}
+
 
 /*
 Types of UI
@@ -69,12 +99,17 @@ export class UIController {
     private tableController: TableController;
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
 
+    private dialogController: DialogController;
+
     constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
         this.camera = camera;
         this.tableController = tableController;
         this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
         this.player = entities.getActors().player;
+
+        this.dialogController = new DialogController();
+        //this.dialogController.showDialog("Microscope #1", `This is a microscope panel...`);
     }
 
     public update(input: Input): void {
@@ -153,11 +188,28 @@ export class UIController {
         }
     }
 
+    private getHoveredOpticsController(): OpticsController | null {
+        const table = this.entities.getActors().table;
+        const selectBox = table.selectBoxes.find(sb => sb.getState() === UIState.HOVER) || null;
+        if (selectBox) {
+            const opticsController = this.tableController.getOpticsControllerBySelectBox(selectBox);
+            if (opticsController) {
+                return opticsController;
+            }
+        }
+        return null;
+    }
+
     private handleMouse(mouse: MouseInput): void {
         const table = this.entities.getActors().table;
         const meshes = this.getVisibleMeshes(table);
         const intersectedMesh = this.getIntersectedMesh(mouse, meshes);
         this.updateMouseUIState(table, intersectedMesh);
+
+        if (mouse.pressed.has(MouseButton.LEFT) && intersectedMesh) {
+            let ctrl = this.getHoveredOpticsController();
+            this.dialogController.showDialog("Microscope Info", `Microscope #${ctrl?.getID()}`);
+        }
     }
 
 }

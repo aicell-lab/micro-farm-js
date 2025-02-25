@@ -9,8 +9,9 @@ export class OpticsController {
     state: OpticsState = OpticsState.STANDBY;
     pos: THREE.Vector3;
     selectBox: SelectBox
+    id: number;
 
-    constructor(bubble: Bubble, position: THREE.Vector3, selectBox: SelectBox) {
+    constructor(bubble: Bubble, position: THREE.Vector3, selectBox: SelectBox, id: number) {
         this.bubble = bubble;
         this.pos = position;
         this.selectBox = selectBox;
@@ -18,6 +19,7 @@ export class OpticsController {
         position.y -= 0.4;
         selectBox.setPosition(position);
         selectBox.setVisible(false);
+        this.id = id;
     }
 
     update(_dt: number): void {
@@ -31,6 +33,9 @@ export class OpticsController {
         return this.getDistance(entity).length();
     }
 
+    public getID(): number {
+        return this.id;
+    }
 
 }
 

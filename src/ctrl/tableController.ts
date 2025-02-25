@@ -33,7 +33,7 @@ export class TableController {
                 pos.x -= 5 * 0.57;
                 pos.z = 0.5;
             }
-            let opticsController = new OpticsController(bubbles[i], pos, selBoxes[i]);
+            let opticsController = new OpticsController(bubbles[i], pos, selBoxes[i], i);
             this.opticsControllers.push(opticsController);
         }
     }
@@ -56,6 +56,10 @@ export class TableController {
 
     public getOpticalControllers(): OpticsController[] {
         return this.opticsControllers;
+    }
+
+    public getOpticsControllerBySelectBox(selectBox: SelectBox): OpticsController | undefined {
+        return this.opticsControllers.find(controller => controller.selectBox === selectBox);
     }
 
     update(delta: number): void {
