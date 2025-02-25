@@ -37,6 +37,17 @@ async function loadTextures(files: FileCollections): Promise<Map<Textures, THREE
     return textureMap;
 }
 
+async function loadURDFs(): Promise<Map<Robots, URDFRobot>> {
+    let robotMap: Map<Robots, URDFRobot> = new Map();
+    for (const typeValue of Object.values(Robots)) {
+        if (typeof typeValue === 'number') { // Ensure it's a number
+            const type = typeValue as Robots;
+            robotMap.set(type, await loadURDF(type)); // Use 'type' here
+        }
+    }
+    return robotMap;
+}
+
 export class Assets {
 
     private static instance: Assets;
@@ -61,7 +72,7 @@ export class Assets {
             assets.modelMap = loadModels(assets.files);
             assets.animationMap = await loadAnimations(assets.files);
             assets.textureMap = await loadTextures(assets.files);
-            assets.robotMap.set(Robots.OpticalTable, await loadURDF(Robots.OpticalTable));
+            assets.robotMap = await loadURDFs();
             Assets.instance = assets;
         }
         return Assets.instance;
