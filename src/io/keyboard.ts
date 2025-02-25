@@ -32,14 +32,16 @@ export class KeyboardListener {
     }
 
     public getKeyboardInput(): KeyboardInput {
-        return {
+        const inputSnapshot = {
             pressed: new Set(this.keyboardInput.pressed),
             released: new Set(this.keyboardInput.released),
             held: new Set(this.keyboardInput.held),
         };
+        this.clear();
+        return inputSnapshot;
     }
 
-    public clear(): void {
+    private clear(): void {
         this.keyboardInput.pressed.clear();
         this.keyboardInput.released.clear();
     }

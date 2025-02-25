@@ -43,13 +43,20 @@ export class MouseListener {
         this.mouseInput.released.add(button);
     }
 
+    private clear(): void {
+        this.mouseInput.pressed.clear();
+        this.mouseInput.released.clear();
+    }
+
     public getMouseInput(): MouseInput {
-        return {
+        const inputSnapshot = {
             x: this.mouseInput.x,
             y: this.mouseInput.y,
             pressed: new Set(this.mouseInput.pressed),
             released: new Set(this.mouseInput.released),
-            held: new Set(this.mouseInput.held)
+            held: new Set(this.mouseInput.held),
         };
+        this.clear();
+        return inputSnapshot;
     }
 }

@@ -24,9 +24,7 @@ export class InputListener {
     }
 
     public getInput(): Input {
-        const input = { keys: this.getKeyboardInput(), mouse: this.getMouseInput() };
-        this.keyboardListener.clear();
-        return input;
+        return { keys: this.getKeyboardInput(), mouse: this.getMouseInput() };
     }
 
 }
