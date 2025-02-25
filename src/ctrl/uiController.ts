@@ -95,29 +95,38 @@ export class UIController {
         }
     }
 
-    private updateSpatialUI(): void {
-        let minDist = 9999.9;
+    private toggleHUD(visible: boolean) {
+        const hudElement = document.getElementById("hud");
+        if (hudElement) {
+            hudElement.classList.toggle("hidden", !visible);
+        }
+    }
+
+    private getClosestOpticalControllerInRange(): OpticsController | null {
+        const MAX_DISTANCE = 9999.9;
+        const VISIBILITY_DISTANCE = 2.0;
+
+        let minDist = MAX_DISTANCE;
         let minDistCtrl: OpticsController | null = null;
+
         for (const ctrl of this.tableController.getOpticalControllers()) {
             ctrl.selectBox.setVisible(false);
             ctrl.selectBox.update();
-            let dist = ctrl.getDistanceScalar(this.player);
-            const visibilityDist = 2.0;
-            if (dist < minDist && dist < visibilityDist) {
+            const dist = ctrl.getDistanceScalar(this.player);
+
+            if (dist < VISIBILITY_DISTANCE && dist < minDist) {
                 minDistCtrl = ctrl;
                 minDist = dist;
             }
         }
+        return minDistCtrl;
+    }
 
-        const hudElement = document.getElementById("hud");
-        if (minDistCtrl && hudElement) {
-            hudElement.classList.remove("hidden");
-        } else if (hudElement) {
-            hudElement.classList.add("hidden");
-        }
-
-        if (minDistCtrl) {
-            minDistCtrl.selectBox.setVisible(true);
+    private updateSpatialUI(): void {
+        const closestController = this.getClosestOpticalControllerInRange();
+        this.toggleHUD(closestController !== null);
+        if (closestController) {
+            closestController.selectBox.setVisible(true);
         }
     }
 
