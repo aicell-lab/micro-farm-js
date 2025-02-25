@@ -1,6 +1,11 @@
 import { KeyboardInput, KeyboardListener } from './keyboard';
 import { MouseInput, MouseListener } from './mouse';
 
+export interface Input {
+    keys: KeyboardInput;
+    mouse: MouseInput;
+}
+
 export class InputListener {
     private keyboardListener: KeyboardListener;
     private mouseListener: MouseListener;
@@ -10,12 +15,18 @@ export class InputListener {
         this.mouseListener = new MouseListener();
     }
 
-    public getKeyboardInput(): KeyboardInput {
+    private getKeyboardInput(): KeyboardInput {
         return this.keyboardListener.getKeyboardInput();
     }
 
-    public getMouseInput(): MouseInput {
+    private getMouseInput(): MouseInput {
         return this.mouseListener.getMouseInput();
+    }
+
+    public getInput(): Input {
+        const input = { keys: this.getKeyboardInput(), mouse: this.getMouseInput() };
+        this.keyboardListener.clear();
+        return input;
     }
 
 }

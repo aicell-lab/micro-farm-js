@@ -3,15 +3,13 @@ import { CameraController } from '../ctrl/cameraController';
 import { SimulationLoop } from './simulationLoop';
 import { ActorController } from '../ctrl/actorController';
 import { RenderController, createCamera } from '../ctrl/renderController';
-import { InputListener } from '../io/input';
+import { Input, InputListener } from '../io/input';
 import { PhysicsWorld } from './physicsWorld';
 import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { URDFRobot } from 'urdf-loader';
 import { EntityCollection } from '../setup/entityCollection';
-import { KeyboardInput } from '../io/keyboard';
-import { MouseInput } from '../io/mouse';
 
 interface Controllers {
   ui: UIController;
@@ -42,15 +40,15 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   };
 }
 
-function updatePreSimulationStepControllers(dt: number, ctrl: Controllers, entities: EntityCollection, keys: KeyboardInput): void {
+function updatePreSimulationStepControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt);
-  ctrl.actor.processActions(keys, ctrl.ui.getArmCommands());
+  ctrl.actor.processActions(input.keys, ctrl.ui.getArmCommands());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
 }
 
-function updatePostSimulationStepControllers(ctrl: Controllers, mouse: MouseInput): void {
-  ctrl.ui.update(mouse);
+function updatePostSimulationStepControllers(ctrl: Controllers, input: Input): void {
+  ctrl.ui.update(input);
   ctrl.render.render();
 }
 
@@ -69,24 +67,17 @@ export class SceneSystem {
     this.controllers = createControllers(entities, scene);
   }
 
-  runSimulationLoop() {
+  runSimulationLoop = () => {
     this.processNextFrame();
-    requestAnimationFrame(this.runSimulationLoop.bind(this));
-  }
-
-  private getInputs(): { keys: KeyboardInput; mouse: MouseInput } {
-    return {
-      keys: this.inputListener.getKeyboardInput(),
-      mouse: this.inputListener.getMouseInput(),
-    };
-  }
+    requestAnimationFrame(this.runSimulationLoop);
+  };
 
   processNextFrame() {
     const dt = this.clock.getDelta();
-    const { keys, mouse } = this.getInputs();
-    updatePreSimulationStepControllers(dt, this.controllers, this.entities, keys);
+    const input = this.inputListener.getInput();
+    updatePreSimulationStepControllers(dt, this.controllers, this.entities, input);
     this.simulationLoop.step(dt);
-    updatePostSimulationStepControllers(this.controllers, mouse);
+    updatePostSimulationStepControllers(this.controllers, input);
   }
 
 }

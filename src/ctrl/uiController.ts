@@ -5,17 +5,8 @@ import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
 import { OpticsController } from './opticsController';
 import { MouseInput } from '../io/mouse';
-
-function initToolTip() {
-    document.addEventListener("keydown", (event: KeyboardEvent) => {
-        if (event.key.toLowerCase() === "h") {
-            const uiElement = document.getElementById("ui");
-            if (uiElement) {
-                uiElement.classList.toggle("hidden");
-            }
-        }
-    });
-}
+import { KeyboardInput } from '../io/keyboard';
+import { Input } from '../io/input';
 
 export class ArmCommandUI {
     private actionQueue: Array<ArmCommand> = [];
@@ -84,16 +75,24 @@ export class UIController {
         this.entities = entities;
         this.armCommandUI = new ArmCommandUI();
         this.player = entities.getActors().player;
-        initToolTip();
     }
 
-    public update(mouse: MouseInput): void {
+    public update(input: Input): void {
         this.updateSpatialUI();
-        this.handleMouse(mouse);
+        this.handleMouse(input.mouse);
+        this.updateToolTip(input.keys);
     }
 
     public getArmCommands(): Array<ArmCommand> {
         return this.armCommandUI.getAndClearQueue();
+    }
+
+    private updateToolTip(keys: KeyboardInput): void {
+        const uiElement = document.getElementById("ui");
+        if (!uiElement) return;
+        if (keys.pressed.has("h")) {
+            uiElement.classList.toggle("hidden");
+        }
     }
 
     private updateSpatialUI(): void {
@@ -109,6 +108,14 @@ export class UIController {
                 minDist = dist;
             }
         }
+
+        const hudElement = document.getElementById("hud");
+        if (minDistCtrl && hudElement) {
+            hudElement.classList.remove("hidden");
+        } else if (hudElement) {
+            hudElement.classList.add("hidden");
+        }
+
         if (minDistCtrl) {
             minDistCtrl.selectBox.setVisible(true);
         }

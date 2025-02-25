@@ -39,4 +39,9 @@ export class KeyboardListener {
         };
     }
 
+    public clear(): void {
+        this.keyboardInput.pressed.clear();
+        this.keyboardInput.released.clear();
+    }
+
 }
