@@ -9,19 +9,16 @@ import { AmmoSingleton } from './setup/ammoSingleton';
 import { PhysicsWorld } from './system/physicsWorld';
 import { EntityCollection } from "./setup/entityCollection";
 
-function showLoadingScreen() {
-    const loadingScreen = document.getElementById("loading-screen");
-    if (loadingScreen) {
-        loadingScreen.style.display = "flex";
+function hideLoadingScreen() {
+    const overlay = document.getElementById("overlay");
+    if (overlay) {
+        overlay.classList.add("hidden"); // Start fade-out
+        setTimeout(() => {
+            overlay.style.display = "none";
+        }, 500);
     }
 }
 
-function hideLoadingScreen() {
-    const loadingScreen = document.getElementById("loading-screen");
-    if (loadingScreen) {
-        loadingScreen.style.display = "none";
-    }
-}
 
 async function init() {
     await AmmoSingleton.init();
@@ -38,7 +35,6 @@ function createSceneSystem(): SceneSystem {
 }
 
 async function runApp() {
-    showLoadingScreen();
     await init();
     const system = createSceneSystem();
     hideLoadingScreen();
