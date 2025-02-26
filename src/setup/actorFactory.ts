@@ -8,8 +8,8 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
+import { getMeshFromJoint, applyMaterialToVisuals } from "./urdfUtil";
 
-import { URDFVisual, URDFRobot } from "urdf-loader";
 
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
@@ -24,63 +24,6 @@ function loadAnimatioAsset(animationType: Animations): AnimationAsset {
     return animationAssets.get(animationType)!;
 }
 
-function getMeshFromJoint(robot: URDFRobot, jointName: string): THREE.Mesh | null {
-    const joint = robot.joints[jointName];
-    if (!joint) {
-        console.warn(`Joint "${jointName}" not found.`);
-        return null;
-    }
-    // Get the child link name from the joint definition
-    const jointNode = joint.urdfNode;
-    if (!jointNode) {
-        console.warn(`No URDF node found for joint "${jointName}".`);
-        return null;
-    }
-    const childElement = jointNode.querySelector("child");
-    if (!childElement) {
-        console.warn(`Joint "${jointName}" has no child link.`);
-        return null;
-    }
-    const childLinkName = childElement.getAttribute("link");
-    if (!childLinkName) {
-        console.warn(`Child link attribute missing for joint "${jointName}".`);
-        return null;
-    }
-    //console.log(`Joint "${jointName}" is connected to child link: "${childLinkName}"`);
-    const childLink = robot.links[childLinkName];
-    if (!childLink) {
-        console.warn(`Child link "${childLinkName}" not found in URDF.`);
-        return null;
-    }
-    // Search for a visual object in the child link
-    let visual: URDFVisual | null = null;
-    childLink.traverse((child) => {
-        if ((child as URDFVisual).isURDFVisual) {
-            visual = child as URDFVisual;
-        }
-    });
-    if (!visual) {
-        console.warn(`No visual found for child link "${childLinkName}".`);
-        return null;
-    }
-    let vis = visual as URDFVisual;
-    if (vis.children.length > 0) {
-        const firstChild = vis.children[0];
-        if (firstChild instanceof THREE.Mesh) {
-            // console.log(`Mesh found for joint "${jointName}" ->`, firstChild);
-            return firstChild;
-        } else {
-            console.warn(`First child of visual for "${childLinkName}" is not a mesh.`);
-            return null;
-        }
-    } else {
-        console.warn(`Visual for child link "${childLinkName}" has no children.`);
-        return null;
-    }
-}
-
-
-
 export class ActorFactory {
 
     constructor() {
@@ -93,26 +36,10 @@ export class ActorFactory {
             object: armRobot
         };
         let arm = new Entity(options);
-        //console.log(arm.object);
         arm.object.position.y += 2.0;
         arm.object.rotation.x = MathUtils.degToRad(270.0);
 
-        function applyMaterialToVisuals(obj: THREE.Object3D) {
-            //console.log(obj.type);
-            if (obj.type === "URDFVisual") {
-                let visual = obj as URDFVisual;
-                visual.traverse(child => {
-                    if (child instanceof THREE.Mesh) {
-                        child.material = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-                    }
-                });
-            }
-            for (const child of obj.children) {
-                applyMaterialToVisuals(child);
-            }
-        }
-        applyMaterialToVisuals(arm.object);
-
+        applyMaterialToVisuals(arm.object, 0xff0000);
         const mesh = getMeshFromJoint(armRobot, "arm1j");
         if (mesh) {
             console.log("Retrieved mesh via joint:", mesh);
