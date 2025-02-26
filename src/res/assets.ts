@@ -48,11 +48,6 @@ async function loadURDFs(): Promise<Map<Robots, URDFRobot>> {
     return new Map(robotEntries);
 }
 
-
-async function delay(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function countURDFMeshes(robots: Map<Robots, URDFRobot>): number {
     let totalMeshes = 0;
 

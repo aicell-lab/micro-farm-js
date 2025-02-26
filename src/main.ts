@@ -9,6 +9,20 @@ import { AmmoSingleton } from './setup/ammoSingleton';
 import { PhysicsWorld } from './system/physicsWorld';
 import { EntityCollection } from "./setup/entityCollection";
 
+function showLoadingScreen() {
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) {
+        loadingScreen.style.display = "flex";
+    }
+}
+
+function hideLoadingScreen() {
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) {
+        loadingScreen.style.display = "none";
+    }
+}
+
 async function init() {
     await AmmoSingleton.init();
     await Assets.init();
@@ -24,9 +38,11 @@ function createSceneSystem(): SceneSystem {
 }
 
 async function runApp() {
+    showLoadingScreen();
     await init();
-    createSceneSystem().runSimulationLoop();
+    const system = createSceneSystem();
+    hideLoadingScreen();
+    system.runSimulationLoop();
 }
-
 
 runApp();
