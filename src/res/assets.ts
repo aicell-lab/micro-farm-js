@@ -8,6 +8,7 @@ import { loadURDF } from './urdf';
 import { Robots, Models, Animations, Textures } from '../setup/enums';
 import { AnimationAsset, loadAnimations } from './animationLoader';
 import { textureFilepaths } from '../setup/constants';
+import { URDFVisual } from 'urdf-loader';
 
 
 async function loadTextures(files: FileCollections): Promise<Map<Textures, THREE.Texture>> {
@@ -38,15 +39,53 @@ async function loadTextures(files: FileCollections): Promise<Map<Textures, THREE
 }
 
 async function loadURDFs(): Promise<Map<Robots, URDFRobot>> {
-    let robotMap: Map<Robots, URDFRobot> = new Map();
-    for (const typeValue of Object.values(Robots)) {
-        if (typeof typeValue === 'number') { // Ensure it's a number
-            const type = typeValue as Robots;
-            robotMap.set(type, await loadURDF(type)); // Use 'type' here
+    const robotEntries: [Robots, URDFRobot][] = await Promise.all(
+        Object.values(Robots)
+            .filter((value): value is Robots => typeof value === 'number') // Type guard
+            .map(async (type): Promise<[Robots, URDFRobot]> => [type, await loadURDF(type)])
+    );
+
+    return new Map(robotEntries);
+}
+
+
+async function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function countURDFMeshes(robots: Map<Robots, URDFRobot>): number {
+    let totalMeshes = 0;
+
+    function countMeshes(obj: THREE.Object3D) {
+        if (obj.type === "URDFVisual") {
+            let visual = obj as URDFVisual;
+            visual.traverse(child => {
+                if (child instanceof THREE.Mesh) {
+                    totalMeshes++;
+                }
+            });
+        }
+
+        for (const child of obj.children) {
+            countMeshes(child);
         }
     }
-    return robotMap;
+    robots.forEach(robot => {
+        countMeshes(robot);
+    });
+
+    return totalMeshes;
 }
+
+async function waitForMeshes(assets: Assets, expectedMeshes: number, delayMs: number = 20) {
+    // urdf-loader package is not "awaiting" visuals & meshes, so this sleep hack is needed in order to wait for the library to internally finish loading.
+    let numMeshes = 0;
+    while (numMeshes !== expectedMeshes) {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        numMeshes = countURDFMeshes(assets.getRobots());
+    }
+}
+
 
 export class Assets {
 
@@ -69,12 +108,25 @@ export class Assets {
         if (!Assets.instance) {
             const assets = new Assets();
             assets.files = await getFileCollectionsNoThrow();
-            assets.modelMap = loadModels(assets.files);
-            assets.animationMap = await loadAnimations(assets.files);
-            assets.textureMap = await loadTextures(assets.files);
-            assets.robotMap = await loadURDFs();
+
+            const [modelMap, animationMap, textureMap, robotMap] = await Promise.all([
+                loadModels(assets.files),
+                loadAnimations(assets.files),
+                loadTextures(assets.files),
+                loadURDFs()
+            ]);
+
+            assets.modelMap = modelMap;
+            assets.animationMap = animationMap;
+            assets.textureMap = textureMap;
+            assets.robotMap = robotMap;
             Assets.instance = assets;
+
+            const NUM_EXPECTED_MESHES = 11;
+            await waitForMeshes(assets, NUM_EXPECTED_MESHES);
+
         }
+
         return Assets.instance;
     }
 

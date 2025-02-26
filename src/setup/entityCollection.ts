@@ -10,6 +10,7 @@ export interface Room {
 export interface Actors {
     player: Entity;
     table: Entity;
+    arm: Entity;
 }
 
 export class EntityCollection {

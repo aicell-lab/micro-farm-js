@@ -9,6 +9,8 @@ import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
 
+import { URDFVisual } from "urdf-loader";
+
 function setActorPosition(actor: Entity) {
     const boundingBox = new THREE.Box3().setFromObject(actor.object);
     const minY = boundingBox.min.y;
@@ -26,6 +28,41 @@ export class ActorFactory {
 
     constructor() {
 
+    }
+
+    createArm(): Entity {
+        let armRobot = Assets.getInstance().getRobots().get(Robots.Arm)!;
+        const options: EntityOptions = {
+            object: armRobot
+        };
+        let arm = new Entity(options);
+        console.log(arm.object);
+        arm.object.position.y += 2.0;
+        arm.object.rotation.x = MathUtils.degToRad(270.0);
+
+        function applyMaterialToVisuals(obj: THREE.Object3D) {
+            if (obj.type === "URDFVisual") {
+                console.log("Found visual:", obj);
+                let visual = obj as URDFVisual;
+    
+                visual.traverse(child => {
+                    if (child instanceof THREE.Mesh) {
+                        console.log("Applying material to:", child);
+                        child.material = new THREE.MeshStandardMaterial({
+                            color: 0xff0000, // Red
+                            metalness: 0.5,
+                            roughness: 0.5
+                        });
+                    }
+                });
+            }
+            for (const child of obj.children) {
+                applyMaterialToVisuals(child);
+            }
+        }
+        applyMaterialToVisuals(arm.object);
+
+        return arm;
     }
 
     createHuman(): Entity {
@@ -60,7 +97,7 @@ export class ActorFactory {
     }
 
     createActors(): Actors {
-        return { player: this.createHuman(), table: this.createOpticalTable() };
+        return { player: this.createHuman(), table: this.createOpticalTable(), arm: this.createArm() };
     }
 }
 

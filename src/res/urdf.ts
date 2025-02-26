@@ -28,28 +28,22 @@ const urdfPackages: Map<Robots, URDFPackage> = new Map(
     ])
 );
 
-function _loadURDF(loader: URDFLoader, pgg: URDFPackage): Promise<URDFRobot> {
-    return new Promise((resolve, reject) => {
-
-        loader.packages = {
-            [pgg.packageName]: pgg.packagePath
-        }
-
-        loader.load(
-            pgg.urdfPath,
-            robot => resolve(robot),
-            undefined,
-            error => reject(error)
-        );
-    });
+async function _loadURDF(loader: URDFLoader, pgg: URDFPackage): Promise<URDFRobot> {
+    loader.packages = {
+        [pgg.packageName]: pgg.packagePath
+    };
+    const robot = await loader.loadAsync(pgg.urdfPath);
+    return robot;
 }
 
-export function loadURDF(type: Robots): Promise<URDFRobot> {
+export async function loadURDF(type: Robots): Promise<URDFRobot> {
     const manager = new LoadingManager();
     const loader = new URDFLoader(manager);
+
     const pkg = urdfPackages.get(type);
     if (!pkg) {
-        return Promise.reject(new Error(`URDF package not found for robot type: ${type}`));
+        throw new Error(`URDF package not found for robot type: ${type}`);
     }
-    return _loadURDF(loader, pkg);
+    const robot = await _loadURDF(loader, pkg);
+    return robot;
 }
