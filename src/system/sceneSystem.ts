@@ -24,7 +24,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   let camera = createCamera();
   let cameraController = new CameraController(actors.player.object, camera);
   let player = new PlayerController(entities.getActors().player);
-  let table = new TableController(actors.table);
+  let table = new TableController(actors.table, actors.arm);
   let ui = new UIController(camera, entities, table);
   let render = new RenderController(scene, camera);
   let actor = new ActorController(actors, player, table);

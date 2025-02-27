@@ -11,6 +11,7 @@ export class TableController {
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
     opticsControllers: OpticsController[];
+    arm: Entity;
 
 
     private checkTable(table: Entity): void {
@@ -37,7 +38,8 @@ export class TableController {
         return controllers;
     }
 
-    constructor(table: Entity) {
+    constructor(table: Entity, arm: Entity) {
+        this.arm = arm;
         this.checkTable(table);
         const tableRobot = table.object as URDFRobot;
         this.slideJoint = tableRobot.joints["slide-j"];
@@ -70,6 +72,11 @@ export class TableController {
     }
 
     update(delta: number): void {
+
+        let slidePos = new THREE.Vector3();
+        this.slideJoint.getWorldPosition(slidePos);
+        this.arm.object.position.copy(slidePos.clone());
+
         if (this.armFSM.getState() == ArmState.Idle) {
             return;
         }
