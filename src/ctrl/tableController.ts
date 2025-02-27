@@ -45,6 +45,7 @@ export class TableController {
         this.slideJoint = tableRobot.joints["slide-j"];
         this.armFSM = new ArmStateMachine();
         this.opticsControllers = this.createOpticsControllers(table);
+        this.setArmPosition();
     }
 
     getCurrentAngle(): number {
@@ -71,12 +72,14 @@ export class TableController {
         return this.opticsControllers.find(controller => controller.selectBox === selectBox);
     }
 
-    update(delta: number): void {
-
+    private setArmPosition(): void {
         let slidePos = new THREE.Vector3();
         this.slideJoint.getWorldPosition(slidePos);
-        this.arm.object.position.copy(slidePos.clone());
+        const offset = new THREE.Vector3(-0.087, 0.0777, -0.01345);
+        this.arm.object.position.copy(slidePos.clone()).add(offset);
+    }
 
+    update(delta: number): void {
         if (this.armFSM.getState() == ArmState.Idle) {
             return;
         }
@@ -89,5 +92,7 @@ export class TableController {
         if (Math.abs(angleDifference) < 0.01) {
             this.slideJoint.setJointValue(this.getTargetAngle());
         }
+
+        this.setArmPosition();
     }
 }
