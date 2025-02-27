@@ -8,7 +8,7 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
-import { getMeshFromJoint, applyMaterialToVisuals } from "./urdfUtil";
+import { getMeshFromJoint, applyMaterialToVisuals, getLinkMesh, createMaterial } from "./urdfUtil";
 
 
 function setActorPosition(actor: Entity) {
@@ -40,11 +40,8 @@ export class ActorFactory {
         arm.object.rotation.x = MathUtils.degToRad(270.0);
 
         applyMaterialToVisuals(arm.object, 0xff0000);
-        const mesh = getMeshFromJoint(armRobot, "arm1j");
-        if (mesh) {
-            console.log("Retrieved mesh via joint:", mesh);
-            mesh.material = new THREE.MeshStandardMaterial({ color: 0x0000ff });
-        }
+        getLinkMesh("gripper", arm.object)!.material = createMaterial(0x00ff00);
+        getLinkMesh("arm-base", arm.object)!.material = createMaterial(0x00ff00);
 
         return arm;
     }
