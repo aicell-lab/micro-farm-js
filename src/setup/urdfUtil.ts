@@ -1,18 +1,34 @@
 import * as THREE from 'three';
 
-export function applyMaterialToVisuals(obj: THREE.Object3D, color: number) {
+/*export function applyMaterialToVisuals(obj: THREE.Object3D, color: number) {
     const stack: THREE.Object3D[] = [obj];
-
     while (stack.length > 0) {
         const current = stack.pop()!;
-
         if (current.type === "URDFVisual") {
             const mesh = findFirstMesh(current);
             if (mesh) {
-                mesh.material = createMaterial(color);
+                mesh.material = createGenericMaterial(color);
             }
         }
         //console.log(current.name);
+        stack.push(...current.children);
+    }
+}*/
+
+export function applyMaterialToVisuals(
+    obj: THREE.Object3D,
+    materialFunction: (color: number) => THREE.Material,
+    color: number
+) {
+    const stack: THREE.Object3D[] = [obj];
+    while (stack.length > 0) {
+        const current = stack.pop()!;
+        if (current.type === "URDFVisual") {
+            const mesh = findFirstMesh(current);
+            if (mesh) {
+                mesh.material = materialFunction(color);
+            }
+        }
         stack.push(...current.children);
     }
 }
@@ -42,15 +58,8 @@ function findFirstMesh(obj: THREE.Object3D): THREE.Mesh | null {
     return mesh;
 }
 
-function applyMaterialToMeshes(obj: THREE.Object3D, color: number) {
-    obj.traverse(child => {
-        if (child instanceof THREE.Mesh) {
-            child.material = createMaterial(color);
-        }
-    });
-}
-
 export function createMaterial(color: number): THREE.MeshStandardMaterial {
     return new THREE.MeshStandardMaterial({ color });
 }
+
 

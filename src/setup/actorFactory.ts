@@ -8,7 +8,7 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
-import { getMeshFromJoint, applyMaterialToVisuals, getLinkMesh, createMaterial } from "./urdfUtil";
+import { applyMaterialToVisuals, getLinkMesh, createMaterial } from "./urdfUtil";
 
 
 function setActorPosition(actor: Entity) {
@@ -39,9 +39,9 @@ export class ActorFactory {
         arm.object.position.y += 2.0;
         arm.object.rotation.x = MathUtils.degToRad(270.0);
 
-        applyMaterialToVisuals(arm.object, 0xff0000);
-        getLinkMesh("gripper", arm.object)!.material = createMaterial(0x00ff00);
-        getLinkMesh("arm-base", arm.object)!.material = createMaterial(0x00ff00);
+        applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
+        getLinkMesh("gripper", arm.object)!.material = createMaterial(0x00fff0);
+        getLinkMesh("arm-base", arm.object)!.material = createMaterial(0x00fff0);
 
         return arm;
     }
@@ -74,6 +74,7 @@ export class ActorFactory {
         table.selectBoxes = selectBoxes;
         table.object.position.y += 0.855;
         table.object.rotation.x = MathUtils.degToRad(270.0);
+        applyMaterialToVisuals(table.object, createMaterial, 0x999999);
         return table;
     }
 
