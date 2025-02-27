@@ -79,20 +79,22 @@ export class TableController {
         this.arm.object.position.copy(slidePos.clone()).add(offset);
     }
 
-    update(delta: number): void {
-        if (this.armFSM.getState() == ArmState.Idle) {
-            return;
-        }
-
+    private setSlidePosition(dt: number): void {
         const speed = 1.0;
         const currentAngle = this.getCurrentAngle();
         const angleDifference = this.getTargetAngle() - currentAngle;
-        const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * delta);
+        const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * dt);
         this.slideJoint.setJointValue(currentAngle + step);
         if (Math.abs(angleDifference) < 0.01) {
             this.slideJoint.setJointValue(this.getTargetAngle());
         }
+    }
 
+    update(dt: number): void {
+        if (this.armFSM.getState() == ArmState.Idle) {
+            return;
+        }
+        this.setSlidePosition(dt);
         this.setArmPosition();
     }
 }
