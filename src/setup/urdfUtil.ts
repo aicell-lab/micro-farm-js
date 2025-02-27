@@ -14,7 +14,7 @@ export function applyMaterialToVisuals(
                 mesh.material = materialFunction(color);
             }
         }
-        console.log(current.name);
+        //console.log(current.name);
         stack.push(...current.children);
     }
 }

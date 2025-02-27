@@ -8,7 +8,6 @@ import { PhysicsWorld } from './physicsWorld';
 import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
-import { URDFRobot } from 'urdf-loader';
 import { EntityCollection } from '../setup/entityCollection';
 
 interface Controllers {
@@ -25,7 +24,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   let camera = createCamera();
   let cameraController = new CameraController(actors.player.object, camera);
   let player = new PlayerController(entities.getActors().player);
-  let table = new TableController(actors.table.object as URDFRobot, actors.table.bubbles, actors.table.selectBoxes);
+  let table = new TableController(actors.table);
   let ui = new UIController(camera, entities, table);
   let render = new RenderController(scene, camera);
   let actor = new ActorController(actors, player, table);

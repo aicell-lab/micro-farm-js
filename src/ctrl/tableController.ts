@@ -3,39 +3,46 @@ import { ArmStateMachine } from '../entity/armState';
 import { ArmState, ArmCommand } from '../setup/enums';
 import { OpticsController } from './opticsController';
 import * as THREE from 'three';
-import { Bubble } from '../entity/bubble';
+//import { Bubble } from '../entity/bubble';
 import { SelectBox } from '../entity/selectBox';
+import { Entity } from '../entity/entity';
 
 export class TableController {
-    table: URDFRobot;
     slideJoint: URDFJoint; // range [-3.5, 0]
     armFSM: ArmStateMachine;
     opticsControllers: OpticsController[];
 
-    constructor(table: URDFRobot, bubbles: Bubble[], selBoxes: SelectBox[]) {
 
+    private checkTable(table: Entity): void {
         const numOptics = 10;
-        if (bubbles.length !== numOptics) {
+        if (table.bubbles.length !== numOptics) {
             throw new Error(`Expected exactly ${numOptics} speech buubles.`);
         }
-        if (selBoxes.length !== numOptics) {
+        if (table.selectBoxes.length !== numOptics) {
             throw new Error(`Expected exactly ${numOptics} selection boxes.`);
         }
+    }
 
-        this.table = table;
-        table.updateMatrixWorld(true);
-        this.slideJoint = table.joints["slide-j"];
-        this.armFSM = new ArmStateMachine();
-        this.opticsControllers = [];
+    private createOpticsControllers(table: Entity): OpticsController[] {
+        let controllers: OpticsController[] = [];
         for (let i = 0; i < 10; i++) {
             const pos = new THREE.Vector3(-1.3 + i * 0.57, 1.5, -0.5);
             if (i > 4) {
                 pos.x -= 5 * 0.57;
                 pos.z = 0.5;
             }
-            let opticsController = new OpticsController(bubbles[i], pos, selBoxes[i], i);
-            this.opticsControllers.push(opticsController);
+            let opticsController = new OpticsController(table.bubbles[i], pos, table.selectBoxes[i], i);
+            controllers.push(opticsController);
         }
+        return controllers;
+    }
+
+    constructor(table: Entity) {
+        this.checkTable(table);
+        const tableRobot = table.object as URDFRobot;
+        this.slideJoint = tableRobot.joints["slide-j"];
+        this.armFSM = new ArmStateMachine();
+        this.opticsControllers = this.createOpticsControllers(table);
     }
 
     getCurrentAngle(): number {

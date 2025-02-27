@@ -42,7 +42,7 @@ export class ActorFactory {
         applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
         getLinkMesh("gripper", arm.object)!.material = createMaterial(0x00fff0);
         getLinkMesh("arm-base", arm.object)!.material = createMaterial(0x00fff0);
-
+        arm.object.updateMatrixWorld(true);
         return arm;
     }
 
@@ -78,6 +78,7 @@ export class ActorFactory {
         getLinkMesh("plate-microscope", table.object)!.material = createMaterial(0xee6600);
         getLinkMesh("plate-incubator", table.object)!.material = createMaterial(0xee6600);
         getLinkMesh("slide", table.object)!.material = createMaterial(0xee6600);
+        table.object.updateMatrixWorld(true);
         return table;
     }
 
