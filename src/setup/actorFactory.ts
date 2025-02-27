@@ -74,7 +74,10 @@ export class ActorFactory {
         table.selectBoxes = selectBoxes;
         table.object.position.y += 0.855;
         table.object.rotation.x = MathUtils.degToRad(270.0);
-        applyMaterialToVisuals(table.object, createMaterial, 0x999999);
+        applyMaterialToVisuals(table.object, createMaterial, 0xfffff0);
+        getLinkMesh("plate-microscope", table.object)!.material = createMaterial(0xee6600);
+        getLinkMesh("plate-incubator", table.object)!.material = createMaterial(0xee6600);
+        getLinkMesh("slide", table.object)!.material = createMaterial(0xee6600);
         return table;
     }
 

@@ -1,20 +1,5 @@
 import * as THREE from 'three';
 
-/*export function applyMaterialToVisuals(obj: THREE.Object3D, color: number) {
-    const stack: THREE.Object3D[] = [obj];
-    while (stack.length > 0) {
-        const current = stack.pop()!;
-        if (current.type === "URDFVisual") {
-            const mesh = findFirstMesh(current);
-            if (mesh) {
-                mesh.material = createGenericMaterial(color);
-            }
-        }
-        //console.log(current.name);
-        stack.push(...current.children);
-    }
-}*/
-
 export function applyMaterialToVisuals(
     obj: THREE.Object3D,
     materialFunction: (color: number) => THREE.Material,
@@ -29,6 +14,7 @@ export function applyMaterialToVisuals(
                 mesh.material = materialFunction(color);
             }
         }
+        console.log(current.name);
         stack.push(...current.children);
     }
 }
