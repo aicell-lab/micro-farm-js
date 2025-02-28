@@ -37,7 +37,7 @@ export class ActorFactory {
         let sliderMaterial = new THREE.MeshBasicMaterial({ color: 0x00aa00 });
         let sliderMesh = new THREE.Mesh(sliderGeometry, sliderMaterial);
         let boxGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-        let boxMaterial = new THREE.MeshBasicMaterial({ color: 0x992000, transparent: true, opacity: 0.9  });
+        let boxMaterial = new THREE.MeshBasicMaterial({ color: 0x992000, transparent: true, opacity: 0.9 });
         let boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
         boxMesh.position.set(1, 0.75, 2);
         sliderMesh.position.set(2, 0.75, 2);
@@ -66,8 +66,8 @@ export class ActorFactory {
         let animAsset = loadAnimatioAsset(Animations.Human);
         const options: EntityOptions = {
             object: animAsset.model,
-            animations: animAsset.animations,
         };
+        options.object.animations = animAsset.animations;
         let human = new Entity(options);
         const rotY = THREE.MathUtils.degToRad(180.0);
         human.object.rotateY(rotY);

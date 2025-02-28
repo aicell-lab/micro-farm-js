@@ -4,7 +4,6 @@ import { SelectBox } from './selectBox';
 
 export interface EntityOptions {
     object: THREE.Object3D;
-    animations?: THREE.AnimationClip[];
 }
 
 export class Entity {
@@ -12,11 +11,10 @@ export class Entity {
     bubbles: Bubble[];
     selectBoxes: SelectBox[];
 
-    constructor({ object, animations }: EntityOptions) {
+    constructor({ object }: EntityOptions) {
         this.bubbles = [];
         this.selectBoxes = [];
         this.object = object;
-        this.object.animations = animations ?? [];
     }
 
 }
