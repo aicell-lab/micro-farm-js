@@ -30,6 +30,22 @@ export class ActorFactory {
 
     }
 
+    createArmTest(): Entity {
+        let object = new THREE.Object3D();
+        let armTest = new Entity({ object: object });
+        let sliderGeometry = new THREE.BoxGeometry(2, 0.1, 0.1);
+        let sliderMaterial = new THREE.MeshBasicMaterial({ color: 0x00aa00 });
+        let sliderMesh = new THREE.Mesh(sliderGeometry, sliderMaterial);
+        let boxGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+        let boxMaterial = new THREE.MeshBasicMaterial({ color: 0x992000, transparent: true, opacity: 0.9  });
+        let boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+        boxMesh.position.set(1, 0.75, 2);
+        sliderMesh.position.set(2, 0.75, 2);
+        object.add(sliderMesh);
+        object.add(boxMesh);
+        return armTest;
+    }
+
     createArm(): Entity {
         let armRobot = Assets.getInstance().getRobots().get(Robots.Arm)!;
         const options: EntityOptions = {
@@ -83,7 +99,7 @@ export class ActorFactory {
     }
 
     createActors(): Actors {
-        return { player: this.createHuman(), table: this.createOpticalTable(), arm: this.createArm() };
+        return { player: this.createHuman(), table: this.createOpticalTable(), arm: this.createArm(), armTest: this.createArmTest() };
     }
 }
 

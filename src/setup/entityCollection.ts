@@ -11,6 +11,7 @@ export interface Actors {
     player: Entity;
     table: Entity;
     arm: Entity;
+    armTest: Entity;
 }
 
 export class EntityCollection {
