@@ -9,7 +9,6 @@ export interface EntityOptions {
 
 export class Entity {
     object: THREE.Object3D;
-    animations?: THREE.AnimationClip[];
     bubbles: Bubble[];
     selectBoxes: SelectBox[];
 
@@ -17,7 +16,7 @@ export class Entity {
         this.bubbles = [];
         this.selectBoxes = [];
         this.object = object;
-        this.animations = animations;
+        this.object.animations = animations ?? [];
     }
 
 }

@@ -98,7 +98,7 @@ class PlayerAnimationController {
 
     constructor(entity: Entity, phyicsCtrl: PlayerPhysicsController) {
         this.object = entity.object;
-        this.animations = entity.animations!;
+        this.animations = entity.object.animations;
         this.animationMixer = new THREE.AnimationMixer(this.object);
         this.walkAction = this.animationMixer.clipAction(this.animations[0]); //Assume first animation is walk
         this.walkAction.play();
