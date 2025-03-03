@@ -7,49 +7,54 @@
   <title>Micro Farm Demo</title>
 
   <style>
-/* Fullscreen loading screen */
-#overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgb(48, 48, 48);
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    color: white;
-    font-size: 20px;
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-}
+    /* Fullscreen loading screen */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgb(48, 48, 48);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      font-size: 20px;
+      opacity: 1;
+      transform: scale(1);
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
 
-/* When loading is done, fade out the overlay */
-#overlay.hidden {
-    opacity: 0;
-    transform: scale(0.8); /* Shrinks smoothly */
-    pointer-events: none;
-}
+    /* When loading is done, fade out the overlay */
+    #overlay.hidden {
+      opacity: 0;
+      transform: scale(0.8);
+      /* Shrinks smoothly */
+      pointer-events: none;
+    }
 
-/* Spinner Animation */
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top: 5px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
-}
+    /* Spinner Animation */
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
+    }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
 
+      to {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
@@ -59,7 +64,6 @@
   <script type="module" src="/src/main.ts"></script>
 
   <div id="ui">
-    <h2>Controls</h2>
     <p><strong>W A S D</strong> - Move</p>
     <p><strong>Q / E</strong> - Rotate</p>
     <p><strong>H</strong> - Hide/Show</p>
@@ -78,12 +82,16 @@
   <div id="hud" class="hidden">Click microscope to interact</div>
 
   <div id="dialog" class="dialog-hidden">
-    <div class="dialog-content">
+    <div id="dialog-header">
       <h2 id="dialog-title">Dialog Title</h2>
       <p id="dialog-message">Dialog message goes here...</p>
-      <button id="dialog-close">Close</button>
+      <button id="dialog-close">✕</button>
+    </div>
+    <div id="dialog-body">
+      <iframe src="https://example.com/"></iframe>
     </div>
   </div>
+
 
   <div id="loading-screen">
     <div class="spinner"></div>
@@ -93,7 +101,7 @@
   <div id="overlay">
     <div class="spinner"></div>
     <p>Loading...</p>
-</div> 
+  </div>
 
 </body>
 

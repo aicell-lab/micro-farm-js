@@ -23,6 +23,8 @@ function hideLoadingScreen() {
 async function init() {
     await AmmoSingleton.init();
     await Assets.init();
+    document.getElementById("dialog")!.classList.add("dialog-hidden");
+
 }
 
 function createSceneSystem(): SceneSystem {

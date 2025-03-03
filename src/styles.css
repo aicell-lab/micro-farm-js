@@ -119,25 +119,21 @@ canvas {
     color: white;
     font-family: Arial, sans-serif;
     z-index: 20;
-    width: 300px;
+    width: 80vw;
+    height: 65vh;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    
+
+    
 }
 
 .dialog-content {
     /* Optional: Style the content within the dialog */
 }
 
-#dialog-title {
-    margin-bottom: 10px;
-}
-
-#dialog-message {
-    margin-bottom: 20px;
-}
-
 #dialog-close {
-    background: #536a4c;
+    background: #b80000;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -150,7 +146,7 @@ canvas {
 }
 
 #dialog-close:hover {
-    background: #457d45;
+    background: #ff4545;
 }
 
 #dialog-close:active {
@@ -160,4 +156,59 @@ canvas {
 .dialog-hidden {
     display: none;
 }
+
+
+
+#dialog-header {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center; /* Centers the message */
+    align-items: center;
+    position: relative;
+    height: 50px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Title positioned to the left */
+#dialog-title {
+    position: absolute;
+    left: 10px;
+    font-size: 18px;
+    margin: 0;
+}
+
+/* Message centered */
+#dialog-message {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.8;
+    margin: 0;
+}
+
+
+#dialog-body {
+    position: absolute;
+    top: 100px; /* Pushes it below the header */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px 10px 10px 10px; /* Adds more top spacing */
+}
+
+
+/* Makes the iframe take up most of the dialog space */
+#dialog-body iframe {
+    width: 95%;  /* Almost full width */
+    height: 95%; /* Almost full height */
+    border: none; /* Removes border */
+}
+
+
+
+
+
+
 
