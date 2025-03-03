@@ -12,7 +12,7 @@ function createPhysicsController(entities: EntityCollection): PhysicsController 
     return ctrl;
 }
 
-export class SimulationLoop {
+export class PhysicsSystem {
     private entities: EntityCollection;
     private world: PhysicsWorld;
     private physicsCtrl: PhysicsController;

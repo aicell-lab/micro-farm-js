@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
-import { SimulationLoop } from './simulationLoop';
+import { PhysicsSystem } from './physicsSystem';
 import { ActorController } from '../ctrl/actorController';
 import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
@@ -52,7 +52,7 @@ function updatePostSimulationStepControllers(ctrl: Controllers, input: Input): v
 }
 
 export class SceneSystem {
-  private simulationLoop: SimulationLoop;
+  private physicsSystem: PhysicsSystem;
   private clock: THREE.Clock;
   private entities: EntityCollection;
   private controllers: Controllers;
@@ -61,7 +61,7 @@ export class SceneSystem {
   constructor(entities: EntityCollection, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
     this.inputListener = new InputListener();
     this.entities = entities;
-    this.simulationLoop = new SimulationLoop(entities, physicsWorld);
+    this.physicsSystem = new PhysicsSystem(entities, physicsWorld);
     this.clock = new THREE.Clock();
     this.controllers = createControllers(entities, scene);
   }
@@ -75,7 +75,7 @@ export class SceneSystem {
     const dt = this.clock.getDelta();
     const input = this.inputListener.getInput();
     updatePreSimulationStepControllers(dt, this.controllers, this.entities, input);
-    this.simulationLoop.step(dt);
+    this.physicsSystem.step(dt);
     updatePostSimulationStepControllers(this.controllers, input);
   }
 
