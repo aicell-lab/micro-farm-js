@@ -68,6 +68,10 @@ export class DialogController {
         this.dialogClose?.addEventListener("click", () => this.hideDialog());
     }
 
+    public isDialogVisible(): boolean {
+        return this.dialog !== null && !this.dialog.classList.contains("dialog-hidden");
+    }
+
     public showDialog(title: string, message: string): void {
         if (this.dialog && this.dialogTitle && this.dialogMessage) {
             this.dialogTitle.textContent = title;
@@ -111,9 +115,13 @@ export class UIController {
     }
 
     public update(input: Input): void {
-        this.updateSpatialUI();
+        if (!this.dialogController.isDialogVisible()) {
+            this.updateSpatialUI();
+        }
         this.handleMouse(input.mouse);
-        this.updateToolTip(input.keys);
+        if (!this.dialogController.isDialogVisible()) {
+            this.updateToolTip(input.keys);
+        }
     }
 
     public getArmCommands(): Array<ArmCommand> {
