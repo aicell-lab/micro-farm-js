@@ -47,4 +47,20 @@ export namespace AmmoUtils {
         const relPos = new Ammo.btVector3(0, 0, 0);
         bodies.forEach((body) => { body.applyImpulse(impulse, relPos) });
     }
+
+    export function getPositionRotation(body: Ammo.btRigidBody): [THREE.Vector3, THREE.Quaternion] {
+        const transform = getWorldTransform(body);
+        const origin = transform.getOrigin();
+        const position = new THREE.Vector3(origin.x(), origin.y(), origin.z());
+        const rotation = transform.getRotation();
+        const quaternion = new THREE.Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+        return [position, quaternion];
+    }
+
+    export function getWorldTransform(body: Ammo.btRigidBody): Ammo.btTransform {
+        const Ammo = AmmoSingleton.get();
+        const transform = new Ammo.btTransform();
+        body.getMotionState().getWorldTransform(transform);
+        return transform;
+    }
 }

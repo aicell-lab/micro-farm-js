@@ -2,13 +2,11 @@ import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import Ammo from 'ammojs-typed';
-import { AmmoSingleton } from '../setup/ammoSingleton';
 import { AmmoUtils } from './physicsUtil';
 
 export class PhysicsSystem {
     private entities: EntityCollection;
     private world: PhysicsWorld;
-
     private objects: Map<THREE.Mesh, Ammo.btRigidBody> = new Map();
     private masses: Map<THREE.Mesh, number> = new Map();
 
@@ -38,7 +36,7 @@ export class PhysicsSystem {
     }
 
     private syncObject(object: THREE.Object3D): void {
-        const [origin, rotation] = this.getPositionRotation(object);
+        const [origin, rotation] = AmmoUtils.getPositionRotation(this.getRigidBody(object));
         object.position.set(origin.x, origin.y, origin.z);
         object.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
     }
@@ -73,22 +71,4 @@ export class PhysicsSystem {
     private getRigidBodies(): Ammo.btRigidBody[] {
         return [...this.objects.values()];
     }
-
-    private getPositionRotation(object: THREE.Object3D): [THREE.Vector3, THREE.Quaternion] {
-        const body = this.getRigidBody(object);
-        const transform = this.getWorldTransform(body);
-        const origin = transform.getOrigin();
-        const position = new THREE.Vector3(origin.x(), origin.y(), origin.z());
-        const rotation = transform.getRotation();
-        const quaternion = new THREE.Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
-        return [position, quaternion];
-    }
-
-    private getWorldTransform(body: Ammo.btRigidBody): Ammo.btTransform {
-        const Ammo = AmmoSingleton.get();
-        const transform = new Ammo.btTransform();
-        body.getMotionState().getWorldTransform(transform);
-        return transform;
-    }
-
 } 
