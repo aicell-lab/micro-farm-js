@@ -33,7 +33,7 @@ export class PhysicsWorld {
         this.world.addRigidBody(body);
     }
 
-    public addRigidBodies(bodies: [THREE.Mesh, Ammo.btRigidBody][]) {
+    public addRigidBodies(bodies: [THREE.Mesh, Ammo.btRigidBody][]): void {
         bodies.forEach(([mesh, body]) => {
             this.addRigidBody(body, mesh);
         });

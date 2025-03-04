@@ -22,7 +22,7 @@ export class PhysicsSystem {
         const room = this.entities.getRoom();
         this.addObject(room.cube.object, 1.0);
         this.addObject(room.floor.object, 0.0);
-        this.applyImpulse(new THREE.Vector3(4.5, 0, 0));
+        AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), this.getRigidBodies());
         this.world.addRigidBodies(this.getMeshRigidBodyPairs());
     }
 
@@ -70,6 +70,10 @@ export class PhysicsSystem {
         return [...this.objects];
     }
 
+    private getRigidBodies(): Ammo.btRigidBody[] {
+        return [...this.objects.values()];
+    }
+
     private getPositionRotation(object: THREE.Object3D): [THREE.Vector3, THREE.Quaternion] {
         const body = this.getRigidBody(object);
         const transform = this.getWorldTransform(body);
@@ -86,15 +90,5 @@ export class PhysicsSystem {
         body.getMotionState().getWorldTransform(transform);
         return transform;
     }
-
-    private applyImpulse(force: THREE.Vector3): void {
-        const Ammo = AmmoSingleton.get();
-        const impulse = new Ammo.btVector3(force.x, force.y, force.z);
-        const relPos = new Ammo.btVector3(0, 0, 0);
-        this.objects.forEach((body, _) => {
-            body.applyImpulse(impulse, relPos);
-        });
-    }
-
 
 } 
