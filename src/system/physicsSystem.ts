@@ -3,25 +3,23 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import { PhysicsController } from '../ctrl/physicsController';
 
-
-function createPhysicsController(entities: EntityCollection): PhysicsController {
-    let room = entities.getRoom();
-    let ctrl = new PhysicsController();
-    ctrl.addObject(room.cube.object, 1.0);
-    ctrl.addObject(room.floor.object, 0.0);
-    ctrl.applyImpulse(new THREE.Vector3(4.5, 0, 0));
-    return ctrl;
-}
-
 export class PhysicsSystem {
     private entities: EntityCollection;
     private world: PhysicsWorld;
     private physicsCtrl: PhysicsController;
 
-    constructor(entities: EntityCollection, world: PhysicsWorld) {
+    constructor(entities: EntityCollection) {
         this.entities = entities;
-        this.world = world;
-        this.physicsCtrl = createPhysicsController(this.entities);
+        this.world = new PhysicsWorld();
+        this.physicsCtrl = new PhysicsController();
+        this.initializePhysics();
+    }
+
+    private initializePhysics(): void {
+        const room = this.entities.getRoom();
+        this.physicsCtrl.addObject(room.cube.object, 1.0);
+        this.physicsCtrl.addObject(room.floor.object, 0.0);
+        this.physicsCtrl.applyImpulse(new THREE.Vector3(4.5, 0, 0));
         this.world.addRigidBodies(this.physicsCtrl.getMeshRigidBodyPairs());
     }
 

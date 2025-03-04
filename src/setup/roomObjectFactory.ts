@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { Room } from './entityCollection';
-import { PhysicsWorld } from '../system/physicsWorld';
 import { createNoise2D } from 'simplex-noise';
 import { Material, MeshStandardMaterial, Mesh } from 'three';
 import { BoxGeometry } from 'three';
@@ -50,10 +49,7 @@ function createCubeMaterial(): Material {
 
 export class RoomObjectFactory {
 
-    world: PhysicsWorld;
-
-    constructor(world: PhysicsWorld) {
-        this.world = world;
+    constructor() {
     }
 
     createFloor(): Entity {

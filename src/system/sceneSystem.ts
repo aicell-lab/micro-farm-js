@@ -4,7 +4,6 @@ import { PhysicsSystem } from './physicsSystem';
 import { ActorController } from '../ctrl/actorController';
 import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
-import { PhysicsWorld } from './physicsWorld';
 import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
@@ -58,10 +57,10 @@ export class SceneSystem {
   private controllers: Controllers;
   private inputListener: InputListener;
 
-  constructor(entities: EntityCollection, scene: THREE.Scene, physicsWorld: PhysicsWorld) {
+  constructor(entities: EntityCollection, scene: THREE.Scene) {
     this.inputListener = new InputListener();
     this.entities = entities;
-    this.physicsSystem = new PhysicsSystem(entities, physicsWorld);
+    this.physicsSystem = new PhysicsSystem(entities);
     this.clock = new THREE.Clock();
     this.controllers = createControllers(entities, scene);
   }
