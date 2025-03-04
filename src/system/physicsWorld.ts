@@ -15,8 +15,6 @@ function createPhysicsWorld(): Ammo.btDiscreteDynamicsWorld {
 export class PhysicsWorld {
     private world: Ammo.btDiscreteDynamicsWorld;
     private rigidBodies: Ammo.btRigidBody[] = [];
-    private objectMap: Map<number, THREE.Object3D> = new Map();
-    private nextUserIndex = 0;
 
     constructor() {
         this.world = createPhysicsWorld();
@@ -29,11 +27,15 @@ export class PhysicsWorld {
         this.world.stepSimulation(dt, maxSubSteps);
     }
 
-    addRigidBody(body: Ammo.btRigidBody, object: THREE.Object3D): void {
-        const userIndex = this.nextUserIndex++;
-        body.setUserIndex(userIndex);
-        this.objectMap.set(userIndex, object);
+    addRigidBody(body: Ammo.btRigidBody, mesh: THREE.Mesh): void {
+        body.setUserPointer(mesh);
         this.rigidBodies.push(body);
         this.world.addRigidBody(body);
+    }
+
+    public addRigidBodies(bodies: [THREE.Mesh, Ammo.btRigidBody][]) {
+        bodies.forEach(([mesh, body]) => {
+            this.addRigidBody(body, mesh);
+        });
     }
 }

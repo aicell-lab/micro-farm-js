@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import { PhysicsController } from '../ctrl/physicsController';
 
+
 function createPhysicsController(entities: EntityCollection): PhysicsController {
     let room = entities.getRoom();
     let ctrl = new PhysicsController();
@@ -21,13 +22,7 @@ export class PhysicsSystem {
         this.entities = entities;
         this.world = world;
         this.physicsCtrl = createPhysicsController(this.entities);
-        this.addRigidBodiesToWorld();
-    }
-
-    private addRigidBodiesToWorld() {
-        this.physicsCtrl.getPhysicsData().forEach(([object, data]) => {
-            this.world.addRigidBody(data.body, object);
-        });
+        this.world.addRigidBodies(this.physicsCtrl.getMeshRigidBodyPairs());
     }
 
     step(dt: number): void {
