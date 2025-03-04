@@ -25,9 +25,28 @@ export class PhysicsSystem {
         this.world.addRigidBodies(this.physicsCtrl.getMeshRigidBodyPairs());
     }
 
-    step(dt: number): void {
+    public step(dt: number): void {
         let slowedDT = dt / 10.0;
         this.world.step(slowedDT);
-        this.physicsCtrl.update();
     }
+
+    private getSimulatedObjects(): Array<THREE.Object3D> {
+        const cube = this.entities.getRoom().cube;
+        const cubeObj = cube.object;
+        return [cubeObj];
+    }
+
+    private syncObject(object: THREE.Object3D): void {
+        const [origin, rotation] = this.physicsCtrl.getPositionRotation(object);
+        object.position.set(origin.x, origin.y, origin.z);
+        object.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
+    }
+
+    public syncGraphics(): void {
+        this.getSimulatedObjects().forEach((object) => {
+            this.syncObject(object);
+        });
+    }
+
+
 } 

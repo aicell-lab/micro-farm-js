@@ -73,13 +73,14 @@ export class PhysicsController {
         return Array.from(this.objects.entries()).map(([mesh, body]) => [mesh, body]);
     }
 
-    update(): void {
-        this.objects.forEach((body, object) => {
-            const mass = this.masses.get(object) || 0;
-            if (mass > 0) {
-                this.applyPhysics(body, object);
-            }
-        });
+    public getPositionRotation(object: THREE.Object3D): [THREE.Vector3, THREE.Quaternion] {
+        const body = this.getRigidBody(object);
+        const transform = this.getWorldTransform(body);
+        const origin = transform.getOrigin();
+        const position = new THREE.Vector3(origin.x(), origin.y(), origin.z());
+        const rotation = transform.getRotation();
+        const quaternion = new THREE.Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w());
+        return [position, quaternion];
     }
 
     private getWorldTransform(body: Ammo.btRigidBody): Ammo.btTransform {
@@ -87,14 +88,6 @@ export class PhysicsController {
         const transform = new Ammo.btTransform();
         body.getMotionState().getWorldTransform(transform);
         return transform;
-    }
-
-    private applyPhysics(body: Ammo.btRigidBody, object: THREE.Object3D): void { //TODO: Get position, rotation pair for each mesh.
-        const transform = this.getWorldTransform(body);
-        const origin = transform.getOrigin();
-        const rotation = transform.getRotation();
-        object.position.set(origin.x(), origin.y(), origin.z());
-        object.quaternion.set(rotation.x(), rotation.y(), rotation.z(), rotation.w());
     }
 
     applyImpulse(force: THREE.Vector3): void {

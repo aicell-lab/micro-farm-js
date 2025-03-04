@@ -76,6 +76,7 @@ export class SceneSystem {
     const input = this.inputListener.getInput();
     updatePreSimulationStepControllers(dt, this.controllers, this.entities, input);
     this.physicsSystem.step(dt);
+    this.physicsSystem.syncGraphics();
     updatePostSimulationStepControllers(this.controllers, input);
   }
 
