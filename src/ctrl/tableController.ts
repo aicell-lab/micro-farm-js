@@ -49,11 +49,7 @@ export class TableController {
         this.armFSM.transition(newCommand);
     }
 
-    private getTargetAngle(): number {
-        return this.armFSM.getTargetAngle();
-    }
-
-    public getOpticalControllers(): OpticsController[] {
+    public getOpticalControllers(): Array<OpticsController> {
         return this.opticsControllers;
     }
 
@@ -67,14 +63,12 @@ export class TableController {
     }
 
     private getSlideTargetPosition(dt: number): number {
-        const currentAngle = getSlideJoint(this.table).angle as number;
-        const targetAngle = this.getTargetAngle();
+        const currentAngle = getSlideAngle(this.table);
+        const targetAngle = this.armFSM.getTargetAngle();
         const angleDifference = targetAngle - currentAngle;
-
         if (Math.abs(angleDifference) < 0.01) {
             return targetAngle;
         }
-
         const speed = 1.0;
         return currentAngle + Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * dt);
     }
