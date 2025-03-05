@@ -21,7 +21,6 @@ export class PhysicsSystem {
         this.addObject(room.cube.object, 1.0);
         this.addObject(room.floor.object, 0.0);
         AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), [...this.objects.values()]);
-        this.world.addRigidBodies([...this.objects.entries()]);
     }
 
     public step(dt: number): void {
@@ -35,7 +34,9 @@ export class PhysicsSystem {
 
     private addObject(object: THREE.Object3D, mass: number): void {
         const mesh = AmmoUtils.getMesh(object);
-        this.objects.set(mesh, AmmoUtils.createBody(mesh, mass));
+        const body = AmmoUtils.createBody(mesh, mass);
+        this.objects.set(mesh, body);
         this.masses.set(mesh, mass);
+        this.world.addRigidBody(body, mesh);
     }
 } 

@@ -33,7 +33,7 @@ export class PhysicsWorld {
         });
     }
 
-    private addRigidBody(body: Ammo.btRigidBody, mesh: THREE.Mesh): void {
+    public addRigidBody(body: Ammo.btRigidBody, mesh: THREE.Mesh): void {
         body.setUserPointer(mesh);
         this.rigidBodies.push(body);
         this.world.addRigidBody(body);
