@@ -68,6 +68,7 @@ class PlayerPhysicsController {
     public handleRotation(p: RotatePayload) {
         this.rotationSpeed = 0.0;
         const speed = 2.0;
+        const mouseSensitivity = 50.0;
 
         if (p.left) {
             this.rotationSpeed = speed;
@@ -75,6 +76,11 @@ class PlayerPhysicsController {
         if (p.right) {
             this.rotationSpeed = -speed;
         }
+
+        if (Math.abs(p.dx) > 0.01) {
+            this.rotationSpeed = -p.dx * mouseSensitivity;
+        }
+
     }
 
     public getVelocity(): THREE.Vector3 {

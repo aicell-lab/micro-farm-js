@@ -11,6 +11,7 @@ export interface MovePayload {
 export interface RotatePayload {
     left: boolean;
     right: boolean;
+    dx: number;
 }
 
 export type ActionPayload =

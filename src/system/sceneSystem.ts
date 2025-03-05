@@ -41,7 +41,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
 
 function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt, input);
-  ctrl.actor.processActions(input.keys, ctrl.ui.getArmCommands());
+  ctrl.actor.processActions(input, ctrl.ui.getArmCommands());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
 }
@@ -49,6 +49,17 @@ function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: En
 function updateUIAndRender(ctrl: Controllers, input: Input): void {
   ctrl.ui.update(input);
   ctrl.render.render();
+}
+
+function togglePointerLock(inputListener: InputListener, input: Input): void {
+  const locked = input.mouse.pointerLocked;
+  const lockKey = "r";
+  if (!locked && input.keys.pressed.has(lockKey)) {
+    inputListener.requestPointerLock();
+  }
+  else if (locked && input.keys.pressed.has(lockKey)) {
+    inputListener.exitPointerLock();
+  }
 }
 
 export class SceneSystem {
@@ -71,15 +82,16 @@ export class SceneSystem {
     requestAnimationFrame(this.runSimulationLoop);
   };
 
-  processNextFrame() {
+  processNextFrame(): void {
     const dt = this.clock.getDelta();
     const input = this.inputListener.getInput();
+    togglePointerLock(this.inputListener, input);
     updatePrePhysicsControllers(dt, this.controllers, this.entities, input);
     this.stepSimulation(dt);
     updateUIAndRender(this.controllers, input);
   }
 
-  private stepSimulation(dt: number) {
+  private stepSimulation(dt: number): void {
     this.physicsSystem.step(dt);
     syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
   }

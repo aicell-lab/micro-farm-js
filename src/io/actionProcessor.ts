@@ -2,6 +2,7 @@ import { Action } from '../types/action';
 import { MovePayload, ActionPayload, RotatePayload } from '../types/actionType';
 import { Actions } from '../setup/enums';
 import { KeyboardInput } from './keyboard';
+import { Input } from './input';
 
 export namespace ActionProcessor {
     export function getMoveAction(keyboardInput: KeyboardInput): Action {
@@ -15,19 +16,21 @@ export namespace ActionProcessor {
         return new Action(actionPayload);
     }
 
-    export function getRotateAction(keyboardInput: KeyboardInput): Action {
+    export function getRotateAction(input: Input): Action {
+        const dx = input.mouse.pointerLocked ? input.mouse.dx : 0;
         const rot: RotatePayload = {
-            left: keyboardInput.held.has("q"),
-            right: keyboardInput.held.has("e"),
+            left: input.keys.held.has("q"),
+            right: input.keys.held.has("e"),
+            dx: dx,
         };
         const actionPayload: ActionPayload = { type: Actions.PLAYER_ROTATE, payload: rot };
         return new Action(actionPayload);
     }
 
-    export function getPlayerActions(keyboardInput: KeyboardInput): Action[] {
+    export function getPlayerActions(input: Input): Action[] {
         return [
-            getMoveAction(keyboardInput),
-            getRotateAction(keyboardInput),
+            getMoveAction(input.keys),
+            getRotateAction(input),
         ];
     }
 }
