@@ -27,17 +27,4 @@ export class InputListener {
         return { keys: this.getKeyboardInput(), mouse: this.getMouseInput() };
     }
 
-    public requestPointerLock(): void {
-        const canvas = document.body;
-        if (canvas.requestPointerLock) {
-            canvas.requestPointerLock();
-        }
-    }
-
-    public exitPointerLock() {
-        if (document.pointerLockElement) {
-            document.exitPointerLock();
-        }
-    }
-
 }

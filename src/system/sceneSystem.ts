@@ -9,6 +9,7 @@ import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
+import { requestPointerLock, exitPointerLock } from './window';
 
 interface Controllers {
   ui: UIController;
@@ -51,14 +52,14 @@ function updateUIAndRender(ctrl: Controllers, input: Input): void {
   ctrl.render.render();
 }
 
-function togglePointerLock(inputListener: InputListener, input: Input): void {
+function togglePointerLock(input: Input): void {
   const locked = input.mouse.pointerLocked;
   const lockKey = "r";
   if (!locked && input.keys.pressed.has(lockKey)) {
-    inputListener.requestPointerLock();
+    requestPointerLock();
   }
   else if (locked && input.keys.pressed.has(lockKey)) {
-    inputListener.exitPointerLock();
+    exitPointerLock();
   }
 }
 
@@ -85,7 +86,7 @@ export class SceneSystem {
   processNextFrame(): void {
     const dt = this.clock.getDelta();
     const input = this.inputListener.getInput();
-    togglePointerLock(this.inputListener, input);
+    togglePointerLock(input);
     updatePrePhysicsControllers(dt, this.controllers, this.entities, input);
     this.stepSimulation(dt);
     updateUIAndRender(this.controllers, input);

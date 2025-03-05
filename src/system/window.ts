@@ -20,3 +20,16 @@ export function getRenderer(): THREE.WebGLRenderer {
   }
   return rendererInstance;
 }
+
+export function requestPointerLock(): void {
+  const canvas = document.body;
+  if (canvas.requestPointerLock) {
+    canvas.requestPointerLock();
+  }
+}
+
+export function exitPointerLock(): void {
+  if (document.pointerLockElement) {
+    document.exitPointerLock();
+  }
+}
