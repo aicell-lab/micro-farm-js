@@ -39,14 +39,14 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   };
 }
 
-function updatePreSimulationStepControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
+function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt);
   ctrl.actor.processActions(input.keys, ctrl.ui.getArmCommands());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
 }
 
-function updatePostSimulationStepControllers(ctrl: Controllers, input: Input): void {
+function updateUIAndRender(ctrl: Controllers, input: Input): void {
   ctrl.ui.update(input);
   ctrl.render.render();
 }
@@ -74,10 +74,14 @@ export class SceneSystem {
   processNextFrame() {
     const dt = this.clock.getDelta();
     const input = this.inputListener.getInput();
-    updatePreSimulationStepControllers(dt, this.controllers, this.entities, input);
+    updatePrePhysicsControllers(dt, this.controllers, this.entities, input);
+    this.stepSimulation(dt);
+    updateUIAndRender(this.controllers, input);
+  }
+
+  private stepSimulation(dt: number) {
     this.physicsSystem.step(dt);
     syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
-    updatePostSimulationStepControllers(this.controllers, input);
   }
 
 }
