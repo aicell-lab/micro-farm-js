@@ -24,6 +24,16 @@ function loadAnimatioAsset(animationType: Animations): AnimationAsset {
     return animationAssets.get(animationType)!;
 }
 
+function validateTableEntity(table: Entity): void {
+    const numOptics = 10;
+    if (table.bubbles.length !== numOptics) {
+        throw new Error(`Expected exactly ${numOptics} speech buubles.`);
+    }
+    if (table.selectBoxes.length !== numOptics) {
+        throw new Error(`Expected exactly ${numOptics} selection boxes.`);
+    }
+}
+
 export class ActorFactory {
 
     constructor() {
@@ -99,7 +109,9 @@ export class ActorFactory {
     }
 
     createActors(): Actors {
-        return { player: this.createHuman(), table: this.createOpticalTable(), arm: this.createArm(), armTest: this.createArmTest() };
+        const table = this.createOpticalTable();
+        validateTableEntity(table);
+        return { player: this.createHuman(), table: table, arm: this.createArm(), armTest: this.createArmTest() };
     }
 }
 

@@ -6,28 +6,10 @@ import * as THREE from 'three';
 import { SelectBox } from '../entity/selectBox';
 import { Entity } from '../entity/entity';
 
-function validateTableEntity(table: Entity): void {
-    const numOptics = 10;
-    if (table.bubbles.length !== numOptics) {
-        throw new Error(`Expected exactly ${numOptics} speech buubles.`);
-    }
-    if (table.selectBoxes.length !== numOptics) {
-        throw new Error(`Expected exactly ${numOptics} selection boxes.`);
-    }
-}
-
-function initOpticsControllers(table: Entity): OpticsController[] {
-    let controllers: OpticsController[] = [];
-    for (let i = 0; i < 10; i++) {
-        const pos = new THREE.Vector3(-1.3 + i * 0.57, 1.5, -0.5);
-        if (i > 4) {
-            pos.x -= 5 * 0.57;
-            pos.z = 0.5;
-        }
-        let opticsController = new OpticsController(table.bubbles[i], pos, table.selectBoxes[i], i);
-        controllers.push(opticsController);
-    }
-    return controllers;
+function createOpticsControllers(table: Entity): OpticsController[] {
+    return Array.from({ length: 10 }, (_, i) =>
+        new OpticsController(table.bubbles[i], table.selectBoxes[i], i)
+    );
 }
 
 function getSlideJoint(table: Entity): URDFJoint {
@@ -54,8 +36,7 @@ export class TableController {
     constructor(table: Entity, arm: Entity) {
         this.table = table;
         this.arm = arm;
-        validateTableEntity(table);
-        this.opticsControllers = initOpticsControllers(table);
+        this.opticsControllers = createOpticsControllers(table);
         this.armFSM = new ArmStateMachine();
         this.setArmPosition();
     }
