@@ -66,16 +66,21 @@ export class TableController {
         this.arm.object.position.copy(getSlidePosition(this.table).clone()).add(offset);
     }
 
-    private setSlidePosition(dt: number): void {
-        const speed = 1.0;
-        const angle = getSlideAngle(this.table);
-        const angleDifference = this.getTargetAngle() - angle;
-        const step = Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * dt);
-        const slideJoint = getSlideJoint(this.table);
-        slideJoint.setJointValue(angle + step);
+    private getSlideTargetPosition(dt: number): number {
+        const currentAngle = getSlideJoint(this.table).angle as number;
+        const targetAngle = this.getTargetAngle();
+        const angleDifference = targetAngle - currentAngle;
+
         if (Math.abs(angleDifference) < 0.01) {
-            slideJoint.setJointValue(this.getTargetAngle());
+            return targetAngle;
         }
+
+        const speed = 1.0;
+        return currentAngle + Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * dt);
+    }
+
+    private setSlidePosition(dt: number): void {
+        getSlideJoint(this.table).setJointValue(this.getSlideTargetPosition(dt));
     }
 
     update(dt: number): void {
