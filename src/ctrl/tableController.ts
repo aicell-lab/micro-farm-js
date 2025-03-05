@@ -28,10 +28,11 @@ function getSlidePosition(table: Entity): THREE.Vector3 {
 }
 
 export class TableController {
-    armFSM: ArmStateMachine;
-    opticsControllers: OpticsController[];
-    arm: Entity;
-    table: Entity;
+    private static readonly SLIDE_SPEED = 1.0;
+    private armFSM: ArmStateMachine;
+    private opticsControllers: OpticsController[];
+    private arm: Entity;
+    private table: Entity;
 
     constructor(table: Entity, arm: Entity) {
         this.table = table;
@@ -49,7 +50,7 @@ export class TableController {
         this.armFSM.transition(newCommand);
     }
 
-    public getOpticalControllers(): Array<OpticsController> {
+    public getOpticalControllers(): OpticsController[] {
         return this.opticsControllers;
     }
 
@@ -58,23 +59,25 @@ export class TableController {
     }
 
     private setArmPosition(): void {
+        this.arm.object.position.copy(this.getArmPosition())
+    }
+
+    private getArmPosition(): THREE.Vector3 {
         const offset = new THREE.Vector3(-0.087, 0.0777, -0.01345);
-        this.arm.object.position.copy(getSlidePosition(this.table).clone()).add(offset);
+        return getSlidePosition(this.table).clone().add(offset);
     }
 
     private getSlideTargetPosition(dt: number): number {
         const currentAngle = getSlideAngle(this.table);
         const targetAngle = this.armFSM.getTargetAngle();
         const angleDifference = targetAngle - currentAngle;
-        if (Math.abs(angleDifference) < 0.01) {
-            return targetAngle;
-        }
-        const speed = 1.0;
-        return currentAngle + Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), speed * dt);
+        if (Math.abs(angleDifference) < 0.01) return targetAngle;
+        return currentAngle + Math.sign(angleDifference) * Math.min(Math.abs(angleDifference), TableController.SLIDE_SPEED * dt);
     }
 
     private setSlidePosition(dt: number): void {
-        getSlideJoint(this.table).setJointValue(this.getSlideTargetPosition(dt));
+        const slideJoint: URDFJoint = getSlideJoint(this.table);
+        slideJoint.setJointValue(this.getSlideTargetPosition(dt));
     }
 
     update(dt: number): void {
