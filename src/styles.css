@@ -212,3 +212,34 @@ canvas {
 
 
 
+#ui {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out;
+    text-align: center;
+}
+
+/* New Grid Layout for Even Spacing */
+.ui-controls {
+    display: grid;
+    grid-template-columns: auto auto; /* Ensures two equal columns */
+    gap: 5px 15px;
+    justify-content: center;
+    margin-top: 5px;
+}
+
+/* Makes sure all rows are aligned */
+.ui-controls div {
+    white-space: nowrap;
+    text-align: left;
+    font-size: 12px;
+    opacity: 0.9;
+}

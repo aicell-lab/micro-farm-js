@@ -10,6 +10,7 @@ import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
 import { requestPointerLock, exitPointerLock } from './window';
+import { togglePlayerVisibility } from './playerOpacity';
 
 interface Controllers {
   ui: UIController;
@@ -87,6 +88,7 @@ export class SceneSystem {
     const dt = this.clock.getDelta();
     const input = this.inputListener.getInput();
     togglePointerLock(input);
+    togglePlayerVisibility(this.entities, input);
     updatePrePhysicsControllers(dt, this.controllers, this.entities, input);
     this.stepSimulation(dt);
     updateUIAndRender(this.controllers, input);
