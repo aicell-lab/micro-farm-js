@@ -22,15 +22,9 @@ export class PhysicsWorld {
         this.world.setGravity(new Ammo.btVector3(0, -10, 0));
     }
 
-    step(dt: number) {
+    public step(dt: number): void {
         const maxSubSteps = 10;
         this.world.stepSimulation(dt, maxSubSteps);
-    }
-
-    addRigidBody(body: Ammo.btRigidBody, mesh: THREE.Mesh): void {
-        body.setUserPointer(mesh);
-        this.rigidBodies.push(body);
-        this.world.addRigidBody(body);
     }
 
     public addRigidBodies(bodies: [THREE.Mesh, Ammo.btRigidBody][]): void {
@@ -38,4 +32,11 @@ export class PhysicsWorld {
             this.addRigidBody(body, mesh);
         });
     }
+
+    private addRigidBody(body: Ammo.btRigidBody, mesh: THREE.Mesh): void {
+        body.setUserPointer(mesh);
+        this.rigidBodies.push(body);
+        this.world.addRigidBody(body);
+    }
+
 }
