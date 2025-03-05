@@ -29,22 +29,8 @@ export class PhysicsSystem {
         this.world.step(slowedDT);
     }
 
-    private getSimulatedObjects(): Array<THREE.Object3D> {
-        const cube = this.entities.getRoom().cube;
-        const cubeObj = cube.object;
-        return [cubeObj];
-    }
-
-    private syncObject(object: THREE.Object3D): void {
-        const [origin, rotation] = AmmoUtils.getPositionRotation(this.getRigidBody(object));
-        object.position.set(origin.x, origin.y, origin.z);
-        object.quaternion.set(rotation.x, rotation.y, rotation.z, rotation.w);
-    }
-
-    public syncGraphics(): void {
-        this.getSimulatedObjects().forEach((object) => {
-            this.syncObject(object);
-        });
+    public getRigidBodyMap(): Map<THREE.Mesh, Ammo.btRigidBody> {
+        return this.objects;
     }
 
     private addMesh(mesh: THREE.Mesh, mass: number): void {
@@ -55,13 +41,6 @@ export class PhysicsSystem {
     private addObject(object: THREE.Object3D, mass: number): void {
         const mesh = AmmoUtils.getMesh(object);
         this.addMesh(mesh, mass);
-    }
-
-    private getRigidBody(object: THREE.Object3D): Ammo.btRigidBody {
-        const mesh = AmmoUtils.getMesh(object);
-        const body = this.objects.get(mesh);
-        if (!body) throw new Error("Body not found");
-        return body;
     }
 
     private getMeshRigidBodyPairs(): [THREE.Mesh, Ammo.btRigidBody][] {

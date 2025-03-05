@@ -8,6 +8,7 @@ import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
+import { syncGraphics } from './physicsSync';
 
 interface Controllers {
   ui: UIController;
@@ -75,7 +76,7 @@ export class SceneSystem {
     const input = this.inputListener.getInput();
     updatePreSimulationStepControllers(dt, this.controllers, this.entities, input);
     this.physicsSystem.step(dt);
-    this.physicsSystem.syncGraphics();
+    syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
     updatePostSimulationStepControllers(this.controllers, input);
   }
 
