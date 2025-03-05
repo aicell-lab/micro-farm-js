@@ -1,18 +1,13 @@
-type AmmoType = typeof import("ammojs-typed").default;
-
 export class AmmoSingleton {
-    private static instance: AmmoType | null = null;
-
-    static async init(): Promise<void> {
+    private static instance: typeof import("ammojs-typed").default | null = null;
+    static async init() {
         if (!this.instance) {
-            const AmmoModule = await import("ammojs-typed");
-            this.instance = (await AmmoModule.default()) as AmmoType;
+            this.instance = (await (await import("ammojs-typed")).default()) as typeof import("ammojs-typed").default;
         }
     }
-
-    static get(): AmmoType {
+    static get() {
         if (!this.instance) {
-            throw new Error("Ammo.js has not been initialized. Call AmmoSingleton.init() first.");
+            throw new Error("Ammo has not been initialized. Call AmmoSingleton.init() first.");
         }
         return this.instance;
     }
