@@ -1,8 +1,11 @@
+import * as THREE from 'three';
 import { MouseButton } from "../setup/enums";
 
 export interface MouseInput {
     x: number;
     y: number;
+    scrollDelta: number;
+    normalizedScrollDelta: number;
     pressed: Set<MouseButton>;
     released: Set<MouseButton>;
     held: Set<MouseButton>;
@@ -12,6 +15,8 @@ export class MouseListener {
     private mouseInput: MouseInput = {
         x: 0,
         y: 0,
+        scrollDelta: 0,
+        normalizedScrollDelta: 0,
         pressed: new Set(),
         released: new Set(),
         held: new Set(),
@@ -21,6 +26,13 @@ export class MouseListener {
         document.addEventListener("mousemove", this.onMouseMove.bind(this));
         document.addEventListener("mousedown", this.onMouseDown.bind(this));
         document.addEventListener("mouseup", this.onMouseUp.bind(this));
+        document.addEventListener("wheel", this.onMouseScroll.bind(this));
+    }
+
+    private onMouseScroll(event: WheelEvent) {
+        const MAX_SCROLL_DELTA = 300;
+        this.mouseInput.scrollDelta = event.deltaY;
+        this.mouseInput.normalizedScrollDelta = THREE.MathUtils.clamp(event.deltaY / MAX_SCROLL_DELTA, -1, 1);
     }
 
     private onMouseMove(event: MouseEvent) {
@@ -46,12 +58,16 @@ export class MouseListener {
     private clear(): void {
         this.mouseInput.pressed.clear();
         this.mouseInput.released.clear();
+        this.mouseInput.scrollDelta = 0;
+        this.mouseInput.normalizedScrollDelta = 0;
     }
 
     public getMouseInput(): MouseInput {
         const inputSnapshot = {
             x: this.mouseInput.x,
             y: this.mouseInput.y,
+            scrollDelta: this.mouseInput.scrollDelta,
+            normalizedScrollDelta: this.mouseInput.normalizedScrollDelta,
             pressed: new Set(this.mouseInput.pressed),
             released: new Set(this.mouseInput.released),
             held: new Set(this.mouseInput.held),

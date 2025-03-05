@@ -40,7 +40,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
 }
 
 function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
-  ctrl.camera.update(dt);
+  ctrl.camera.update(dt, input);
   ctrl.actor.processActions(input.keys, ctrl.ui.getArmCommands());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);

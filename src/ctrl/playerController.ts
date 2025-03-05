@@ -19,32 +19,31 @@ class PlayerPhysicsController {
 
 
     public update(object: THREE.Object3D, delta: number) {
-        if (this.kinState) {
-            const { acceleration: a, velocity: v } = this.kinState;
 
-            const forwardDirection = new THREE.Vector3(0, 0, 1);
-            object.getWorldDirection(forwardDirection);
+        const { acceleration: a, velocity: v } = this.kinState;
 
-            const rightDirection = new THREE.Vector3();
-            rightDirection.crossVectors(new THREE.Vector3(0, 1, 0), forwardDirection).normalize();
+        const forwardDirection = new THREE.Vector3(0, 0, 1);
+        object.getWorldDirection(forwardDirection);
 
-            const acc = 0.025;
-            if (a.z !== 0) {
-                v.add(forwardDirection.clone().multiplyScalar(a.z * acc));
-            }
-            if (a.x !== 0) {
-                v.add(rightDirection.clone().multiplyScalar(a.x * acc));
-            }
+        const rightDirection = new THREE.Vector3();
+        rightDirection.crossVectors(new THREE.Vector3(0, 1, 0), forwardDirection).normalize();
 
-            object.position.add(v.clone().multiplyScalar(delta));
+        const acc = 0.025;
+        if (a.z !== 0) {
+            v.add(forwardDirection.clone().multiplyScalar(a.z * acc));
+        }
+        if (a.x !== 0) {
+            v.add(rightDirection.clone().multiplyScalar(a.x * acc));
+        }
 
-            const dampingFactor = 1 - Math.min(1, 5 * delta);
-            v.multiplyScalar(dampingFactor);
+        object.position.add(v.clone().multiplyScalar(delta));
 
-            const velocityThreshold = 0.01;
-            if (v.lengthSq() < velocityThreshold ** 2) {
-                v.set(0, 0, 0);
-            }
+        const dampingFactor = 1 - Math.min(1, 5 * delta);
+        v.multiplyScalar(dampingFactor);
+
+        const velocityThreshold = 0.01;
+        if (v.lengthSq() < velocityThreshold ** 2) {
+            v.set(0, 0, 0);
         }
 
         const quaternion = new THREE.Quaternion();

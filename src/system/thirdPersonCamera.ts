@@ -5,12 +5,30 @@ export class ThirdPersonCamera {
     private currentPosition: THREE.Vector3;
     private currentLookat: THREE.Vector3;
     private camera: THREE.PerspectiveCamera;
+    private zoomLevel: number;
+    private readonly ZOOM_SPEED = 0.1;
+
+    constructor(camera: THREE.PerspectiveCamera, targetObject: THREE.Object3D, initialZoom: number = 1.0) {
+        this.targetObject = targetObject;
+        this.camera = camera;
+        this.currentPosition = new THREE.Vector3();
+        this.currentLookat = new THREE.Vector3();
+        this.zoomLevel = initialZoom;
+    }
 
     private getIdealOffset(): THREE.Vector3 {
-        const idealOffset = new THREE.Vector3(-1.6, 1.7, -2.5);
-        idealOffset.applyQuaternion(this.targetObject.quaternion);
-        idealOffset.add(this.targetObject.position);
-        return idealOffset;
+        const baseOffset = new THREE.Vector3(-1.6, 1.7, -2.5);
+
+        // Instead of scaling everything, only scale X and Z for better zoom behavior
+        const zoomedOffset = new THREE.Vector3(
+            baseOffset.x * this.zoomLevel, // Scale X
+            baseOffset.y, // Keep Y constant
+            baseOffset.z * this.zoomLevel // Scale Z (depth)
+        );
+
+        zoomedOffset.applyQuaternion(this.targetObject.quaternion);
+        zoomedOffset.add(this.targetObject.position);
+        return zoomedOffset;
     }
 
     private getIdealLookat(): THREE.Vector3 {
@@ -29,11 +47,9 @@ export class ThirdPersonCamera {
         this.camera.lookAt(this.currentLookat);
     }
 
-    constructor(camera: THREE.PerspectiveCamera, targetObject: THREE.Object3D) {
-        this.targetObject = targetObject;
-        this.camera = camera;
-        this.currentPosition = new THREE.Vector3();
-        this.currentLookat = new THREE.Vector3();
+    public adjustZoom(scrollDelta: number): void {
+        scrollDelta *= -1.0;
+        this.zoomLevel = THREE.MathUtils.clamp(this.zoomLevel - scrollDelta * this.ZOOM_SPEED, 0.5, 2.0);
     }
 
 }
