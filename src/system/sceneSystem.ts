@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
-import { PhysicsSystem } from './physicsSystem';
+import { PhysicsSystem } from '../physics/physicsSystem';
 import { ActorController } from '../ctrl/actorController';
 import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
@@ -8,7 +8,7 @@ import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
-import { syncGraphics } from './physicsSync';
+import { syncGraphics } from '../physics/physicsSync';
 
 interface Controllers {
   ui: UIController;
