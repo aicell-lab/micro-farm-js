@@ -39,7 +39,7 @@ canvas {
     top: 10px;
     right: 10px;
     background: rgba(0, 0, 0, 0.7);
-    padding: 12px;
+    padding: 4px;
     border-radius: 8px;
     color: white;
     font-family: Arial, sans-serif;
@@ -47,16 +47,16 @@ canvas {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     /* 3 columns */
-    gap: 8px;
+    gap: 4px;
     text-align: center;
 }
 
 /* Button Styling */
 .ui-button {
-    background: #536a4c;
-    color: white;
+    background: #428d2b;
+    color: rgb(198, 198, 198);
     border: none;
-    padding: 10px;
+    padding: 6px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
@@ -76,14 +76,14 @@ canvas {
 
 #btn7 {
     background: #8b0000;
-    color: white;
+    color: rgb(198, 198, 198);
     font-weight: bold;
     grid-column: 2 / 3;
     /* Center STOP button */
 }
 
 #btn7:hover {
-    background: #ff0000;
+    background: #9e0a0a;
 }
 
 #hud {
@@ -123,9 +123,9 @@ canvas {
     height: 65vh;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    
 
-    
+
+
 }
 
 .dialog-content {
@@ -163,7 +163,8 @@ canvas {
     background: rgba(0, 0, 0, 0.9);
     padding: 10px 20px;
     display: flex;
-    justify-content: center; /* Centers the message */
+    justify-content: center;
+    /* Centers the message */
     align-items: center;
     position: relative;
     height: 50px;
@@ -191,19 +192,24 @@ canvas {
 
 #dialog-body {
     position: absolute;
-    top: 100px; /* Pushes it below the header */
+    top: 100px;
+    /* Pushes it below the header */
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 20px 10px 10px 10px; /* Adds more top spacing */
+    padding: 20px 10px 10px 10px;
+    /* Adds more top spacing */
 }
 
 
 /* Makes the iframe take up most of the dialog space */
 #dialog-body iframe {
-    width: 95%;  /* Almost full width */
-    height: 95%; /* Almost full height */
-    border: none; /* Removes border */
+    width: 95%;
+    /* Almost full width */
+    height: 95%;
+    /* Almost full height */
+    border: none;
+    /* Removes border */
 }
 
 
@@ -230,7 +236,8 @@ canvas {
 /* New Grid Layout for Even Spacing */
 .ui-controls {
     display: grid;
-    grid-template-columns: auto auto; /* Ensures two equal columns */
+    grid-template-columns: auto auto;
+    /* Ensures two equal columns */
     gap: 5px 15px;
     justify-content: center;
     margin-top: 5px;
