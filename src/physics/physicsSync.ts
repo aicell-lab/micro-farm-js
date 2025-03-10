@@ -19,7 +19,12 @@ function syncObject(object: THREE.Object3D, rigidBodyMap: Map<THREE.Mesh, Ammo.b
 function getSimulatedObjects(entities: EntityCollection): Array<THREE.Object3D> {
     const cube = entities.getRoom().cube;
     const cubeObj = cube.object;
-    return [cubeObj];
+
+    const armTest = entities.getActors().armTest;
+    const sliderMesh = armTest.getMesh("slider")!;
+    const boxMesh = armTest.getMesh("box")!;
+
+    return [cubeObj, sliderMesh, boxMesh];
 }
 
 export function syncGraphics(entities: EntityCollection, rigidBodyMap: Map<THREE.Mesh, Ammo.btRigidBody>) {

@@ -15,6 +15,7 @@ function createPhysicsWorld(): Ammo.btDiscreteDynamicsWorld {
 export class PhysicsWorld {
     private world: Ammo.btDiscreteDynamicsWorld;
     private rigidBodies: Ammo.btRigidBody[] = [];
+    private constraints: Ammo.btTypedConstraint[] = [];
 
     constructor() {
         this.world = createPhysicsWorld();
@@ -37,6 +38,18 @@ export class PhysicsWorld {
         body.setUserPointer(mesh);
         this.rigidBodies.push(body);
         this.world.addRigidBody(body);
+        this.world.addCollisionObject
+    }
+
+    public addConstraint(constraint: Ammo.btTypedConstraint, disableCollisionsBetweenLinkedBodies = true): void {
+        this.world.addConstraint(constraint, disableCollisionsBetweenLinkedBodies);
+        this.constraints.push(constraint);
+    }
+
+    public removeConstraint(constraint: Ammo.btTypedConstraint): void {
+        this.world.removeConstraint(constraint);
+        const index = this.constraints.indexOf(constraint);
+        if (index >= 0) this.constraints.splice(index, 1);
     }
 
 }

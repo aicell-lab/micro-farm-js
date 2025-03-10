@@ -42,17 +42,31 @@ export class ActorFactory {
 
     createArmTest(): Entity {
         let object = new THREE.Object3D();
-        let armTest = new Entity({ object: object });
-        let sliderGeometry = new THREE.BoxGeometry(2, 0.1, 0.1);
-        let sliderMaterial = new THREE.MeshBasicMaterial({ color: 0x00aa00 });
-        let sliderMesh = new THREE.Mesh(sliderGeometry, sliderMaterial);
-        let boxGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
-        let boxMaterial = new THREE.MeshBasicMaterial({ color: 0x992000, transparent: true, opacity: 0.9 });
-        let boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-        boxMesh.position.set(1, 0.75, 2);
+
+        let sliderMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(2, 0.1, 0.1),
+            new THREE.MeshBasicMaterial({ color: 0x009900 })
+        );
+
+        let boxMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(0.3, 0.3, 0.3),
+            new THREE.MeshBasicMaterial({ color: 0x222200, transparent: true, opacity: 0.9 })
+        );
+
+        boxMesh.position.set(3.15, 0.75, 2);
         sliderMesh.position.set(2, 0.75, 2);
+
+        const armTest = new Entity({
+            object,
+            meshes: {
+                slider: sliderMesh,
+                box: boxMesh
+            }
+        });
+
         object.add(sliderMesh);
         object.add(boxMesh);
+
         return armTest;
     }
 
