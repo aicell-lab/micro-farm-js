@@ -62,10 +62,10 @@ export class ActorFactory {
 
         const armTest = new Entity({
             object,
-            meshes: {
-                slider: sliderMesh,
-                box: boxMesh
-            }
+            meshes: new Map([
+                ["slider", sliderMesh],
+                ["box", boxMesh],
+            ])
         });
 
         object.add(sliderMesh);

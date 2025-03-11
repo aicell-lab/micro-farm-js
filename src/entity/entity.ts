@@ -4,7 +4,7 @@ import { SelectBox } from './selectBox';
 
 export interface EntityOptions {
     object: THREE.Object3D;
-    meshes?: Record<string, THREE.Mesh>;
+    meshes?: Map<string, THREE.Mesh>;
 }
 
 export class Entity {
@@ -13,9 +13,9 @@ export class Entity {
     bubbles: Bubble[];
     selectBoxes: SelectBox[];
 
-    constructor({ object, meshes = {} }: EntityOptions) {
+    constructor({ object, meshes = new Map() }: EntityOptions) {
         this.object = object;
-        this.meshes = new Map(Object.entries(meshes));
+        this.meshes = meshes;
         this.bubbles = [];
         this.selectBoxes = [];
     }
