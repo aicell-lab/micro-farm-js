@@ -8,7 +8,7 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
-import { applyMaterialToVisuals, getLinkMesh, createMaterial } from "./urdfUtil";
+import { applyMaterialToVisuals, getLinkMesh, createMaterial, getAllLinkMeshNames, getLinkMeshesMap } from "./urdfUtil";
 
 
 function setActorPosition(actor: Entity) {
@@ -32,6 +32,10 @@ function validateTableEntity(table: Entity): void {
     if (table.selectBoxes.length !== numOptics) {
         throw new Error(`Expected exactly ${numOptics} selection boxes.`);
     }
+}
+
+function setMeshColor(mesh: THREE.Mesh, color: number): void {
+    mesh.material = createMaterial(color);
 }
 
 export class ActorFactory {
@@ -78,10 +82,13 @@ export class ActorFactory {
         let arm = new Entity(options);
         arm.object.position.y += 2.0;
         arm.object.rotation.x = MathUtils.degToRad(270.0);
-
         applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
-        getLinkMesh("gripper", arm.object)!.material = createMaterial(0x00fff0);
-        getLinkMesh("arm-base", arm.object)!.material = createMaterial(0x00fff0);
+        const gripperMesh = getLinkMesh("gripper", arm.object)!;
+        const armBaseMesh = getLinkMesh("arm-base", arm.object)!;
+        const endColor: number = 0x00fff0;
+        setMeshColor(gripperMesh, endColor);
+        setMeshColor(armBaseMesh, endColor);
+        console.log(getLinkMeshesMap(arm.object));
         arm.object.updateMatrixWorld(true);
         return arm;
     }
