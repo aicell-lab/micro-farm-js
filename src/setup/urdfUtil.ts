@@ -63,7 +63,7 @@ export function getAllLinkMeshNames(obj: THREE.Object3D): string[] {
         .filter((name): name is string => name !== null);
 }
 
-export function getLinkMeshesMap(obj: THREE.Object3D): Map<string, THREE.Mesh> {
+export function getLinkMeshMap(obj: THREE.Object3D): Map<string, THREE.Mesh> {
     const meshes = new Map<string, THREE.Mesh>();
 
     for (const visual of getAllURDFVisuals(obj)) {

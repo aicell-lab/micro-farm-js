@@ -8,7 +8,7 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
-import { applyMaterialToVisuals, getLinkMesh, createMaterial, getAllLinkMeshNames, getLinkMeshesMap } from "./urdfUtil";
+import { applyMaterialToVisuals, getLinkMesh, createMaterial, getLinkMeshMap } from "./urdfUtil";
 
 
 function setActorPosition(actor: Entity) {
@@ -74,22 +74,41 @@ export class ActorFactory {
         return armTest;
     }
 
+    private colorizeArm(arm: Entity): void {
+        applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
+
+        const highlightColors: Record<string, number> = {
+            "gripper": 0x00fff0,
+            "arm-base": 0x00fff0,
+        };
+
+        for (const [name, color] of Object.entries(highlightColors)) {
+            const mesh = arm.getMesh(name);
+            if (mesh) {
+                setMeshColor(mesh, color);
+            } else {
+                console.warn(`Mesh "${name}" not found on arm`);
+            }
+        }
+    }
+
+    private setArmTransform(arm: Entity): void {
+        const armObj = arm.object;
+        armObj.position.y += 2.0;
+        armObj.rotation.x = MathUtils.degToRad(270.0);
+        armObj.updateMatrixWorld(true);
+    }
+
     createArm(): Entity {
         let armRobot = Assets.getInstance().getRobots().get(Robots.Arm)!;
+        const meshes = getLinkMeshMap(armRobot)
         const options: EntityOptions = {
-            object: armRobot
+            object: armRobot,
+            meshes: meshes,
         };
-        let arm = new Entity(options);
-        arm.object.position.y += 2.0;
-        arm.object.rotation.x = MathUtils.degToRad(270.0);
-        applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
-        const gripperMesh = getLinkMesh("gripper", arm.object)!;
-        const armBaseMesh = getLinkMesh("arm-base", arm.object)!;
-        const endColor: number = 0x00fff0;
-        setMeshColor(gripperMesh, endColor);
-        setMeshColor(armBaseMesh, endColor);
-        console.log(getLinkMeshesMap(arm.object));
-        arm.object.updateMatrixWorld(true);
+        const arm = new Entity(options);
+        this.setArmTransform(arm);
+        this.colorizeArm(arm);
         return arm;
     }
 
