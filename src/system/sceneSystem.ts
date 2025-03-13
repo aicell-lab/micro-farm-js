@@ -95,7 +95,7 @@ export class SceneSystem {
   }
 
   private stepSimulation(dt: number): void {
-    this.physicsSystem.step(dt);
+    this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
     syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
   }
 

@@ -8,7 +8,7 @@ import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
 import { AnimationAsset } from "../res/animationLoader";
 import { SelectBox } from "../entity/selectBox";
-import { applyMaterialToVisuals, getLinkMesh, createMaterial, getLinkMeshMap } from "./urdfUtil";
+import { applyMaterialToVisuals, createMaterial, getLinkMeshMap } from "./urdfUtil";
 
 
 function setActorPosition(actor: Entity) {
@@ -44,36 +44,6 @@ export class ActorFactory {
 
     }
 
-    createArmTest(): Entity {
-        let object = new THREE.Object3D();
-
-        let sliderMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(2, 0.1, 0.1),
-            new THREE.MeshBasicMaterial({ color: 0x009900 })
-        );
-
-        let boxMesh = new THREE.Mesh(
-            new THREE.BoxGeometry(0.3, 0.3, 0.3),
-            new THREE.MeshBasicMaterial({ color: 0x222200, transparent: true, opacity: 0.9 })
-        );
-
-        boxMesh.position.set(3.15, 0.75, 2);
-        sliderMesh.position.set(2, 0.75, 2);
-
-        const armTest = new Entity({
-            object,
-            meshes: new Map([
-                ["slider", sliderMesh],
-                ["box", boxMesh],
-            ])
-        });
-
-        object.add(sliderMesh);
-        object.add(boxMesh);
-
-        return armTest;
-    }
-
     private colorizeArm(arm: Entity): void {
         applyMaterialToVisuals(arm.object, createMaterial, 0xff0000);
 
@@ -102,10 +72,11 @@ export class ActorFactory {
     private buildArmObject(): Entity {
         let armRobot = Assets.getInstance().getRobots().get(Robots.Arm)!;
         const meshes = getLinkMeshMap(armRobot)
-        return new Entity({
+        const entity = new Entity({
             object: armRobot,
             meshes: meshes,
         });
+        return entity;
     }
 
     createArm(): Entity {
@@ -171,7 +142,7 @@ export class ActorFactory {
     createActors(): Actors {
         const table = this.createOpticalTable();
         validateTableEntity(table);
-        return { player: this.createHuman(), table: table, arm: this.createArm(), armTest: this.createArmTest() };
+        return { player: this.createHuman(), table: table, arm: this.createArm() };
     }
 }
 

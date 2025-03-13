@@ -3,27 +3,31 @@ import Ammo from 'ammojs-typed';
 import { AmmoSingleton } from '../setup/ammoSingleton';
 
 export namespace AmmoUtils {
-    export function createBoxShape(object: THREE.Mesh): Ammo.btBoxShape {
+    export function createBoxShape(mesh: THREE.Mesh): Ammo.btBoxShape {
         const Ammo = AmmoSingleton.get();
-        const bbox = new THREE.Box3().setFromObject(object);
+        const bbox = new THREE.Box3().setFromObject(mesh);
         const size = new THREE.Vector3();
         bbox.getSize(size);
         const halfExtents = new Ammo.btVector3(size.x / 2, size.y / 2, size.z / 2);
         return new Ammo.btBoxShape(halfExtents);
     }
 
-    export function createBody(object: THREE.Mesh, mass: number): Ammo.btRigidBody {
+    function createBodyTransform(mesh: THREE.Mesh): Ammo.btTransform {
         const Ammo = AmmoSingleton.get();
         const transform = new Ammo.btTransform();
         transform.setIdentity();
         transform.setOrigin(new Ammo.btVector3(
-            object.position.x,
-            object.position.y,
-            object.position.z
+            mesh.position.x,
+            mesh.position.y,
+            mesh.position.z
         ));
+        return transform;
+    }
 
-        const motionState = new Ammo.btDefaultMotionState(transform);
-        const shape = createBoxShape(object);
+    export function createBody(mesh: THREE.Mesh, mass: number): Ammo.btRigidBody {
+        const Ammo = AmmoSingleton.get();
+        const motionState = new Ammo.btDefaultMotionState(createBodyTransform(mesh));
+        const shape = createBoxShape(mesh);
         const localInertia = new Ammo.btVector3(0, 0, 0);
         if (mass > 0) shape.calculateLocalInertia(mass, localInertia);
         const rbInfo = new Ammo.btRigidBodyConstructionInfo(mass, motionState, shape, localInertia);

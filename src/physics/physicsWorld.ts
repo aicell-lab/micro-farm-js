@@ -20,7 +20,7 @@ export class PhysicsWorld {
     constructor() {
         this.world = createPhysicsWorld();
         const Ammo = AmmoSingleton.get();
-        this.world.setGravity(new Ammo.btVector3(0, -10, 0));
+        this.world.setGravity(new Ammo.btVector3(0, 0, 0));
     }
 
     public step(dt: number): void {
@@ -38,7 +38,6 @@ export class PhysicsWorld {
         body.setUserPointer(mesh);
         this.rigidBodies.push(body);
         this.world.addRigidBody(body);
-        this.world.addCollisionObject
     }
 
     public addConstraint(constraint: Ammo.btTypedConstraint, disableCollisionsBetweenLinkedBodies = true): void {

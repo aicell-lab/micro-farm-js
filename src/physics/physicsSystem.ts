@@ -3,14 +3,14 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import Ammo from 'ammojs-typed';
 import { AmmoUtils } from './physicsUtil';
-import { AmmoSingleton } from '../setup/ammoSingleton';
+//import { AmmoSingleton } from '../setup/ammoSingleton';
 
 export class PhysicsSystem {
     private entities: EntityCollection;
     private world: PhysicsWorld;
     private rigidBodies: Map<THREE.Mesh, Ammo.btRigidBody> = new Map();
     private masses: Map<THREE.Mesh, number> = new Map();
-    private hingeConstraints: Map<THREE.Mesh, Ammo.btHingeConstraint> = new Map();
+    //private hingeConstraints: Map<THREE.Mesh, Ammo.btHingeConstraint> = new Map();
 
     constructor(entities: EntityCollection) {
         this.entities = entities;
@@ -22,59 +22,55 @@ export class PhysicsSystem {
         const room = this.entities.getRoom();
         this.addObject(room.cube.object, 1.0);
         this.addObject(room.floor.object, 0.0);
-        AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), [...this.rigidBodies.values()]);
-        this.setupArmTest();
+        AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), [this.rigidBodies.get(room.cube.object as THREE.Mesh)!]);
+        //this.setupArm();
     }
 
-    private setupArmTest(): void {
+    /*private setupArm(): void {
         const Ammo = AmmoSingleton.get();
-        const armTest = this.entities.getActors().armTest;
-        const sliderMesh = armTest.getMesh("slider")!;
-        const boxMesh = armTest.getMesh("box")!;
+        const arm = this.entities.getActors().arm;
+        const base = arm.getMesh("arm-base")!;
+        const arm1 = arm.getMesh("arm1")!;
+        const arm2 = arm.getMesh("arm2")!;
+        const arm3 = arm.getMesh("arm3")!;
+        const gripper = arm.getMesh("gripper")!;
+        const wrist1 = arm.getMesh("wrist1")!;
+        const wrist2 = arm.getMesh("wrist2")!;
 
-        this.addObject(sliderMesh, 0.0);
-        this.addObject(boxMesh, 1.0);
-        const sliderBody = this.rigidBodies.get(sliderMesh)!;
-        const boxBody = this.rigidBodies.get(boxMesh)!;
-        const hingePivotSlider = new Ammo.btVector3(1, 0, 0); // local to slider
-        const hingePivotBox = new Ammo.btVector3(-0.15, 0, 0); // local to box
-        const hingeAxis = new Ammo.btVector3(0, 1, 0); // Y-axis rotation
+        this.addObject(base, 0.0);
+        this.addObject(arm1, 1.0);
+        this.addObject(arm2, 1.0);
+    }*/
 
-        const hinge = new Ammo.btHingeConstraint(
-            sliderBody,
-            boxBody,
-            hingePivotSlider,
-            hingePivotBox,
-            hingeAxis,
-            hingeAxis,
-            true // useReferenceFrameA
-        );
+    /*private moveStaticObjects(armBasePosition: THREE.Vector3): void {
+        const Ammo = AmmoSingleton.get();
+        const arm = this.entities.getActors().arm;
+        const base = arm.getMesh("arm-base")!;
+        const baseBody = this.rigidBodies.get(base)!;
+        const transform = new Ammo.btTransform();
+        baseBody.getMotionState().getWorldTransform(transform);
+        const p = armBasePosition.clone();
+    
+        const newPos = new Ammo.btVector3(p.x, -p.z, -p.y);
+        const offset = new Ammo.btVector3(-0.086, 0.017, -0.07);
+        const result = newPos.op_add(offset);
+        transform.setOrigin(result);
 
-        hinge.setLimit(
-            -Math.PI * 0.9,       // low limit
-            Math.PI * 0.9,        // high limit
-            0.9,            // softness (how soft the limit feels; 0 = hard, 1 = soft)
-            0.3,            // biasFactor (how aggressively to correct limit violations)
-            1.0             // relaxationFactor (how fast to bounce back)
-        );
+        baseBody.setWorldTransform(transform);
+        baseBody.getMotionState().setWorldTransform(transform);
+    }*/
 
+    public step(dt: number, _armBasePosition: THREE.Vector3): void {
+        //this.moveStaticObjects(armBasePosition);
 
-
-        this.world.addConstraint(hinge, true);
-        this.hingeConstraints.set(boxMesh, hinge);
-
-    }
-
-    public step(dt: number): void {
         let slowedDT = dt / 10.0;
         this.world.step(slowedDT);
 
-        const time = performance.now() / 1000; // time in seconds
-        const speed = Math.sin(time) * 1.5;
-
-        for (const hinge of this.hingeConstraints.values()) {
-            hinge.enableAngularMotor(true, speed, 10.0);
-        }
+        //const time = performance.now() / 1000; // time in seconds
+        //const speed = Math.sin(time) * 1.5;
+        //for (const hinge of this.hingeConstraints.values()) {
+        //    hinge.enableAngularMotor(true, speed * 2, 20.0);
+        //}
     }
 
     public getRigidBodyMap(): Map<THREE.Mesh, Ammo.btRigidBody> {

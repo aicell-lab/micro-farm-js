@@ -59,12 +59,16 @@ export class TableController {
     }
 
     private setArmPosition(): void {
-        this.arm.object.position.copy(this.getArmPosition())
+        this.arm.object.position.copy(this.getArmBasePosition2())
     }
 
-    private getArmPosition(): THREE.Vector3 {
+    public getArmBasePosition2(): THREE.Vector3 {
         const offset = new THREE.Vector3(-0.087, 0.0777, -0.01345);
         return getSlidePosition(this.table).clone().add(offset);
+    }
+
+    public getArmBasePosition(): THREE.Vector3 {
+        return getSlidePosition(this.table).clone();
     }
 
     private getSlideTargetPosition(dt: number): number {
