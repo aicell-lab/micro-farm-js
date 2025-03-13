@@ -20,7 +20,7 @@ export class PhysicsWorld {
     constructor() {
         this.world = createPhysicsWorld();
         const Ammo = AmmoSingleton.get();
-        this.world.setGravity(new Ammo.btVector3(0, 0, 0));
+        this.world.setGravity(new Ammo.btVector3(0, -9.81, 0));
     }
 
     public step(dt: number): void {
