@@ -9,7 +9,7 @@ import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
 
-interface SyncCommand {
+/*interface SyncCommand {
     cmd: string;
     rel: number;
     j0: number;
@@ -35,7 +35,7 @@ function getMockSyncJSON(): SyncCommand {
         accel: 200,
         jerk: 1000
     };
-}
+}*/
 
 export class ArmCommandUI {
     private actionQueue: Array<ArmCommand> = [];

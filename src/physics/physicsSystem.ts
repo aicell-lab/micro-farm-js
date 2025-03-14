@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import Ammo from 'ammojs-typed';
 import { AmmoUtils } from './physicsUtil';
-import { AmmoSingleton } from '../setup/ammoSingleton';
+//import { AmmoSingleton } from '../setup/ammoSingleton';
 import { URDFLink } from 'urdf-loader';
 import { ArmJoints } from '../setup/enums';
 import { Entity } from '../entity/entity';
@@ -84,7 +84,7 @@ export class PhysicsSystem {
         link.rotation[axis] = angleRad;
     }
 
-    private setupArm2(): void {
+    /*private setupArm2(): void {
         const Ammo = AmmoSingleton.get();
         const arm = this.entities.getActors().arm;
         const base = arm.getMesh("arm-base")!;
@@ -94,14 +94,7 @@ export class PhysicsSystem {
         const gripper = arm.getMesh("gripper")!;
         const wrist1 = arm.getMesh("wrist1")!;
         const wrist2 = arm.getMesh("wrist2")!;
-
-        const arm1L = getLink(arm1);
-        arm1L.rotation.z = 120;
-        //arm1.rotation.y = 150;
-        //this.addObject(base, 0.0);
-        //this.addObject(arm1, 1.0);
-        //this.addObject(arm2, 1.0);
-    }
+    }*/
 
     /*private setupArm(): void {
         const Ammo = AmmoSingleton.get();
@@ -137,7 +130,7 @@ export class PhysicsSystem {
         baseBody.getMotionState().setWorldTransform(transform);
     }*/
 
-    public step(dt: number, _armBasePosition: THREE.Vector3): void {
+    public step(_dt: number, _armBasePosition: THREE.Vector3): void {
         //this.moveStaticObjects(armBasePosition);
 
         //let slowedDT = dt / 10.0;
