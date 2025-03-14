@@ -5,7 +5,7 @@ import { ActionProcessor } from '../io/actionProcessor';
 import { Input } from '../io/input';
 import { ArmCommand } from '../setup/enums';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { getJointsSync } from '../entity/armSync';
+import { getJointsSync, JointsSync } from '../entity/armSync';
 
 export class ActorController {
 
@@ -21,7 +21,7 @@ export class ActorController {
         this.physicsSystem = physicsSystem;
     }
 
-    public processActions(input: Input, armCommands: Array<ArmCommand>) {
+    public processActions(input: Input, armCommands: Array<ArmCommand>, realJointSync: JointsSync) {
         const playerActions = ActionProcessor.getPlayerActions(input);
         playerActions.forEach(action => {
             action.execute(this.actors.player, this.playerController);
@@ -30,6 +30,9 @@ export class ActorController {
             this.tableController.handleArmCommand(command);
             if (command == ArmCommand.SYNC) {
                 this.physicsSystem.syncJoints(getJointsSync());
+            }
+            if (command == ArmCommand.SYNC_REAL) {
+                this.physicsSystem.syncJoints(realJointSync);
             }
         });
     }

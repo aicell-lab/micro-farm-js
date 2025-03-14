@@ -47,7 +47,7 @@ export class TableController {
     }
 
     public handleArmCommand(newCommand: ArmCommand): void {
-        if (newCommand != ArmCommand.SYNC) {
+        if (newCommand != ArmCommand.SYNC && newCommand != ArmCommand.SYNC_REAL) {
             this.armFSM.transition(newCommand);
         }
     }

@@ -8,12 +8,16 @@ import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
+import { fetchJointsSyncFromAPI, JointsSync } from '../entity/armSync';
 
 export class ArmCommandUI {
+    private realJointData: JointsSync;
     private actionQueue: Array<ArmCommand> = [];
+    private isSyncing = false;
 
     constructor() {
         this.initButtons();
+        this.realJointData = { j0: 0, j1: 0, j2: 0, j3: 0, j4: 0 };
     }
 
     private initButtons(): void {
@@ -40,11 +44,32 @@ export class ArmCommandUI {
         if (syncButton) {
             syncButton.addEventListener("click", () => { this.onSync(); });
         }
+
+        const syncButtonReal = document.getElementById("sync-button-real");
+        if (syncButtonReal) {
+            syncButtonReal.addEventListener("click", () => { this.onSyncReal(); });
+        }
     }
 
     private onSync(): void {
         console.log("Sync...");
         this.queueCommand(ArmCommand.SYNC);
+    }
+
+    private async onSyncReal(): Promise<void> {
+        if (this.isSyncing) return;
+        this.isSyncing = true;
+
+        try {
+            console.log("Sync real...");
+            const data = await fetchJointsSyncFromAPI();
+            this.realJointData = data;
+            this.queueCommand(ArmCommand.SYNC_REAL);
+        } catch (err) {
+            console.error("Failed to sync:", err);
+        } finally {
+            this.isSyncing = false;
+        }
     }
 
     private queueCommand(command: ArmCommand) {
@@ -61,6 +86,10 @@ export class ArmCommandUI {
         const queue = [...this.actionQueue];
         this.actionQueue = [];
         return queue;
+    }
+
+    public getArmRealJointSync(): JointsSync {
+        return this.realJointData;
     }
 }
 
@@ -136,6 +165,10 @@ export class UIController {
 
     public getArmCommands(): Array<ArmCommand> {
         return this.armCommandUI.getAndClearQueue();
+    }
+
+    public getArmRealJointSync(): JointsSync {
+        return this.armCommandUI.getArmRealJointSync();
     }
 
     private updateToolTip(keys: KeyboardInput): void {

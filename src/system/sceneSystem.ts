@@ -43,7 +43,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene, physi
 
 function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt, input);
-  ctrl.actor.processActions(input, ctrl.ui.getArmCommands());
+  ctrl.actor.processActions(input, ctrl.ui.getArmCommands(), ctrl.ui.getArmRealJointSync());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
 }

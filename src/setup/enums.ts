@@ -30,6 +30,7 @@ export enum ArmCommand {
     GOTO_5,
     GOTO_6,
     SYNC,
+    SYNC_REAL,
     STOP,
 }
 
