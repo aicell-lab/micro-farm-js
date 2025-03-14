@@ -57,3 +57,10 @@ export enum MouseButton {
     RIGHT = 2,
 }
 
+export enum ArmJoints {
+    j0 = 0,
+    j1 = 1,
+    j2 = 2,
+    j3 = 3,
+    j4 = 4,
+}

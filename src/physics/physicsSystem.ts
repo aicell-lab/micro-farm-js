@@ -3,7 +3,22 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import Ammo from 'ammojs-typed';
 import { AmmoUtils } from './physicsUtil';
-//import { AmmoSingleton } from '../setup/ammoSingleton';
+import { AmmoSingleton } from '../setup/ammoSingleton';
+import { URDFLink } from 'urdf-loader';
+import { ArmJoints } from '../setup/enums';
+import { Entity } from '../entity/entity';
+
+function getLink(mesh: THREE.Mesh): URDFLink {
+    const p1 = mesh.parent
+    if (!p1) {
+        throw new Error("Missing parent");
+    }
+    const p2 = p1.parent;
+    if (!p2) {
+        throw new Error("Missing parent");
+    }
+    return p2 as URDFLink;
+}
 
 export class PhysicsSystem {
     private entities: EntityCollection;
@@ -24,6 +39,68 @@ export class PhysicsSystem {
         this.addObject(room.floor.object, 0.0);
         AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), [this.rigidBodies.get(room.cube.object as THREE.Mesh)!]);
         //this.setupArm();
+        //this.setupArm2();
+        this.setJointAngle(ArmJoints.j0, 40);
+        this.setJointAngle(ArmJoints.j1, 10);
+        this.setJointAngle(ArmJoints.j2, 20);
+        this.setJointAngle(ArmJoints.j3, -50);
+        this.setJointAngle(ArmJoints.j4, 40);
+    }
+
+    private getArmEntity(): Entity {
+        return this.entities.getActors().arm;
+    }
+
+    private getLinkJoint(joint: ArmJoints): URDFLink {
+        const arm = this.getArmEntity();
+        switch (joint) {
+            case ArmJoints.j0:
+                return getLink(arm.getMesh("arm1")!);
+            case ArmJoints.j1:
+                return getLink(arm.getMesh("arm2")!);
+            case ArmJoints.j2:
+                return getLink(arm.getMesh("arm3")!);
+            case ArmJoints.j3:
+                return getLink(arm.getMesh("wrist1")!);
+            case ArmJoints.j4:
+                return getLink(arm.getMesh("wrist2")!);
+            default:
+                throw new Error("Unknown joint index");
+        }
+    }
+
+    private getRotationAxis(j: ArmJoints): 'x' | 'y' | 'z' {
+        switch (j) {
+            case ArmJoints.j4: return 'x';
+            case ArmJoints.j0: return 'z';
+            default: return 'y';
+        }
+    }
+
+    public setJointAngle(j: ArmJoints, angleDeg: number): void {
+        const angleRad = THREE.MathUtils.degToRad(angleDeg);
+        const link = this.getLinkJoint(j);
+        const axis = this.getRotationAxis(j);
+        link.rotation[axis] = angleRad;
+    }
+
+    private setupArm2(): void {
+        const Ammo = AmmoSingleton.get();
+        const arm = this.entities.getActors().arm;
+        const base = arm.getMesh("arm-base")!;
+        const arm1 = arm.getMesh("arm1")!;
+        const arm2 = arm.getMesh("arm2")!;
+        const arm3 = arm.getMesh("arm3")!;
+        const gripper = arm.getMesh("gripper")!;
+        const wrist1 = arm.getMesh("wrist1")!;
+        const wrist2 = arm.getMesh("wrist2")!;
+
+        const arm1L = getLink(arm1);
+        arm1L.rotation.z = 120;
+        //arm1.rotation.y = 150;
+        //this.addObject(base, 0.0);
+        //this.addObject(arm1, 1.0);
+        //this.addObject(arm2, 1.0);
     }
 
     /*private setupArm(): void {
@@ -63,8 +140,8 @@ export class PhysicsSystem {
     public step(dt: number, _armBasePosition: THREE.Vector3): void {
         //this.moveStaticObjects(armBasePosition);
 
-        let slowedDT = dt / 10.0;
-        this.world.step(slowedDT);
+        //let slowedDT = dt / 10.0;
+        //this.world.step(slowedDT);
 
         //const time = performance.now() / 1000; // time in seconds
         //const speed = Math.sin(time) * 1.5;
