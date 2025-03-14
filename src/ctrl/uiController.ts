@@ -9,34 +9,6 @@ import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
 
-/*interface SyncCommand {
-    cmd: string;
-    rel: number;
-    j0: number;
-    j1: number;
-    j2: number;
-    j3: number;
-    j4: number;
-    vel: number;
-    accel: number;
-    jerk: number;
-}
-
-function getMockSyncJSON(): SyncCommand {
-    return {
-        cmd: "jmove",
-        rel: 0,
-        j0: 0,
-        j1: 106.45752,
-        j2: -116.608887,
-        j3: -79.49707,
-        j4: 0.65918,
-        vel: 20,
-        accel: 200,
-        jerk: 1000
-    };
-}*/
-
 export class ArmCommandUI {
     private actionQueue: Array<ArmCommand> = [];
 
@@ -72,7 +44,7 @@ export class ArmCommandUI {
 
     private onSync(): void {
         console.log("Sync...");
-        //{"cmd":"jmove","rel":0,"j0":0,"j1":106.45752,"j2":-116.608887,"j3":-79.49707,"j4":0.65918,"vel":20,"accel":200,"jerk":1000}
+        this.queueCommand(ArmCommand.SYNC);
     }
 
     private queueCommand(command: ArmCommand) {

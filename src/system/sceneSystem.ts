@@ -21,7 +21,7 @@ interface Controllers {
   table: TableController;
 }
 
-function createControllers(entities: EntityCollection, scene: THREE.Scene): Controllers {
+function createControllers(entities: EntityCollection, scene: THREE.Scene, physicsSystem: PhysicsSystem): Controllers {
   let actors = entities.getActors();
   let camera = createCamera();
   let cameraController = new CameraController(actors.player.object, camera);
@@ -29,7 +29,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene): Cont
   let table = new TableController(actors.table, actors.arm);
   let ui = new UIController(camera, entities, table);
   let render = new RenderController(scene, camera);
-  let actor = new ActorController(actors, player, table);
+  let actor = new ActorController(actors, player, table, physicsSystem);
 
   return {
     player: player,
@@ -76,7 +76,7 @@ export class SceneSystem {
     this.entities = entities;
     this.physicsSystem = new PhysicsSystem(entities);
     this.clock = new THREE.Clock();
-    this.controllers = createControllers(entities, scene);
+    this.controllers = createControllers(entities, scene, this.physicsSystem);
   }
 
   runSimulationLoop = () => {

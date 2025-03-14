@@ -7,6 +7,7 @@ import { AmmoUtils } from './physicsUtil';
 import { URDFLink } from 'urdf-loader';
 import { ArmJoints } from '../setup/enums';
 import { Entity } from '../entity/entity';
+import { JointsSync } from '../entity/armSync';
 
 function getLink(mesh: THREE.Mesh): URDFLink {
     const p1 = mesh.parent
@@ -82,6 +83,14 @@ export class PhysicsSystem {
         const link = this.getLinkJoint(j);
         const axis = this.getRotationAxis(j);
         link.rotation[axis] = angleRad;
+    }
+
+    public syncJoints(data: JointsSync): void {
+        this.setJointAngle(ArmJoints.j0, data.j0);
+        this.setJointAngle(ArmJoints.j1, data.j1);
+        this.setJointAngle(ArmJoints.j2, data.j2);
+        this.setJointAngle(ArmJoints.j3, data.j3);
+        this.setJointAngle(ArmJoints.j4, data.j4);
     }
 
     /*private setupArm2(): void {

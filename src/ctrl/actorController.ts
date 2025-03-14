@@ -4,17 +4,21 @@ import { Actors } from '../setup/entityCollection';
 import { ActionProcessor } from '../io/actionProcessor';
 import { Input } from '../io/input';
 import { ArmCommand } from '../setup/enums';
+import { PhysicsSystem } from '../physics/physicsSystem';
+import { getJointsSync } from '../entity/armSync';
 
 export class ActorController {
 
     private actors: Actors;
     private playerController: PlayerController;
     private tableController: TableController;
+    private physicsSystem: PhysicsSystem;
 
-    constructor(actors: Actors, playerController: PlayerController, tableController: TableController) {
+    constructor(actors: Actors, playerController: PlayerController, tableController: TableController, physicsSystem: PhysicsSystem) {
         this.actors = actors;
         this.playerController = playerController;
         this.tableController = tableController;
+        this.physicsSystem = physicsSystem;
     }
 
     public processActions(input: Input, armCommands: Array<ArmCommand>) {
@@ -24,6 +28,9 @@ export class ActorController {
         });
         armCommands.forEach(command => {
             this.tableController.handleArmCommand(command);
+            if (command == ArmCommand.SYNC) {
+                this.physicsSystem.syncJoints(getJointsSync());
+            }
         });
     }
 

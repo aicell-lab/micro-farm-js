@@ -47,7 +47,9 @@ export class TableController {
     }
 
     public handleArmCommand(newCommand: ArmCommand): void {
-        this.armFSM.transition(newCommand);
+        if (newCommand != ArmCommand.SYNC) {
+            this.armFSM.transition(newCommand);
+        }
     }
 
     public getOpticalControllers(): OpticsController[] {

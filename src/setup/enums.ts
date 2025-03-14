@@ -29,7 +29,8 @@ export enum ArmCommand {
     GOTO_4,
     GOTO_5,
     GOTO_6,
-    STOP
+    SYNC,
+    STOP,
 }
 
 export enum Actions {
