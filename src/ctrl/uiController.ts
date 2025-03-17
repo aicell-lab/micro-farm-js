@@ -8,7 +8,7 @@ import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
-import { fetchJointsSyncFromAPI, JointsSync } from '../entity/armSync';
+import { fetchArmSyncFromAPI, JointsSync, convertToJointsSync } from '../entity/armSync';
 
 export class ArmCommandUI {
     //private realBasePosition: number = 0;
@@ -69,8 +69,8 @@ export class ArmCommandUI {
 
         try {
             console.log("Sync real...");
-            const data = await fetchJointsSyncFromAPI();
-            this.realJointSync = data;
+            const data = await fetchArmSyncFromAPI();
+            this.realJointSync = convertToJointsSync(data);
             this.queueCommand(ArmCommand.SYNC_REAL);
         } catch (err) {
             console.error("Failed to sync:", err);

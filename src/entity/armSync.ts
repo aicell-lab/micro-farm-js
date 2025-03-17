@@ -56,7 +56,7 @@ export function getJointsSync(): JointsSync {
     return result;
 }
 
-function convertToJointsSync(data: number[]): JointsSync {
+export function convertToJointsSync(data: number[]): JointsSync {
     return {
         j0: data[0],
         j1: data[1],
@@ -66,15 +66,14 @@ function convertToJointsSync(data: number[]): JointsSync {
     };
 }
 
-export async function fetchJointsSyncFromAPI(): Promise<JointsSync> {
+export async function fetchArmSyncFromAPI(): Promise<number[]> {
     const response = await fetch("https://hypha.aicell.io/reef-imaging/services/robotic-arm-control/get_all_joints");
     console.log("received response: ", response);
     if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data: number[] = await response.json();
-    const convertedData = convertToJointsSync(data);
-    return convertedData
+    return data;
 }
 
 
