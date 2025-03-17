@@ -10,8 +10,20 @@ import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
 import { fetchArmSyncFromAPI, JointsSync, convertToJointsSync } from '../entity/armSync';
 
+function extractPosition(data: number[]): number {
+    const REAL_JOINT_POS_MULT_CONSTANT: number = 0.26853766; // Multiply by returned value from "https://hypha.aicell.io/reef-imaging/services/robotic-arm-control/get_all_joints"
+    const POSITION_INDEX = 6;
+    const position_data = data[POSITION_INDEX];
+    return position_data * REAL_JOINT_POS_MULT_CONSTANT;
+}
+
+function getScaledPositionValue(realBasePosition: number): number {
+    const MAX_POSITION: number = 331.0; //mm
+    return realBasePosition / MAX_POSITION; // Returns scaled position [0, 1]
+}
+
 export class ArmCommandUI {
-    //private realBasePosition: number = 0;
+    private realBasePositionScaled: number = 0;
     private realJointSync: JointsSync;
     private actionQueue: Array<ArmCommand> = [];
     private isSyncing = false;
@@ -71,6 +83,7 @@ export class ArmCommandUI {
             console.log("Sync real...");
             const data = await fetchArmSyncFromAPI();
             this.realJointSync = convertToJointsSync(data);
+            this.realBasePositionScaled = getScaledPositionValue(extractPosition(data))
             this.queueCommand(ArmCommand.SYNC_REAL);
         } catch (err) {
             console.error("Failed to sync:", err);
@@ -101,6 +114,10 @@ export class ArmCommandUI {
 
     public getArmRealJointSync(): JointsSync {
         return this.realJointSync;
+    }
+
+    public getArmRealBasePositionScaled(): number {
+        return this.realBasePositionScaled;
     }
 }
 
@@ -180,6 +197,10 @@ export class UIController {
 
     public getArmRealJointSync(): JointsSync {
         return this.armCommandUI.getArmRealJointSync();
+    }
+
+    public getArmRealBasePositionScaled(): number {
+        return this.armCommandUI.getArmRealBasePositionScaled();
     }
 
     private updateToolTip(keys: KeyboardInput): void {

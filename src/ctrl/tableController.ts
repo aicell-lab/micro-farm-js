@@ -60,6 +60,12 @@ export class TableController {
         return this.opticsControllers.find(controller => controller.selectBox === selectBox);
     }
 
+    public setArmBasePositionScaled(scaledPosition: number): void {
+        const slideJoint: URDFJoint = getSlideJoint(this.table);
+        slideJoint.setJointValue(scaledPosition);
+        this.setArmPosition();
+    }
+
     private setArmPosition(): void {
         this.arm.object.position.copy(this.getArmBasePosition2())
     }

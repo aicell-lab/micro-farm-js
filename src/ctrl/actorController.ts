@@ -21,7 +21,7 @@ export class ActorController {
         this.physicsSystem = physicsSystem;
     }
 
-    public processActions(input: Input, armCommands: Array<ArmCommand>, realJointSync: JointsSync) {
+    public processActions(input: Input, armCommands: Array<ArmCommand>, realJointSync: JointsSync, realArmBasePositionScaled: number) {
         const playerActions = ActionProcessor.getPlayerActions(input);
         playerActions.forEach(action => {
             action.execute(this.actors.player, this.playerController);
@@ -33,6 +33,7 @@ export class ActorController {
             }
             if (command == ArmCommand.SYNC_REAL) {
                 this.physicsSystem.syncJoints(realJointSync);
+                this.tableController.setArmBasePositionScaled(realArmBasePositionScaled);
             }
         });
     }
