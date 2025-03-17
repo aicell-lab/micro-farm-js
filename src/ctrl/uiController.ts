@@ -11,13 +11,14 @@ import { MouseButton } from '../setup/enums';
 import { fetchJointsSyncFromAPI, JointsSync } from '../entity/armSync';
 
 export class ArmCommandUI {
-    private realJointData: JointsSync;
+    //private realBasePosition: number = 0;
+    private realJointSync: JointsSync;
     private actionQueue: Array<ArmCommand> = [];
     private isSyncing = false;
 
     constructor() {
         this.initButtons();
-        this.realJointData = { j0: 0, j1: 0, j2: 0, j3: 0, j4: 0 };
+        this.realJointSync = { j0: 0, j1: 0, j2: 0, j3: 0, j4: 0 };
     }
 
     private initButtons(): void {
@@ -60,15 +61,25 @@ export class ArmCommandUI {
         if (this.isSyncing) return;
         this.isSyncing = true;
 
+        const syncButtonReal = document.getElementById("sync-button-real");
+        if (syncButtonReal) {
+            syncButtonReal.classList.add("loading");
+            syncButtonReal.textContent = "Syncing..."; // Optional
+        }
+
         try {
             console.log("Sync real...");
             const data = await fetchJointsSyncFromAPI();
-            this.realJointData = data;
+            this.realJointSync = data;
             this.queueCommand(ArmCommand.SYNC_REAL);
         } catch (err) {
             console.error("Failed to sync:", err);
         } finally {
             this.isSyncing = false;
+            if (syncButtonReal) {
+                syncButtonReal.classList.remove("loading");
+                syncButtonReal.textContent = "SYNC-REAL"; // Reset text
+            }
         }
     }
 
@@ -89,7 +100,7 @@ export class ArmCommandUI {
     }
 
     public getArmRealJointSync(): JointsSync {
-        return this.realJointData;
+        return this.realJointSync;
     }
 }
 
