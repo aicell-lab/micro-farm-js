@@ -64,6 +64,7 @@ export class TableController {
         const slideJoint: URDFJoint = getSlideJoint(this.table);
         slideJoint.setJointValue(scaledPosition);
         this.setArmPosition();
+        this.armFSM.transition(ArmCommand.STOP);
     }
 
     private setArmPosition(): void {
