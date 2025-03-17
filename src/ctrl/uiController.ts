@@ -29,6 +29,17 @@ function createArmCommandUIConfig(): ArmCommandUIConfig {
     return armCommandConfig;
 }
 
+interface HUDUIConfig {
+    hud: HTMLElement;
+    info: HTMLElement;
+}
+
+function createHUDUIConfig(): HUDUIConfig {
+    const infoElement = document.getElementById("ui")!;
+    const hudElement = document.getElementById("hud")!;
+    return { hud: hudElement, info: infoElement };
+}
+
 /*
 Types of UI
 Diegetic UI – Exists within the world and can be seen by characters (e.g., in-game screens, holographic displays).
@@ -43,10 +54,11 @@ export class UIController {
     private entities: EntityCollection;
     private tableController: TableController;
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
-
+    private ui: HUDUIConfig;
     private dialogController: DialogController;
 
     constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
+        this.ui = createHUDUIConfig();
         this.camera = camera;
         this.tableController = tableController;
         this.entities = entities;
@@ -78,18 +90,13 @@ export class UIController {
     }
 
     private updateToolTip(keys: KeyboardInput): void {
-        const uiElement = document.getElementById("ui");
-        if (!uiElement) return;
         if (keys.pressed.has("h")) {
-            uiElement.classList.toggle("hidden");
+            this.ui.info.classList.toggle("hidden");
         }
     }
 
-    private toggleHUD(visible: boolean) {
-        const hudElement = document.getElementById("hud");
-        if (hudElement) {
-            hudElement.classList.toggle("hidden", !visible);
-        }
+    private toggleHUD(visible: boolean): void {
+        this.ui.hud.classList.toggle("hidden", !visible);
     }
 
     private getClosestOpticalControllerInRange(): OpticsController | null {
