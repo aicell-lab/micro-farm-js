@@ -68,7 +68,7 @@ export class TableController {
     }
 
     private setArmPosition(): void {
-        this.arm.object.position.copy(this.getArmBasePosition2())
+        this.arm.object.position.copy(this.getArmBasePosition2());
     }
 
     public getArmBasePosition2(): THREE.Vector3 {

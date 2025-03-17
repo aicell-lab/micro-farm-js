@@ -8,152 +8,26 @@ import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
-import { fetchArmSyncFromAPI, JointsSync, convertToJointsSync } from '../entity/armSync';
+import { JointsSync } from '../entity/armSync';
+import { ArmCommandUI, ArmCommandUIConfig } from './armCommandUI';
+import { DialogController } from './dialogController';
 
-function extractPosition(data: number[]): number {
-    const REAL_JOINT_POS_MULT_CONSTANT: number = 0.26853766; // Multiply by returned value from "https://hypha.aicell.io/reef-imaging/services/robotic-arm-control/get_all_joints"
-    const POSITION_INDEX = 6;
-    const position_data = data[POSITION_INDEX];
-    return position_data * REAL_JOINT_POS_MULT_CONSTANT;
+function createArmCommandUIConfig(): ArmCommandUIConfig {
+    const armCommandConfig: ArmCommandUIConfig = {
+        commandButtons: {
+            btn1: ArmCommand.GOTO_1,
+            btn2: ArmCommand.GOTO_2,
+            btn3: ArmCommand.GOTO_3,
+            btn4: ArmCommand.GOTO_4,
+            btn5: ArmCommand.GOTO_5,
+            btn6: ArmCommand.GOTO_6,
+        },
+        syncButton: document.getElementById("sync-button")!,
+        syncButtonReal: document.getElementById("sync-button-real")!,
+        stopButton: document.getElementById("btn7")!,
+    };
+    return armCommandConfig;
 }
-
-function getScaledPositionValue(realBasePosition: number): number {
-    const MAX_POSITION: number = 331.0; //mm
-    return realBasePosition / MAX_POSITION; // Returns scaled position [0, 1]
-}
-
-export class ArmCommandUI {
-    private realBasePositionScaled: number = 0;
-    private realJointSync: JointsSync;
-    private actionQueue: Array<ArmCommand> = [];
-    private isSyncing = false;
-
-    constructor() {
-        this.initButtons();
-        this.realJointSync = { j0: 0, j1: 0, j2: 0, j3: 0, j4: 0 };
-    }
-
-    private initButtons(): void {
-        const commands: { id: string; command: ArmCommand }[] = [
-            { id: "btn1", command: ArmCommand.GOTO_1 },
-            { id: "btn2", command: ArmCommand.GOTO_2 },
-            { id: "btn3", command: ArmCommand.GOTO_3 },
-            { id: "btn4", command: ArmCommand.GOTO_4 },
-            { id: "btn5", command: ArmCommand.GOTO_5 },
-            { id: "btn6", command: ArmCommand.GOTO_6 },
-        ];
-
-        commands.forEach(({ id, command }) => {
-            const button = document.getElementById(id);
-            if (button) {
-                button.addEventListener("click", () => this.queueCommand(command));
-            }
-        });
-
-        const btnStop = document.getElementById("btn7");
-        if (btnStop) btnStop.addEventListener("click", () => this.armStop());
-
-        const syncButton = document.getElementById("sync-button");
-        if (syncButton) {
-            syncButton.addEventListener("click", () => { this.onSync(); });
-        }
-
-        const syncButtonReal = document.getElementById("sync-button-real");
-        if (syncButtonReal) {
-            syncButtonReal.addEventListener("click", () => { this.onSyncReal(); });
-        }
-    }
-
-    private onSync(): void {
-        console.log("Sync...");
-        this.queueCommand(ArmCommand.SYNC);
-    }
-
-    private async onSyncReal(): Promise<void> {
-        if (this.isSyncing) return;
-        this.isSyncing = true;
-
-        const syncButtonReal = document.getElementById("sync-button-real");
-        if (syncButtonReal) {
-            syncButtonReal.classList.add("loading");
-            syncButtonReal.textContent = "Syncing..."; // Optional
-        }
-
-        try {
-            console.log("Sync real...");
-            const data = await fetchArmSyncFromAPI();
-            this.realJointSync = convertToJointsSync(data);
-            this.realBasePositionScaled = getScaledPositionValue(extractPosition(data))
-            this.queueCommand(ArmCommand.SYNC_REAL);
-        } catch (err) {
-            console.error("Failed to sync:", err);
-        } finally {
-            this.isSyncing = false;
-            if (syncButtonReal) {
-                syncButtonReal.classList.remove("loading");
-                syncButtonReal.textContent = "SYNC-REAL"; // Reset text
-            }
-        }
-    }
-
-    private queueCommand(command: ArmCommand) {
-        console.log(`Command: ${command}`);
-        this.actionQueue.push(command);
-    }
-
-    private armStop() {
-        console.log("armStop command");
-        this.actionQueue.push(ArmCommand.STOP);
-    }
-
-    public getAndClearQueue(): Array<ArmCommand> {
-        const queue = [...this.actionQueue];
-        this.actionQueue = [];
-        return queue;
-    }
-
-    public getArmRealJointSync(): JointsSync {
-        return this.realJointSync;
-    }
-
-    public getArmRealBasePositionScaled(): number {
-        return this.realBasePositionScaled;
-    }
-}
-
-export class DialogController {
-    private dialog: HTMLElement | null;
-    private dialogTitle: HTMLElement | null;
-    private dialogMessage: HTMLElement | null;
-    private dialogClose: HTMLElement | null;
-
-    constructor() {
-        this.dialog = document.getElementById("dialog");
-        this.dialogTitle = document.getElementById("dialog-title");
-        this.dialogMessage = document.getElementById("dialog-message");
-        this.dialogClose = document.getElementById("dialog-close");
-        this.dialogClose?.addEventListener("click", () => this.hideDialog());
-    }
-
-    public isDialogVisible(): boolean {
-        return this.dialog !== null && !this.dialog.classList.contains("dialog-hidden");
-    }
-
-    public showDialog(title: string, message: string): void {
-        if (this.dialog && this.dialogTitle && this.dialogMessage) {
-            this.dialogTitle.textContent = title;
-            this.dialogMessage.textContent = message;
-            this.dialog.classList.remove("dialog-hidden");
-        }
-    }
-
-    public hideDialog(): void {
-        if (this.dialog) {
-            this.dialog.classList.add("dialog-hidden");
-        }
-    }
-}
-
 
 /*
 Types of UI
@@ -176,7 +50,7 @@ export class UIController {
         this.camera = camera;
         this.tableController = tableController;
         this.entities = entities;
-        this.armCommandUI = new ArmCommandUI();
+        this.armCommandUI = new ArmCommandUI(createArmCommandUIConfig());
         this.player = entities.getActors().player;
         this.dialogController = new DialogController();
     }
