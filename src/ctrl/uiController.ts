@@ -40,6 +40,12 @@ function createHUDUIConfig(): HUDUIConfig {
     return { hud: hudElement, info: infoElement };
 }
 
+export interface ArmEvent {
+    commands: ArmCommand[];
+    jointSync: JointsSync;
+    basePositionScaled: number;
+}
+
 /*
 Types of UI
 Diegetic UI – Exists within the world and can be seen by characters (e.g., in-game screens, holographic displays).
@@ -77,16 +83,12 @@ export class UIController {
         }
     }
 
-    public getArmCommands(): Array<ArmCommand> {
-        return this.armCommandUI.getAndClearQueue();
-    }
-
-    public getArmRealJointSync(): JointsSync {
-        return this.armCommandUI.getArmRealJointSync();
-    }
-
-    public getArmRealBasePositionScaled(): number {
-        return this.armCommandUI.getArmRealBasePositionScaled();
+    public getArmEvent(): ArmEvent {
+        return {
+            commands: this.armCommandUI.getAndClearQueue(),
+            jointSync: this.armCommandUI.getArmRealJointSync(),
+            basePositionScaled: this.armCommandUI.getArmRealBasePositionScaled(),
+        };
     }
 
     private updateToolTip(keys: KeyboardInput): void {
