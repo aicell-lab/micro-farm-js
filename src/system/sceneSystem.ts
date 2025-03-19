@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { ActorController } from '../ctrl/actorController';
+import { EventMediator } from '../ctrl/EventMediator';
 import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
 import { UIController } from '../ctrl/uiController';
@@ -16,7 +16,7 @@ interface Controllers {
   ui: UIController;
   camera: CameraController;
   render: RenderController;
-  actor: ActorController;
+  eventMediator: EventMediator;
   player: PlayerController;
   table: TableController;
 }
@@ -29,7 +29,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene, physi
   let table = new TableController(actors.table, actors.arm);
   let ui = new UIController(camera, entities, table);
   let render = new RenderController(scene, camera);
-  let actor = new ActorController(actors, player, table, physicsSystem);
+  let eventMediator = new EventMediator(actors, player, table, physicsSystem);
 
   return {
     player: player,
@@ -37,13 +37,13 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene, physi
     camera: cameraController,
     ui: ui,
     render: render,
-    actor: actor,
+    eventMediator: eventMediator,
   };
 }
 
 function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt, input);
-  ctrl.actor.processActions(input, ctrl.ui.getArmEvent());
+  ctrl.eventMediator.processActions(input, ctrl.ui.getArmEvent());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
 }

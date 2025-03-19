@@ -8,7 +8,7 @@ import { PhysicsSystem } from '../physics/physicsSystem';
 import { getJointsSync } from '../entity/armSync';
 import { ArmEvent } from './uiController';
 
-export class ActorController {
+export class EventMediator {
 
     private actors: Actors;
     private playerController: PlayerController;
@@ -22,22 +22,34 @@ export class ActorController {
         this.physicsSystem = physicsSystem;
     }
 
-    public processActions(input: Input, armEvent: ArmEvent) {
-        const playerActions = ActionProcessor.getPlayerActions(input);
-        playerActions.forEach(action => {
-            action.execute(this.actors.player, this.playerController);
-        });
+    public processActions(input: Input, armEvent: ArmEvent): void {
+        this.processPlayerActions(input);
+        this.processArmCommands(armEvent);
+    }
 
-        armEvent.commands.forEach(command => {
-            this.tableController.handleArmCommand(command);
-            if (command == ArmCommand.SYNC) {
-                this.physicsSystem.syncJoints(getJointsSync());
+    private processPlayerActions(input: Input): void {
+        const playerActions = ActionProcessor.getPlayerActions(input);
+        for (const action of playerActions) {
+            action.execute(this.actors.player, this.playerController);
+        }
+    }
+
+    private processArmCommands(armEvent: ArmEvent): void {
+        for (const command of armEvent.commands) {
+            switch (command) {
+                case ArmCommand.SYNC:
+                    this.physicsSystem.syncJoints(getJointsSync());
+                    break;
+
+                case ArmCommand.SYNC_REAL:
+                    this.physicsSystem.syncJoints(armEvent.jointSync);
+                    this.tableController.setArmBasePositionScaled(armEvent.basePositionScaled);
+                    break;
+
+                default:
+                    this.tableController.handleArmCommand(command);
             }
-            if (command == ArmCommand.SYNC_REAL) {
-                this.physicsSystem.syncJoints(armEvent.jointSync);
-                this.tableController.setArmBasePositionScaled(armEvent.basePositionScaled);
-            }
-        });
+        }
     }
 
 }
