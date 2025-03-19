@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { EventMediator } from '../ctrl/EventMediator';
+import { EventMediator } from '../ctrl/eventMediator';
 import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
 import { UIController } from '../ctrl/uiController';
@@ -11,6 +11,7 @@ import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
 import { requestPointerLock, exitPointerLock } from './window';
 import { togglePlayerVisibility } from './playerOpacity';
+import { DialogController } from '../ctrl/dialogController';
 
 interface Controllers {
   ui: UIController;
@@ -19,6 +20,7 @@ interface Controllers {
   eventMediator: EventMediator;
   player: PlayerController;
   table: TableController;
+  dialog: DialogController;
 }
 
 function createControllers(entities: EntityCollection, scene: THREE.Scene, physicsSystem: PhysicsSystem): Controllers {
@@ -38,6 +40,7 @@ function createControllers(entities: EntityCollection, scene: THREE.Scene, physi
     ui: ui,
     render: render,
     eventMediator: eventMediator,
+    dialog: new DialogController(),
   };
 }
 
@@ -49,7 +52,17 @@ function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: En
 }
 
 function updateUIAndRender(ctrl: Controllers, input: Input): void {
-  ctrl.ui.update(input);
+  let dialog = ctrl.dialog;
+  ctrl.ui.update(input, dialog.isDialogVisible());
+  if (ctrl.ui.hasDialogEvent()) {
+    const dialogEvent = ctrl.ui.getDialogEvent();
+    if (dialog.isDialogVisible()) {
+      dialog.hideDialog();
+    } else {
+      dialog.showOpticsDialog(dialogEvent.opticsID);
+    }
+  }
+
   ctrl.render.render();
 }
 

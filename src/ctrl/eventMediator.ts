@@ -6,10 +6,9 @@ import { Input } from '../io/input';
 import { ArmCommand } from '../setup/enums';
 import { PhysicsSystem } from '../physics/physicsSystem';
 import { getJointsSync } from '../entity/armSync';
-import { ArmEvent } from './uiController';
+import { ArmEvent } from './armCommandUI';
 
 export class EventMediator {
-
     private actors: Actors;
     private playerController: PlayerController;
     private tableController: TableController;
@@ -28,27 +27,30 @@ export class EventMediator {
     }
 
     private processPlayerActions(input: Input): void {
-        const playerActions = ActionProcessor.getPlayerActions(input);
-        for (const action of playerActions) {
-            action.execute(this.actors.player, this.playerController);
-        }
+        ActionProcessor.getPlayerActions(input).forEach(action =>
+            action.execute(this.actors.player, this.playerController)
+        );
     }
 
     private processArmCommands(armEvent: ArmEvent): void {
-        for (const command of armEvent.commands) {
-            switch (command) {
-                case ArmCommand.SYNC:
-                    this.physicsSystem.syncJoints(getJointsSync());
-                    break;
+        armEvent.commands.forEach(command => {
+            this.handleArmCommand(command, armEvent);
+        });
+    }
 
-                case ArmCommand.SYNC_REAL:
-                    this.physicsSystem.syncJoints(armEvent.jointSync);
-                    this.tableController.setArmBasePositionScaled(armEvent.basePositionScaled);
-                    break;
+    private handleArmCommand(command: ArmCommand, armEvent: ArmEvent): void {
+        switch (command) {
+            case ArmCommand.SYNC:
+                this.physicsSystem.syncJoints(getJointsSync());
+                break;
 
-                default:
-                    this.tableController.handleArmCommand(command);
-            }
+            case ArmCommand.SYNC_REAL:
+                this.physicsSystem.syncJoints(armEvent.jointSync);
+                this.tableController.setArmBasePositionScaled(armEvent.basePositionScaled);
+                break;
+
+            default:
+                this.tableController.handleArmCommand(command);
         }
     }
 

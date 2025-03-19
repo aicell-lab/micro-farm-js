@@ -13,6 +13,12 @@ function getScaledPositionValue(realBasePosition: number): number {
     return realBasePosition / MAX_POSITION; // Returns scaled position [0, 1]
 }
 
+export interface ArmEvent {
+    commands: ArmCommand[];
+    jointSync: JointsSync;
+    basePositionScaled: number;
+}
+
 export interface ArmCommandUIConfig {
     commandButtons: { [key: string]: ArmCommand };
     syncButton: HTMLElement;
@@ -93,17 +99,25 @@ export class ArmCommandUI {
         this.actionQueue.push(ArmCommand.STOP);
     }
 
-    public getAndClearQueue(): Array<ArmCommand> {
+    private getAndClearQueue(): Array<ArmCommand> {
         const queue = [...this.actionQueue];
         this.actionQueue = [];
         return queue;
     }
 
-    public getArmRealJointSync(): JointsSync {
+    private getArmRealJointSync(): JointsSync {
         return this.realJointSync;
     }
 
-    public getArmRealBasePositionScaled(): number {
+    private getArmRealBasePositionScaled(): number {
         return this.realBasePositionScaled;
+    }
+
+    public getArmEvent(): ArmEvent {
+        return {
+            commands: this.getAndClearQueue(),
+            jointSync: this.getArmRealJointSync(),
+            basePositionScaled: this.getArmRealBasePositionScaled(),
+        };
     }
 }

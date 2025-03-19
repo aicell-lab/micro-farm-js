@@ -8,9 +8,8 @@ import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
-import { JointsSync } from '../entity/armSync';
+import { ArmEvent } from './armCommandUI';
 import { ArmCommandUI, ArmCommandUIConfig } from './armCommandUI';
-import { DialogController } from './dialogController';
 
 function createArmCommandUIConfig(): ArmCommandUIConfig {
     const armCommandConfig: ArmCommandUIConfig = {
@@ -40,10 +39,9 @@ function createHUDUIConfig(): HUDUIConfig {
     return { hud: hudElement, info: infoElement };
 }
 
-export interface ArmEvent {
-    commands: ArmCommand[];
-    jointSync: JointsSync;
-    basePositionScaled: number;
+export interface DialogEvent {
+    toggleVisibility: boolean;
+    opticsID: number;
 }
 
 /*
@@ -61,7 +59,7 @@ export class UIController {
     private tableController: TableController;
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
     private ui: HUDUIConfig;
-    private dialogController: DialogController;
+    private dialogEvent: DialogEvent;
 
     constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
         this.ui = createHUDUIConfig();
@@ -70,25 +68,29 @@ export class UIController {
         this.entities = entities;
         this.armCommandUI = new ArmCommandUI(createArmCommandUIConfig());
         this.player = entities.getActors().player;
-        this.dialogController = new DialogController();
+        this.dialogEvent = { toggleVisibility: false, opticsID: -1 };
     }
 
-    public update(input: Input): void {
-        if (!this.dialogController.isDialogVisible()) {
+    public update(input: Input, dialogVisible: boolean): void {
+        if (!dialogVisible) {
             this.updateSpatialUI();
-        }
-        this.handleMouse(input.mouse);
-        if (!this.dialogController.isDialogVisible()) {
             this.updateToolTip(input.keys);
         }
+        this.handleMouse(input.mouse);
     }
 
     public getArmEvent(): ArmEvent {
-        return {
-            commands: this.armCommandUI.getAndClearQueue(),
-            jointSync: this.armCommandUI.getArmRealJointSync(),
-            basePositionScaled: this.armCommandUI.getArmRealBasePositionScaled(),
-        };
+        return this.armCommandUI.getArmEvent();
+    }
+
+    public hasDialogEvent(): boolean {
+        return this.dialogEvent.opticsID != -1;
+    }
+
+    public getDialogEvent(): DialogEvent {
+        const clonedEvent: DialogEvent = { ...this.dialogEvent };
+        this.dialogEvent = { toggleVisibility: false, opticsID: -1 };
+        return clonedEvent;
     }
 
     private updateToolTip(keys: KeyboardInput): void {
@@ -166,13 +168,17 @@ export class UIController {
 
     private handleMouse(mouse: MouseInput): void {
         const table = this.entities.getActors().table;
-        const meshes = this.getVisibleMeshes(table);
-        const intersectedMesh = this.getIntersectedMesh(mouse, meshes);
+        const intersectedMesh = this.getIntersectedMesh(mouse, this.getVisibleMeshes(table));
+        if (intersectedMesh && mouse.pressed.has(MouseButton.LEFT)) {
+            this.onOpticsBoxClick();
+        }
         this.updateMouseUIState(table, intersectedMesh);
+    }
 
-        if (mouse.pressed.has(MouseButton.LEFT) && intersectedMesh) {
-            let ctrl = this.getHoveredOpticsController();
-            this.dialogController.showDialog("Microscope Info", `Microscope #${ctrl?.getID()}`);
+    private onOpticsBoxClick(): void {
+        let ctrl = this.getHoveredOpticsController();
+        if (ctrl) {
+            this.dialogEvent = { opticsID: ctrl.getID(), toggleVisibility: true };
         }
     }
 

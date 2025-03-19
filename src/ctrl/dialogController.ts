@@ -17,7 +17,11 @@ export class DialogController {
         return this.dialog !== null && !this.dialog.classList.contains("dialog-hidden");
     }
 
-    public showDialog(title: string, message: string): void {
+    public showOpticsDialog(opticsID: number): void {
+       this.showDialog("Microscope Info", `Microscope #${opticsID}`)
+    }
+
+    private showDialog(title: string, message: string): void {
         if (this.dialog && this.dialogTitle && this.dialogMessage) {
             this.dialogTitle.textContent = title;
             this.dialogMessage.textContent = message;
