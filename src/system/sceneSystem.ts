@@ -12,6 +12,7 @@ import { syncGraphics } from '../physics/physicsSync';
 import { requestPointerLock, exitPointerLock } from './window';
 import { togglePlayerVisibility } from './playerOpacity';
 import { DialogController } from '../ctrl/dialogController';
+import { UIMediator } from './uiMediator';
 
 interface Controllers {
   ui: UIController;
@@ -51,21 +52,6 @@ function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: En
   ctrl.table.update(dt);
 }
 
-function updateUIAndRender(ctrl: Controllers, input: Input): void {
-  let dialog = ctrl.dialog;
-  ctrl.ui.update(input, dialog.isDialogVisible());
-  if (ctrl.ui.hasDialogEvent()) {
-    const dialogEvent = ctrl.ui.getDialogEvent();
-    if (dialog.isDialogVisible()) {
-      dialog.hideDialog();
-    } else {
-      dialog.showOpticsDialog(dialogEvent.opticsID);
-    }
-  }
-
-  ctrl.render.render();
-}
-
 function togglePointerLock(input: Input): void {
   const locked = input.mouse.pointerLocked;
   const lockKey = "r";
@@ -83,6 +69,7 @@ export class SceneSystem {
   private entities: EntityCollection;
   private controllers: Controllers;
   private inputListener: InputListener;
+  private uiMediator: UIMediator;
 
   constructor(entities: EntityCollection, scene: THREE.Scene) {
     this.inputListener = new InputListener();
@@ -90,6 +77,7 @@ export class SceneSystem {
     this.physicsSystem = new PhysicsSystem(entities);
     this.clock = new THREE.Clock();
     this.controllers = createControllers(entities, scene, this.physicsSystem);
+    this.uiMediator = new UIMediator(this.controllers.ui, this.controllers.dialog);
   }
 
   runSimulationLoop = () => {
@@ -104,7 +92,8 @@ export class SceneSystem {
     togglePlayerVisibility(this.entities, input);
     updatePrePhysicsControllers(dt, this.controllers, this.entities, input);
     this.stepSimulation(dt);
-    updateUIAndRender(this.controllers, input);
+    this.uiMediator.update(input);
+    this.controllers.render.render();
   }
 
   private stepSimulation(dt: number): void {

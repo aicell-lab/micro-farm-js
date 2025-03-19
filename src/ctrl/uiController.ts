@@ -54,7 +54,6 @@ Meta UI – UI that represents abstract information but is stylized to fit the e
 export class UIController {
     private camera: THREE.Camera;
     private armCommandUI: ArmCommandUI;
-    private player: Entity;
     private entities: EntityCollection;
     private tableController: TableController;
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
@@ -67,7 +66,6 @@ export class UIController {
         this.tableController = tableController;
         this.entities = entities;
         this.armCommandUI = new ArmCommandUI(createArmCommandUIConfig());
-        this.player = entities.getActors().player;
         this.dialogEvent = { toggleVisibility: false, opticsID: -1 };
     }
 
@@ -113,7 +111,7 @@ export class UIController {
         for (const ctrl of this.tableController.getOpticalControllers()) {
             ctrl.selectBox.setVisible(false);
             ctrl.selectBox.update();
-            const dist = ctrl.getDistanceScalar(this.player);
+            const dist = ctrl.getDistanceScalar(this.entities.getActors().player);
 
             if (dist < VISIBILITY_DISTANCE && dist < minDist) {
                 minDistCtrl = ctrl;
