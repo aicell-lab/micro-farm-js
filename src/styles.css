@@ -18,20 +18,21 @@ canvas {
     position: absolute;
     top: 10px;
     left: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    padding: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px 15px;
     border-radius: 8px;
     color: white;
     font-family: Arial, sans-serif;
+    font-size: 14px;
     z-index: 10;
     transition: opacity 0.3s ease-in-out;
+    text-align: center;
 }
 
 #ui.hidden {
     opacity: 0;
     pointer-events: none;
 }
-
 
 
 #ui-buttons {
@@ -139,10 +140,6 @@ canvas {
 
 }
 
-.dialog-content {
-    /* Optional: Style the content within the dialog */
-}
-
 #dialog-close {
     background: #b80000;
     color: white;
@@ -224,25 +221,6 @@ canvas {
 }
 
 
-
-
-
-
-
-#ui {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: rgba(0, 0, 0, 0.85);
-    padding: 10px 15px;
-    border-radius: 8px;
-    color: white;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    z-index: 10;
-    transition: opacity 0.3s ease-in-out;
-    text-align: center;
-}
 
 /* New Grid Layout for Even Spacing */
 .ui-controls {

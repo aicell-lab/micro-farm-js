@@ -6,10 +6,9 @@
 
 ## Features
 
-- 🎨 **Immersive 3D Environment**: Rendered with Three.js for rich visuals.
-- 🛠️ **TypeScript Powered**: Fully typed, ensuring code quality and maintainability.
-- ⚡ **Vite for Development**: Lightning-fast bundling and hot module replacement.
-- 📁 **Customizable Assets**: Use external assets to enhance your environment.
+- 🎨 **3D Environment**: Rendered with Three.js.
+- 🛠️ **TypeScript**: Type safety.
+- ⚡ **Vite for Development**: Bundling and hot module replacement.
 
 ---
 
@@ -17,7 +16,7 @@
 
 Ensure the following tools are installed on your system:
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
+- [Node.js](https://nodejs.org/)
 - [npm](https://www.npmjs.com/)
 
 ---
@@ -46,3 +45,7 @@ micro-farm-js/
 
 ### Assets
 Download asset files separately and store them in a directory named `public`. There is a SciLifeLab Google Drive folder for the asset files ([link](https://drive.google.com/drive/folders/1g0Fn1z1HypzZXlIOSOknS61B0Xc6bXgN?usp=sharing)).
+
+### Code Overview
+
+`index.html` runs the main application and renders it on a `<canvas>`. The user interface (UI) is composed of DOM elements defined in both `index.html` and `styles.css`. While the app is loading, a temporary loading screen overlay (`#overlay` in `index.html`) is displayed.
