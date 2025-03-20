@@ -1,66 +1,18 @@
 import * as THREE from 'three';
-import { CameraController } from '../ctrl/cameraController';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { EventMediator } from '../ctrl/eventMediator';
-import { RenderController, createCamera } from '../ctrl/renderController';
 import { Input, InputListener } from '../io/input';
-import { UIController } from '../ctrl/uiController';
-import { PlayerController } from '../ctrl/playerController';
-import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
-import { requestPointerLock, exitPointerLock } from './window';
 import { togglePlayerVisibility } from './playerOpacity';
-import { DialogController } from '../ctrl/dialogController';
 import { UIMediator } from './uiMediator';
-
-interface Controllers {
-  ui: UIController;
-  camera: CameraController;
-  render: RenderController;
-  eventMediator: EventMediator;
-  player: PlayerController;
-  table: TableController;
-  dialog: DialogController;
-}
-
-function createControllers(entities: EntityCollection, scene: THREE.Scene, physicsSystem: PhysicsSystem): Controllers {
-  let actors = entities.getActors();
-  let camera = createCamera();
-  let cameraController = new CameraController(actors.player.object, camera);
-  let player = new PlayerController(entities.getActors().player);
-  let table = new TableController(actors.table, actors.arm);
-  let ui = new UIController(camera, entities, table);
-  let render = new RenderController(scene, camera);
-  let eventMediator = new EventMediator(actors, player, table, physicsSystem);
-
-  return {
-    player: player,
-    table: table,
-    camera: cameraController,
-    ui: ui,
-    render: render,
-    eventMediator: eventMediator,
-    dialog: new DialogController(),
-  };
-}
+import { togglePointerLock } from '../io/input';
+import { Controllers, createControllers } from '../ctrl/controllerFactory';
 
 function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input): void {
   ctrl.camera.update(dt, input);
   ctrl.eventMediator.processActions(input, ctrl.ui.getArmEvent());
   ctrl.player.update(entities.getActors().player.object, dt);
   ctrl.table.update(dt);
-}
-
-function togglePointerLock(input: Input): void {
-  const locked = input.mouse.pointerLocked;
-  const lockKey = "r";
-  if (!locked && input.keys.pressed.has(lockKey)) {
-    requestPointerLock();
-  }
-  else if (locked && input.keys.pressed.has(lockKey)) {
-    exitPointerLock();
-  }
 }
 
 export class SceneSystem {

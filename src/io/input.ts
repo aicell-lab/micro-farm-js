@@ -1,5 +1,6 @@
 import { KeyboardInput, KeyboardListener } from './keyboard';
 import { MouseInput, MouseListener } from './mouse';
+import { requestPointerLock, exitPointerLock } from '../system/window';
 
 export interface Input {
     keys: KeyboardInput;
@@ -27,4 +28,15 @@ export class InputListener {
         return { keys: this.getKeyboardInput(), mouse: this.getMouseInput() };
     }
 
+}
+
+export function togglePointerLock(input: Input): void {
+    const locked = input.mouse.pointerLocked;
+    const lockKey = "r";
+    if (!locked && input.keys.pressed.has(lockKey)) {
+        requestPointerLock();
+    }
+    else if (locked && input.keys.pressed.has(lockKey)) {
+        exitPointerLock();
+    }
 }
