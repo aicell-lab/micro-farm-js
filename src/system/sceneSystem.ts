@@ -11,12 +11,6 @@ import { EventMediator } from '../ctrl/eventMediator';
 import { renderScene } from './rendering';
 import { createCamera } from './rendering';
 
-function updatePrePhysicsControllers(dt: number, ctrl: Controllers, entities: EntityCollection, input: Input, eventMediator: EventMediator): void {
-  ctrl.camera.update(dt, input);
-  eventMediator.processActions(input, ctrl.ui.getArmEvent());
-  ctrl.player.update(entities.getActors().player.object, dt);
-  ctrl.table.update(dt);
-}
 
 export class SceneSystem {
   private physicsSystem: PhysicsSystem;
@@ -49,7 +43,7 @@ export class SceneSystem {
   processFrame(dt: number, input: Input): void {
     togglePointerLock(input);
     togglePlayerVisibility(this.entities, input);
-    updatePrePhysicsControllers(dt, this.controllers, this.entities, input, this.eventMediator);
+    this.updatePrePhysicsControllers(dt, input);
     this.stepSimulation(dt);
     this.uiMediator.update(input);
     renderScene(this.scene, this.camera);
@@ -58,6 +52,15 @@ export class SceneSystem {
   private stepSimulation(dt: number): void {
     this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
     syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
+  }
+
+  private updatePrePhysicsControllers(dt: number, input: Input): void {
+    const ctrl = this.controllers;
+    const player = this.entities.getActors().player;
+    ctrl.camera.update(dt, input);
+    this.eventMediator.processActions(input, ctrl.ui.getArmEvent());
+    ctrl.player.update(player.object, dt);
+    ctrl.table.update(dt);
   }
 
 }
