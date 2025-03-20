@@ -1,14 +1,14 @@
 import { URDFRobot, URDFJoint } from 'urdf-loader';
 import { ArmStateMachine } from '../entity/armState';
 import { ArmState, ArmCommand } from '../setup/enums';
-import { OpticsController } from './opticsController';
+import { OpticsUnit } from '../entity/opticsUnit';
 import * as THREE from 'three';
 import { SelectBox } from '../entity/selectBox';
 import { Entity } from '../entity/entity';
 
-function createOpticsControllers(table: Entity): OpticsController[] {
+function createOpticsUnits(table: Entity): OpticsUnit[] {
     return Array.from({ length: 10 }, (_, i) =>
-        new OpticsController(table.bubbles[i], table.selectBoxes[i], i)
+        new OpticsUnit(table.bubbles[i], table.selectBoxes[i], i)
     );
 }
 
@@ -30,14 +30,14 @@ function getSlidePosition(table: Entity): THREE.Vector3 {
 export class TableController {
     private static readonly SLIDE_SPEED = 1.0;
     private armFSM: ArmStateMachine;
-    private opticsControllers: OpticsController[];
+    private opticsUnitss: OpticsUnit[];
     private arm: Entity;
     private table: Entity;
 
     constructor(table: Entity, arm: Entity) {
         this.table = table;
         this.arm = arm;
-        this.opticsControllers = createOpticsControllers(table);
+        this.opticsUnitss = createOpticsUnits(table);
         this.armFSM = new ArmStateMachine();
         this.setArmPosition();
     }
@@ -52,12 +52,12 @@ export class TableController {
         }
     }
 
-    public getOpticalControllers(): OpticsController[] {
-        return this.opticsControllers;
+    public getOpticsUnits(): OpticsUnit[] {
+        return this.opticsUnitss;
     }
 
-    public getOpticsControllerBySelectBox(selectBox: SelectBox): OpticsController | undefined {
-        return this.opticsControllers.find(controller => controller.selectBox === selectBox);
+    public getOpticsUnitBySelectBox(selectBox: SelectBox): OpticsUnit | undefined {
+        return this.opticsUnitss.find(unit => unit.selectBox === selectBox);
     }
 
     public setArmBasePositionScaled(scaledPosition: number): void {

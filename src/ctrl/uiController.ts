@@ -3,7 +3,7 @@ import { EntityCollection } from '../setup/entityCollection';
 import { ArmCommand, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
-import { OpticsController } from './opticsController';
+import { OpticsUnit } from '../entity/opticsUnit';
 import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
@@ -101,14 +101,14 @@ export class UIController {
         this.ui.hud.classList.toggle("hidden", !visible);
     }
 
-    private getClosestOpticalControllerInRange(): OpticsController | null {
+    private getClosestOpticalUnitInRange(): OpticsUnit | null {
         const MAX_DISTANCE = 9999.9;
         const VISIBILITY_DISTANCE = 2.0;
 
         let minDist = MAX_DISTANCE;
-        let minDistCtrl: OpticsController | null = null;
+        let minDistCtrl: OpticsUnit | null = null;
 
-        for (const ctrl of this.tableController.getOpticalControllers()) {
+        for (const ctrl of this.tableController.getOpticsUnits()) {
             ctrl.selectBox.setVisible(false);
             ctrl.selectBox.update();
             const dist = ctrl.getDistanceScalar(this.entities.getActors().player);
@@ -122,10 +122,10 @@ export class UIController {
     }
 
     private updateSpatialUI(): void {
-        const closestController = this.getClosestOpticalControllerInRange();
-        this.toggleHUD(closestController !== null);
-        if (closestController) {
-            closestController.selectBox.setVisible(true);
+        const closestUnit = this.getClosestOpticalUnitInRange();
+        this.toggleHUD(closestUnit !== null);
+        if (closestUnit) {
+            closestUnit.selectBox.setVisible(true);
         }
     }
 
@@ -152,13 +152,13 @@ export class UIController {
         }
     }
 
-    private getHoveredOpticsController(): OpticsController | null {
+    private getHoveredOpticsUnit(): OpticsUnit | null {
         const table = this.entities.getActors().table;
         const selectBox = table.selectBoxes.find(sb => sb.getState() === UIState.HOVER) || null;
         if (selectBox) {
-            const opticsController = this.tableController.getOpticsControllerBySelectBox(selectBox);
-            if (opticsController) {
-                return opticsController;
+            const opticsUnit = this.tableController.getOpticsUnitBySelectBox(selectBox);
+            if (opticsUnit) {
+                return opticsUnit;
             }
         }
         return null;
@@ -174,7 +174,7 @@ export class UIController {
     }
 
     private onOpticsBoxClick(): void {
-        let ctrl = this.getHoveredOpticsController();
+        let ctrl = this.getHoveredOpticsUnit();
         if (ctrl) {
             this.dialogEvent = { opticsID: ctrl.getID(), toggleVisibility: true };
         }

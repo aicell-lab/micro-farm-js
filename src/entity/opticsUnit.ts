@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { OpticsState } from '../setup/enums';
-import { Bubble } from '../entity/bubble';
-import { SelectBox } from '../entity/selectBox';
-import { Entity } from '../entity/entity';
+import { Bubble } from './bubble';
+import { SelectBox } from './selectBox';
+import { Entity } from './entity';
 
-function getOpticsControllerPosition(index: number): THREE.Vector3 {
+function getOpticsUnitPosition(index: number): THREE.Vector3 {
     let pos = new THREE.Vector3(-1.3 + index * 0.57, 1.5, -0.5);
     if (index > 4) {
         pos.x -= 5 * 0.57;
@@ -14,13 +14,13 @@ function getOpticsControllerPosition(index: number): THREE.Vector3 {
 }
 
 function setPositions(index: number, bubble: Bubble, selectBox: SelectBox): void {
-    const position = getOpticsControllerPosition(index);
+    const position = getOpticsUnitPosition(index);
     bubble.setPosition(position);
     position.y -= 0.4;
     selectBox.setPosition(position);
 }
 
-export class OpticsController {
+export class OpticsUnit {
     bubble: Bubble;
     selectBox: SelectBox
     id: number;
@@ -38,7 +38,7 @@ export class OpticsController {
     }
 
     public getDistance(entity: Entity): THREE.Vector3 {
-        const position = getOpticsControllerPosition(this.id);
+        const position = getOpticsUnitPosition(this.id);
         return entity.object.position.clone().sub(position);
     }
 
