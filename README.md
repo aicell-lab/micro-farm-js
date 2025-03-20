@@ -64,3 +64,14 @@ The `runSimulationLoop()` method drives the frame-by-frame updates using `reques
 
 This class acts as the main coordinator for all runtime behavior, combining physics, input, and UI logic into a continuous real-time simulation.
 
+#### Physics
+
+Physics simulation in this project is being developed using Ammo.js, a JavaScript/WebAssembly port of the Bullet Physics engine. The goal is to simulate a robotic arm defined in a URDF (Unified Robot Description Format) file.
+
+While URDF-based simulations are well-supported in Python via PyBullet, Ammo.js only provides a subset of the full Bullet API. As a result, setting up physics with URDFs in Ammo.js is more involved and requires custom setup scripts to manually define joints, constraints, and physical properties.
+
+This feature is currently a work-in-progress, and full integration of Ammo.js into the simulation loop has not yet been completed. The groundwork is being laid to support articulated physics objects such as robotic arms in the near future.
+
+##### Visualizing Physics Colliders
+
+Given that AmmoJS provides only a limited subset of the full Bullet Physics API it may be helpful to introduce visualization tools into the project to improve the development experience. For example, rendering visual representations of `btRigidBody` and `btCollisionShape` objects directly would simplify debugging.
