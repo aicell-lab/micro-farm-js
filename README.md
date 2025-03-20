@@ -49,3 +49,18 @@ Download asset files separately and store them in a directory named `public`. Th
 ### Code Overview
 
 `index.html` runs the main application and renders it on a `<canvas>`. The user interface (UI) is composed of DOM elements defined in both `index.html` and `styles.css`. While the app is loading, a temporary loading screen overlay (`#overlay` in `index.html`) is displayed.
+
+`sceneSystem.ts` defines the `SceneSystem` class, which manages the core simulation loop of the application.
+
+This class coordinates several subsystems, including:
+- **Physics simulation** via `PhysicsSystem`
+- **Input handling** through `InputListener`
+- **3D scene rendering** with Three.js (`renderScene`)
+- **UI interactions** through `UIMediator`
+- **Player and table control logic** via `Controllers`
+- **Event coordination** through `EventMediator`
+
+The `runSimulationLoop()` method drives the frame-by-frame updates using `requestAnimationFrame`, calling `processFrame()` on each tick. Within each frame, input is processed, player visibility is toggled, controllers are updated, the physics engine is stepped forward, and the scene is rendered.
+
+This class acts as the main coordinator for all runtime behavior, combining physics, input, and UI logic into a continuous real-time simulation.
+
