@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
-import { PhysicsSystem } from '../physics/physicsSystem';
-import { EventMediator } from '../ctrl/eventMediator';
-import { RenderController, createCamera } from '../ctrl/renderController';
 import { UIController } from '../ctrl/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
@@ -12,30 +9,23 @@ import { DialogController } from '../ctrl/dialogController';
 export interface Controllers {
     ui: UIController;
     camera: CameraController;
-    render: RenderController;
-    eventMediator: EventMediator;
     player: PlayerController;
     table: TableController;
     dialog: DialogController;
 }
 
-export function createControllers(entities: EntityCollection, scene: THREE.Scene, physicsSystem: PhysicsSystem): Controllers {
-    let actors = entities.getActors();
-    let camera = createCamera();
-    let cameraController = new CameraController(actors.player.object, camera);
-    let player = new PlayerController(entities.getActors().player);
-    let table = new TableController(actors.table, actors.arm);
-    let ui = new UIController(camera, entities, table);
-    let render = new RenderController(scene, camera);
-    let eventMediator = new EventMediator(actors, player, table, physicsSystem);
+export function createControllers(entities: EntityCollection, camera: THREE.PerspectiveCamera): Controllers {
+    const actors = entities.getActors();
+    const cameraController = new CameraController(actors.player.object, camera);
+    const playerCtrl = new PlayerController(actors.player);
+    const tableCtrl = new TableController(actors.table, actors.arm);
+    const uiCtrl = new UIController(camera, entities, tableCtrl);
 
     return {
-        player: player,
-        table: table,
+        player: playerCtrl,
+        table: tableCtrl,
         camera: cameraController,
-        ui: ui,
-        render: render,
-        eventMediator: eventMediator,
+        ui: uiCtrl,
         dialog: new DialogController(),
     };
 }
