@@ -10,6 +10,7 @@ import { Controllers, createControllers } from '../ctrl/controllerFactory';
 import { EventMediator } from '../ctrl/eventMediator';
 import { renderScene } from './rendering';
 import { createCamera } from './rendering';
+import { uiEventBus } from '../io/eventBus';
 
 
 export class SceneSystem {
@@ -37,6 +38,7 @@ export class SceneSystem {
 
   runSimulationLoop = () => {
     this.processFrame(this.clock.getDelta(), this.inputListener.getInput());
+    uiEventBus.clearQueue();
     requestAnimationFrame(this.runSimulationLoop);
   };
 
@@ -58,7 +60,8 @@ export class SceneSystem {
     const ctrl = this.controllers;
     const player = this.entities.getActors().player;
     ctrl.camera.update(dt, input);
-    this.eventMediator.processActions(input, ctrl.ui.getArmEvent());
+    uiEventBus.processEvents();
+    this.eventMediator.processActions(input);
     ctrl.player.update(player.object, dt);
     ctrl.table.update(dt);
   }

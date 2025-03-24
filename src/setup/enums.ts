@@ -29,8 +29,6 @@ export enum ArmCommand {
     GOTO_4,
     GOTO_5,
     GOTO_6,
-    SYNC,
-    SYNC_REAL,
     STOP,
 }
 
@@ -65,4 +63,12 @@ export enum ArmJoints {
     j2 = 2,
     j3 = 3,
     j4 = 4,
+}
+
+export enum UIEventType {
+    ArmCommand = "arm:command",
+    ArmJointSync = "arm:jointSync",
+    ArmBasePosition = "arm:basePosition",
+    DialogToggle = "dialog:toggle",
+    HUDToggle = "hud:toggle",
 }

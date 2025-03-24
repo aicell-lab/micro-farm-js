@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-import { ArmCommand, UIState } from '../setup/enums';
+import { ArmCommand, UIEventType, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
 import { OpticsUnit } from '../entity/opticsUnit';
@@ -8,8 +8,8 @@ import { MouseInput } from '../io/mouse';
 import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
-import { ArmEvent } from './armCommandUI';
 import { ArmCommandUI, ArmCommandUIConfig } from './armCommandUI';
+import { uiEventBus } from '../io/eventBus';
 
 function createArmCommandUIConfig(): ArmCommandUIConfig {
     const armCommandConfig: ArmCommandUIConfig = {
@@ -39,10 +39,6 @@ function createHUDUIConfig(): HUDUIConfig {
     return { hud: hudElement, info: infoElement };
 }
 
-export interface DialogEvent {
-    toggleVisibility: boolean;
-    opticsID: number;
-}
 
 /*
 Types of UI
@@ -53,20 +49,17 @@ Meta UI – UI that represents abstract information but is stylized to fit the e
 */
 export class UIController {
     private camera: THREE.Camera;
-    private armCommandUI: ArmCommandUI;
     private entities: EntityCollection;
     private tableController: TableController;
     private raycaster: THREE.Raycaster = new THREE.Raycaster();
     private ui: HUDUIConfig;
-    private dialogEvent: DialogEvent;
 
     constructor(camera: THREE.PerspectiveCamera, entities: EntityCollection, tableController: TableController) {
         this.ui = createHUDUIConfig();
         this.camera = camera;
         this.tableController = tableController;
         this.entities = entities;
-        this.armCommandUI = new ArmCommandUI(createArmCommandUIConfig());
-        this.dialogEvent = { toggleVisibility: false, opticsID: -1 };
+        new ArmCommandUI(createArmCommandUIConfig());
     }
 
     public update(input: Input, dialogVisible: boolean): void {
@@ -75,20 +68,6 @@ export class UIController {
             this.updateToolTip(input.keys);
         }
         this.handleMouse(input.mouse);
-    }
-
-    public getArmEvent(): ArmEvent {
-        return this.armCommandUI.getArmEvent();
-    }
-
-    public hasDialogEvent(): boolean {
-        return this.dialogEvent.opticsID != -1;
-    }
-
-    public getDialogEvent(): DialogEvent {
-        const clonedEvent: DialogEvent = { ...this.dialogEvent };
-        this.dialogEvent = { toggleVisibility: false, opticsID: -1 };
-        return clonedEvent;
     }
 
     private updateToolTip(keys: KeyboardInput): void {
@@ -176,7 +155,7 @@ export class UIController {
     private onOpticsBoxClick(): void {
         let ctrl = this.getHoveredOpticsUnit();
         if (ctrl) {
-            this.dialogEvent = { opticsID: ctrl.getID(), toggleVisibility: true };
+            uiEventBus.queue(UIEventType.DialogToggle, { opticsID: ctrl.getID(), toggleVisibility: true });
         }
     }
 

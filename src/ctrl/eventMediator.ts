@@ -3,10 +3,11 @@ import { PlayerController } from './playerController';
 import { Actors } from '../setup/entityCollection';
 import { ActionProcessor } from '../io/actionProcessor';
 import { Input } from '../io/input';
-import { ArmCommand } from '../setup/enums';
+import { UIEventType } from '../setup/enums';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { getJointsSync } from '../entity/armSync';
-import { ArmEvent } from './armCommandUI';
+import { uiEventBus } from '../io/eventBus';
+import { ArmCommandEvent, ArmJointSyncEvent, ArmBasePositionEvent } from '../io/uiEvent';
+
 
 export class EventMediator {
     private actors: Actors;
@@ -19,39 +20,28 @@ export class EventMediator {
         this.playerController = playerController;
         this.tableController = tableController;
         this.physicsSystem = physicsSystem;
+
+        uiEventBus.on(UIEventType.ArmCommand, (event: ArmCommandEvent) => {
+            this.tableController.handleArmCommand(event.command);
+        });
+
+        uiEventBus.on(UIEventType.ArmJointSync, (event: ArmJointSyncEvent) => {
+            this.physicsSystem.syncJoints(event.jointSync);
+        });
+
+        uiEventBus.on(UIEventType.ArmBasePosition, (event: ArmBasePositionEvent) => {
+            this.tableController.setArmBasePositionScaled(event.basePositionScaled);
+        });
     }
 
-    public processActions(input: Input, armEvent: ArmEvent): void {
+    public processActions(input: Input): void {
         this.processPlayerActions(input);
-        this.processArmCommands(armEvent);
     }
 
     private processPlayerActions(input: Input): void {
         ActionProcessor.getPlayerActions(input).forEach(action =>
             action.execute(this.actors.player, this.playerController)
         );
-    }
-
-    private processArmCommands(armEvent: ArmEvent): void {
-        armEvent.commands.forEach(command => {
-            this.handleArmCommand(command, armEvent);
-        });
-    }
-
-    private handleArmCommand(command: ArmCommand, armEvent: ArmEvent): void {
-        switch (command) {
-            case ArmCommand.SYNC:
-                this.physicsSystem.syncJoints(getJointsSync());
-                break;
-
-            case ArmCommand.SYNC_REAL:
-                this.physicsSystem.syncJoints(armEvent.jointSync);
-                this.tableController.setArmBasePositionScaled(armEvent.basePositionScaled);
-                break;
-
-            default:
-                this.tableController.handleArmCommand(command);
-        }
     }
 
 }

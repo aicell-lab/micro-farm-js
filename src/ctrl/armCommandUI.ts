@@ -1,5 +1,6 @@
-import { ArmCommand } from '../setup/enums';
-import { fetchArmSyncFromAPI, JointsSync, convertToJointsSync } from '../entity/armSync';
+import { ArmCommand, UIEventType } from '../setup/enums';
+import { fetchArmSyncFromAPI, convertToJointsSync, getJointsSync } from '../entity/armSync';
+import { uiEventBus } from '../io/eventBus';
 
 function extractPosition(data: number[]): number {
     const REAL_JOINT_POS_MULT_CONSTANT: number = 0.26853766; // Multiply by returned value from "https://hypha.aicell.io/reef-imaging/services/robotic-arm-control/get_all_joints"
@@ -13,12 +14,6 @@ function getScaledPositionValue(realBasePosition: number): number {
     return realBasePosition / MAX_POSITION; // Returns scaled position [0, 1]
 }
 
-export interface ArmEvent {
-    commands: ArmCommand[];
-    jointSync: JointsSync;
-    basePositionScaled: number;
-}
-
 export interface ArmCommandUIConfig {
     commandButtons: { [key: string]: ArmCommand };
     syncButton: HTMLElement;
@@ -27,16 +22,12 @@ export interface ArmCommandUIConfig {
 }
 
 export class ArmCommandUI {
-    private realBasePositionScaled: number = 0;
-    private realJointSync: JointsSync;
-    private actionQueue: Array<ArmCommand> = [];
     private isSyncing = false;
     private config: ArmCommandUIConfig;
 
     constructor(config: ArmCommandUIConfig) {
         this.config = config;
         this.initButtons();
-        this.realJointSync = { j0: 0, j1: 0, j2: 0, j3: 0, j4: 0 };
     }
 
     private initButtons(): void {
@@ -59,7 +50,7 @@ export class ArmCommandUI {
 
     private onSync(): void {
         console.log("Sync...");
-        this.queueCommand(ArmCommand.SYNC);
+        uiEventBus.queue(UIEventType.ArmJointSync, { jointSync: getJointsSync() });
     }
 
     private async onSyncReal(): Promise<void> {
@@ -75,9 +66,10 @@ export class ArmCommandUI {
         try {
             console.log("Sync real...");
             const data = await fetchArmSyncFromAPI();
-            this.realJointSync = convertToJointsSync(data);
-            this.realBasePositionScaled = getScaledPositionValue(extractPosition(data));
-            this.queueCommand(ArmCommand.SYNC_REAL);
+            const realJointSync = convertToJointsSync(data);
+            const realBasePositionScaled = getScaledPositionValue(extractPosition(data));
+            uiEventBus.queue(UIEventType.ArmJointSync, { jointSync: realJointSync });
+            uiEventBus.queue(UIEventType.ArmBasePosition, { basePositionScaled: realBasePositionScaled });
         } catch (err) {
             console.error("Failed to sync:", err);
         } finally {
@@ -91,33 +83,12 @@ export class ArmCommandUI {
 
     private queueCommand(command: ArmCommand) {
         console.log(`Command: ${command}`);
-        this.actionQueue.push(command);
+        uiEventBus.queue(UIEventType.ArmCommand, { command: command });
     }
 
     private armStop() {
         console.log("armStop command");
-        this.actionQueue.push(ArmCommand.STOP);
+        uiEventBus.queue(UIEventType.ArmCommand, { command: ArmCommand.STOP });
     }
 
-    private getAndClearQueue(): Array<ArmCommand> {
-        const queue = [...this.actionQueue];
-        this.actionQueue = [];
-        return queue;
-    }
-
-    private getArmRealJointSync(): JointsSync {
-        return this.realJointSync;
-    }
-
-    private getArmRealBasePositionScaled(): number {
-        return this.realBasePositionScaled;
-    }
-
-    public getArmEvent(): ArmEvent {
-        return {
-            commands: this.getAndClearQueue(),
-            jointSync: this.getArmRealJointSync(),
-            basePositionScaled: this.getArmRealBasePositionScaled(),
-        };
-    }
 }
