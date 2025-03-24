@@ -10,7 +10,6 @@ import { Controllers, createControllers } from '../ctrl/controllerFactory';
 import { EventMediator } from '../ctrl/eventMediator';
 import { renderScene } from './rendering';
 import { createCamera } from './rendering';
-import { uiEventBus } from '../io/eventBus';
 
 
 export class SceneSystem {
@@ -38,7 +37,6 @@ export class SceneSystem {
 
   runSimulationLoop = () => {
     this.processFrame(this.clock.getDelta(), this.inputListener.getInput());
-    uiEventBus.clearQueue();
     requestAnimationFrame(this.runSimulationLoop);
   };
 

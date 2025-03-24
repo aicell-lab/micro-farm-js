@@ -27,9 +27,10 @@ export class EventBus<Events extends Record<string, unknown>> {
             const { event, payload } = this.eventQueue.shift()!;
             (this.listeners[event] || []).forEach(cb => cb(payload));
         }
+        this.clearQueue();
     }
 
-    clearQueue(): void {
+    private clearQueue(): void {
         this.eventQueue = [];
     }
 
