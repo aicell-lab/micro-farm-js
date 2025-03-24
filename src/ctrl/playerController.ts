@@ -138,8 +138,10 @@ export class PlayerController {
     private animationCtrl: PlayerAnimationController;
     private bounds: THREE.Box2;
     private tableCollider: THREE.Box3;
+    private playerEntity: Entity;
 
     constructor(entity: Entity) {
+        this.playerEntity = entity;
         this.phyicsCtrl = new PlayerPhysicsController();
         this.animationCtrl = new PlayerAnimationController(entity, this.phyicsCtrl);
 
@@ -148,10 +150,11 @@ export class PlayerController {
         this.tableCollider = new THREE.Box3(new THREE.Vector3(-2, -1, -1.1), new THREE.Vector3(2, 1, 1.1));
     }
 
-    public update(object: THREE.Object3D, dt: number) {
-        this.phyicsCtrl.update(object, dt);
+    public update(dt: number) {
+        const obj = this.playerEntity.object;
+        this.phyicsCtrl.update(obj, dt);
         this.animationCtrl.update(dt);
-        this.setWithinBounds(object);
+        this.setWithinBounds(obj);
     }
 
     private setWithinBounds(object: THREE.Object3D): void {

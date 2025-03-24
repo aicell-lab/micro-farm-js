@@ -56,10 +56,9 @@ export class SceneSystem {
 
   private updatePrePhysicsControllers(dt: number, input: Input): void {
     const ctrl = this.controllers;
-    const player = this.entities.getActors().player;
     ctrl.camera.update(dt, input);
     this.eventMediator.processActions(input);
-    ctrl.player.update(player.object, dt);
+    ctrl.player.update(dt);
     ctrl.table.update(dt);
   }
 
