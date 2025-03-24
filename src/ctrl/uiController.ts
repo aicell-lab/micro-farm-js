@@ -68,6 +68,7 @@ export class UIController {
             this.updateToolTip(input.keys);
         }
         this.handleMouse(input.mouse);
+        uiEventBus.processEvents();
     }
 
     private updateToolTip(keys: KeyboardInput): void {

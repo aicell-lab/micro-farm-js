@@ -60,7 +60,6 @@ export class SceneSystem {
     const ctrl = this.controllers;
     const player = this.entities.getActors().player;
     ctrl.camera.update(dt, input);
-    uiEventBus.processEvents();
     this.eventMediator.processActions(input);
     ctrl.player.update(player.object, dt);
     ctrl.table.update(dt);
