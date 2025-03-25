@@ -22,9 +22,8 @@ export class UIMediator {
 
     public update(input: Input): void {
         keybind.bitFlag.syncState({ [KeybindFlag.DIALOG_VISIBLE]: this.dialogController.isDialogVisible() });
-        const dialog = this.dialogController;
         const ui = this.uiController;
-        ui.update(input, dialog.isDialogVisible());
+        ui.update(input);
     }
 
     private handleDialogEvent(event: DialogEvent): void {

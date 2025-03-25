@@ -1,15 +1,15 @@
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-import { ArmCommand, UIEventType, UIState } from '../setup/enums';
+import { ArmCommand, KeybindFlag, UIEventType, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { TableController } from './tableController';
 import { OpticsUnit } from '../entity/opticsUnit';
 import { MouseInput } from '../io/mouse';
-import { KeyboardInput } from '../io/keyboard';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
 import { ArmCommandUI, ArmCommandUIConfig } from './armCommandUI';
 import { uiEventBus } from '../io/eventBus';
+import { keybind, KeybindBitFlag } from '../io/keybind';
 
 function createArmCommandUIConfig(): ArmCommandUIConfig {
     const armCommandConfig: ArmCommandUIConfig = {
@@ -39,6 +39,13 @@ function createHUDUIConfig(): HUDUIConfig {
     return { hud: hudElement, info: infoElement };
 }
 
+function registerInfoToggle(info: HTMLElement) {
+    keybind.register("h", (_input: Input, bitFlag: KeybindBitFlag) => {
+        if (!bitFlag.hasState(KeybindFlag.DIALOG_VISIBLE)) {
+            info.classList.toggle("hidden");
+        }
+    });
+}
 
 /*
 Types of UI
@@ -60,21 +67,15 @@ export class UIController {
         this.tableController = tableController;
         this.entities = entities;
         new ArmCommandUI(createArmCommandUIConfig());
+        registerInfoToggle(this.ui.info);
     }
 
-    public update(input: Input, dialogVisible: boolean): void {
-        if (!dialogVisible) {
+    public update(input: Input): void {
+        if (!keybind.bitFlag.hasState(KeybindFlag.DIALOG_VISIBLE)) {
             this.updateSpatialUI();
-            this.updateToolTip(input.keys);
         }
         this.handleMouse(input.mouse);
         uiEventBus.processEvents();
-    }
-
-    private updateToolTip(keys: KeyboardInput): void {
-        if (keys.pressed.has("h")) {
-            this.ui.info.classList.toggle("hidden");
-        }
     }
 
     private toggleHUD(visible: boolean): void {
