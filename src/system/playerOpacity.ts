@@ -2,13 +2,13 @@ import { Entity } from '../entity/entity';
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import { Input } from '../io/input';
+import { keybind, KeybindBitFlag } from '../io/keybind';
 
-export function togglePlayerVisibility(entities: EntityCollection, input: Input) {
+export function registerPlayerVisibilityToggle(entities: EntityCollection) {
     const player = entities.getActors().player;
-    const toggleKey = "t";
-    if (input.keys.pressed.has(toggleKey)) {
+    keybind.register("t", (_input: Input, _bitFlag: KeybindBitFlag) => {
         setOpacity(player.object, getNextOpacity(player));
-    }
+    });
 }
 
 function getNextOpacity(player: Entity): number {

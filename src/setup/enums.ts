@@ -72,3 +72,9 @@ export enum UIEventType {
     DialogToggle = "dialog:toggle",
     HUDToggle = "hud:toggle",
 }
+
+export enum KeybindFlag {
+    DIALOG_VISIBLE = 1 << 0,
+    //<FUTURE_COMMAND...> = 1 << 1,
+}
+

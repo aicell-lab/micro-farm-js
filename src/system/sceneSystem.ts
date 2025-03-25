@@ -3,13 +3,13 @@ import { PhysicsSystem } from '../physics/physicsSystem';
 import { Input, InputListener } from '../io/input';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
-import { togglePlayerVisibility } from './playerOpacity';
+import { registerPlayerVisibilityToggle } from './playerOpacity';
 import { UIMediator } from './uiMediator';
-import { togglePointerLock } from '../io/input';
 import { Controllers, createControllers } from '../ctrl/controllerFactory';
 import { EventMediator } from '../ctrl/eventMediator';
 import { renderScene } from './rendering';
 import { createCamera } from './rendering';
+import { keybind } from '../io/keybind';
 
 
 export class SceneSystem {
@@ -33,6 +33,7 @@ export class SceneSystem {
     this.controllers = createControllers(entities, this.camera);
     this.uiMediator = new UIMediator(this.controllers.ui, this.controllers.dialog);
     this.eventMediator = new EventMediator(entities.getActors(), this.controllers.player, this.controllers.table, this.physicsSystem);
+    registerPlayerVisibilityToggle(entities);
   }
 
   runSimulationLoop = () => {
@@ -41,8 +42,7 @@ export class SceneSystem {
   };
 
   processFrame(dt: number, input: Input): void {
-    togglePointerLock(input);
-    togglePlayerVisibility(this.entities, input);
+    keybind.process(input);
     this.updatePrePhysicsControllers(dt, input);
     this.stepSimulation(dt);
     this.uiMediator.update(input);

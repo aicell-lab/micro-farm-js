@@ -1,10 +1,17 @@
 import { KeyboardInput, KeyboardListener } from './keyboard';
 import { MouseInput, MouseListener } from './mouse';
 import { requestPointerLock, exitPointerLock } from '../system/window';
+import { keybind, KeybindBitFlag } from './keybind';
 
 export interface Input {
     keys: KeyboardInput;
     mouse: MouseInput;
+}
+
+function registerPointerLockToggle() {
+    keybind.register("r", (input: Input, _flag: KeybindBitFlag) => {
+        input.mouse.pointerLocked ? exitPointerLock() : requestPointerLock()
+    });
 }
 
 export class InputListener {
@@ -14,6 +21,8 @@ export class InputListener {
     constructor() {
         this.keyboardListener = new KeyboardListener();
         this.mouseListener = new MouseListener();
+
+        registerPointerLockToggle();
     }
 
     private getKeyboardInput(): KeyboardInput {
@@ -30,13 +39,3 @@ export class InputListener {
 
 }
 
-export function togglePointerLock(input: Input): void {
-    const locked = input.mouse.pointerLocked;
-    const lockKey = "r";
-    if (!locked && input.keys.pressed.has(lockKey)) {
-        requestPointerLock();
-    }
-    else if (locked && input.keys.pressed.has(lockKey)) {
-        exitPointerLock();
-    }
-}

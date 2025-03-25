@@ -4,7 +4,8 @@ import { UIController } from "../ctrl/uiController";
 import { uiEventBus } from "../io/eventBus";
 import { Input } from "../io/input";
 import { DialogEvent } from "../io/uiEvent";
-import { UIEventType } from "../setup/enums";
+import { KeybindFlag, UIEventType } from "../setup/enums";
+import { keybind } from "../io/keybind";
 
 export class UIMediator {
     private uiController: UIController;
@@ -20,6 +21,7 @@ export class UIMediator {
     }
 
     public update(input: Input): void {
+        keybind.bitFlag.syncState({ [KeybindFlag.DIALOG_VISIBLE]: this.dialogController.isDialogVisible() });
         const dialog = this.dialogController;
         const ui = this.uiController;
         ui.update(input, dialog.isDialogVisible());
