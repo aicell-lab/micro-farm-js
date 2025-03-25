@@ -1,30 +1,45 @@
 import { Action } from '../types/action';
-import { MovePayload, ActionPayload, RotatePayload } from '../types/actionType';
+import { MovePayload, RotatePayload } from '../types/actionType';
 import { Actions } from '../setup/enums';
 import { KeyboardInput } from './keyboard';
 import { Input } from './input';
 
+
+const MoveKeyMap = {
+    forward: ["w", "ArrowUp"],
+    backward: ["s", "ArrowDown"],
+    left: ["a", "ArrowLeft"],
+    right: ["d", "ArrowRight"]
+} as const;
+
+const RotateKeyMap = {
+    left: ["q"],
+    right: ["e"]
+} as const;
+
+function isAnyKeyHeld(held: Set<string>, keys: readonly string[]): boolean {
+    return keys.some((key) => held.has(key));
+}
+
 export namespace ActionProcessor {
     export function getMoveAction(keyboardInput: KeyboardInput): Action {
         const dir: MovePayload = {
-            forward: keyboardInput.held.has("ArrowUp") || keyboardInput.held.has("w"),
-            backward: keyboardInput.held.has("ArrowDown") || keyboardInput.held.has("s"),
-            left: keyboardInput.held.has("ArrowLeft") || keyboardInput.held.has("a"),
-            right: keyboardInput.held.has("ArrowRight") || keyboardInput.held.has("d"),
+            forward: isAnyKeyHeld(keyboardInput.held, MoveKeyMap.forward),
+            backward: isAnyKeyHeld(keyboardInput.held, MoveKeyMap.backward),
+            left: isAnyKeyHeld(keyboardInput.held, MoveKeyMap.left),
+            right: isAnyKeyHeld(keyboardInput.held, MoveKeyMap.right),
         };
-        const actionPayload: ActionPayload = { type: Actions.PLAYER_MOVE, payload: dir };
-        return new Action(actionPayload);
+        return new Action({ type: Actions.PLAYER_MOVE, payload: dir });
     }
 
     export function getRotateAction(input: Input): Action {
         const dx = input.mouse.pointerLocked ? input.mouse.dx : 0;
         const rot: RotatePayload = {
-            left: input.keys.held.has("q"),
-            right: input.keys.held.has("e"),
-            dx: dx,
+            left: isAnyKeyHeld(input.keys.held, RotateKeyMap.left),
+            right: isAnyKeyHeld(input.keys.held, RotateKeyMap.right),
+            dx,
         };
-        const actionPayload: ActionPayload = { type: Actions.PLAYER_ROTATE, payload: rot };
-        return new Action(actionPayload);
+        return new Action({ type: Actions.PLAYER_ROTATE, payload: rot });
     }
 
     export function getPlayerActions(input: Input): Action[] {
