@@ -75,7 +75,6 @@ export class UIController {
             this.updateSpatialUI();
         }
         this.handleMouse(input.mouse);
-        uiEventBus.processEvents();
     }
 
     private toggleHUD(visible: boolean): void {

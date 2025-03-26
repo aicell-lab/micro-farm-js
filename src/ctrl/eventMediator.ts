@@ -36,6 +36,7 @@ export class EventMediator {
 
     public processActions(input: Input): void {
         this.processPlayerActions(input);
+        uiEventBus.processEvents();
     }
 
     private processPlayerActions(input: Input): void {

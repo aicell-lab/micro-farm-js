@@ -13,23 +13,23 @@ import { keybind } from '../io/keybind';
 
 
 export class SceneSystem {
-  private physicsSystem: PhysicsSystem;
+  private scene: THREE.Scene;
+  private camera: THREE.PerspectiveCamera;
   private clock: THREE.Clock;
   private entities: EntityCollection;
   private controllers: Controllers;
   private inputListener: InputListener;
   private uiMediator: UIMediator;
   private eventMediator: EventMediator;
-  private scene: THREE.Scene;
-  private camera: THREE.PerspectiveCamera;
+  private physicsSystem: PhysicsSystem;
 
   constructor(entities: EntityCollection, scene: THREE.Scene) {
     this.camera = createCamera();
     this.scene = scene;
-    this.inputListener = new InputListener();
     this.entities = entities;
-    this.physicsSystem = new PhysicsSystem(entities);
     this.clock = new THREE.Clock();
+    this.inputListener = new InputListener();
+    this.physicsSystem = new PhysicsSystem(entities);
     this.controllers = createControllers(entities, this.camera);
     this.uiMediator = new UIMediator(this.controllers.ui, this.controllers.dialog);
     this.eventMediator = new EventMediator(entities.getActors(), this.controllers.player, this.controllers.table, this.physicsSystem);
