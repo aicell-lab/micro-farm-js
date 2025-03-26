@@ -1,0 +1,48 @@
+    /* Fullscreen loading screen */
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgb(48, 48, 48);
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: white;
+        font-size: 20px;
+        opacity: 1;
+        transform: scale(1);
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    /* When loading is done, fade out the overlay */
+    #overlay.hidden {
+        opacity: 0;
+        transform: scale(0.8);
+        /* Shrinks smoothly */
+        pointer-events: none;
+    }
+
+    /* Spinner Animation */
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 10px;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }

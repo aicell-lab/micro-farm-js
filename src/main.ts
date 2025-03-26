@@ -1,5 +1,3 @@
-import "./styles.css";
-
 import { SceneSystem } from './system/sceneSystem';
 import { Assets } from './res/assets';
 import { ActorFactory } from './setup/actorFactory';
@@ -18,12 +16,10 @@ function hideLoadingScreen() {
     }
 }
 
-
 async function init() {
     await AmmoSingleton.init();
     await Assets.init();
     document.getElementById("dialog")!.classList.add("dialog-hidden");
-
 }
 
 function createSceneSystem(): SceneSystem {

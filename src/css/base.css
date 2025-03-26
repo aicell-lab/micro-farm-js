@@ -1,0 +1,15 @@
+/* Ensures the body and html occupy the full viewport without scrollbars */
+body,
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Makes the Three.js canvas fit the entire window */
+canvas {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
