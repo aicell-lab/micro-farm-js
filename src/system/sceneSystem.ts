@@ -37,33 +37,34 @@ export class SceneSystem {
   }
 
   runSimulationLoop = () => {
-    this.processFrame(this.clock.getDelta(), this.inputListener.getInput());
+    const dt = this.clock.getDelta();
+    this.processInput(dt, this.inputListener.getInput());
+    this.processFrame(dt);
     requestAnimationFrame(this.runSimulationLoop);
   };
 
-  processFrame(dt: number, input: Input): void {
-    this.processPlayerActions(dt, input);
-    this.updateActors(dt);
-    this.stepSimulation(dt);
-    this.uiMediator.update(input);
-    renderScene(this.scene, this.camera);
-  }
-
-  private stepSimulation(dt: number): void {
-    this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
-    syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
-  }
-
-  private processPlayerActions(dt: number, input: Input): void {
+  private processInput(dt: number, input: Input): void {
     keybind.process(input);
     this.controllers.camera.update(dt, input);
     this.eventMediator.processActions(input);
+    this.uiMediator.update(input);
+  }
+
+  private processFrame(dt: number): void {
+    this.updateActors(dt);
+    this.stepSimulation(dt);
+    renderScene(this.scene, this.camera);
   }
 
   private updateActors(dt: number): void {
     const ctrl = this.controllers;
     ctrl.player.update(dt);
     ctrl.table.update(dt);
+  }
+
+  private stepSimulation(dt: number): void {
+    this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
+    syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
   }
 
 }
