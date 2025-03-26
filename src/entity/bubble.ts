@@ -1,6 +1,6 @@
 
 import * as THREE from 'three';
-import { Assets } from '../res/assets';
+import { Assets } from '../assets/assets';
 import { Textures, OpticsState } from '../setup/enums';
 
 interface BubbleOptions {

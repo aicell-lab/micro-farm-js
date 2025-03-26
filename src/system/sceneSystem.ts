@@ -4,7 +4,7 @@ import { Input, InputListener } from '../io/input';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
 import { registerPlayerVisibilityToggle } from './playerOpacity';
-import { UIMediator } from './uiMediator';
+import { UIMediator } from '../ui/uiMediator';
 import { Controllers, createControllers } from '../ctrl/controllerFactory';
 import { EventMediator } from '../ctrl/eventMediator';
 import { renderScene } from './rendering';

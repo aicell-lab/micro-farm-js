@@ -1,6 +1,6 @@
 
-import { DialogController } from "../ctrl/dialogController";
-import { UIController } from "../ctrl/uiController";
+import { DialogController } from "./dialogController";
+import { UIController } from "./uiController";
 import { uiEventBus } from "../io/eventBus";
 import { Input } from "../io/input";
 import { DialogEvent } from "../io/uiEvent";

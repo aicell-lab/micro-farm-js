@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
 import { ArmCommand, KeybindFlag, UIEventType, UIState } from '../setup/enums';
 import { Entity } from '../entity/entity';
-import { TableController } from './tableController';
+import { TableController } from '../ctrl/tableController';
 import { OpticsUnit } from '../entity/opticsUnit';
 import { MouseInput } from '../io/mouse';
 import { Input } from '../io/input';
 import { MouseButton } from '../setup/enums';
-import { ArmCommandUI, ArmCommandUIConfig } from './armCommandUI';
+import { ArmCommandUI, ArmCommandUIConfig } from '../ctrl/armCommandUI';
 import { uiEventBus } from '../io/eventBus';
 import { keybind, KeybindBitFlag } from '../io/keybind';
 

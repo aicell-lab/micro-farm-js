@@ -1,5 +1,5 @@
 import { SceneSystem } from './system/sceneSystem';
-import { Assets } from './res/assets';
+import { Assets } from './assets/assets';
 import { ActorFactory } from './setup/actorFactory';
 import { SceneFactory } from './setup/sceneFactory';
 import { RoomObjectFactory } from './setup/roomObjectFactory';

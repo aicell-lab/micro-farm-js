@@ -3,10 +3,10 @@ import * as THREE from 'three';
 import { FLOOR_Y_POSITION } from "./constants";
 import { Actors } from './entityCollection';
 import { MathUtils } from "three";
-import { Assets } from '../res/assets';
+import { Assets } from '../assets/assets';
 import { Robots, Animations } from "./enums";
 import { Bubble } from "../entity/bubble";
-import { AnimationAsset } from "../res/animationLoader";
+import { AnimationAsset } from "../assets/animationLoader";
 import { SelectBox } from "../entity/selectBox";
 import { applyMaterialToVisuals, createMaterial, getLinkMeshMap } from "./urdfUtil";
 

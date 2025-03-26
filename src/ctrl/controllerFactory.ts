@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { CameraController } from '../ctrl/cameraController';
-import { UIController } from '../ctrl/uiController';
+import { UIController } from '../ui/uiController';
 import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
-import { DialogController } from '../ctrl/dialogController';
+import { DialogController } from '../ui/dialogController';
 
 export interface Controllers {
     ui: UIController;
