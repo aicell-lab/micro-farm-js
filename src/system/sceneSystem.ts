@@ -42,8 +42,8 @@ export class SceneSystem {
   };
 
   processFrame(dt: number, input: Input): void {
-    keybind.process(input);
-    this.updatePrePhysicsControllers(dt, input);
+    this.processPlayerActions(dt, input);
+    this.updateActors(dt);
     this.stepSimulation(dt);
     this.uiMediator.update(input);
     renderScene(this.scene, this.camera);
@@ -54,10 +54,14 @@ export class SceneSystem {
     syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
   }
 
-  private updatePrePhysicsControllers(dt: number, input: Input): void {
-    const ctrl = this.controllers;
-    ctrl.camera.update(dt, input);
+  private processPlayerActions(dt: number, input: Input): void {
+    keybind.process(input);
+    this.controllers.camera.update(dt, input);
     this.eventMediator.processActions(input);
+  }
+
+  private updateActors(dt: number): void {
+    const ctrl = this.controllers;
     ctrl.player.update(dt);
     ctrl.table.update(dt);
   }
