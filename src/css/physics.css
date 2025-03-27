@@ -1,8 +1,10 @@
+@import './variables.css';
+
 #physics-panel {
     position: fixed;
     top: 155px;
     right: 10px;
-    background: rgba(0, 0, 0, 0.7);
+    background-color: var(--color-bg-panel);
     padding: 4px 4px;
     border-radius: 8px;
     z-index: 30;
@@ -65,7 +67,7 @@
 }
 
 #physics-panel .label {
-    color: rgb(188, 188, 188);
+    color: var(--color-text);
     font-size: 14px;
     font-weight: bold;
 }

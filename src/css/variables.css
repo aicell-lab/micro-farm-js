@@ -1,0 +1,12 @@
+:root {
+    /* Colors */
+    --color-bg-panel: rgba(0, 0, 0, 0.7);
+    --color-button-bg: #295f2a;
+    --color-button-hover: #417843;
+    --color-text: rgb(206, 206, 206);
+
+    /* Spacing */
+    --panel-padding: 10px;
+    --panel-radius: 8px;
+    --gap: 10px;
+}
