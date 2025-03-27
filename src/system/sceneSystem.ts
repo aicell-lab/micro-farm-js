@@ -1,14 +1,14 @@
 import * as THREE from 'three';
 import { PhysicsSystem } from '../physics/physicsSystem';
-import { Input, InputListener } from '../io/input';
+import { Input } from '../io/input';
+import { InputListener } from '../io/inputListener';
 import { EntityCollection } from '../setup/entityCollection';
 import { syncGraphics } from '../physics/physicsSync';
 import { registerPlayerVisibilityToggle } from './playerOpacity';
 import { UIMediator } from '../ui/uiMediator';
 import { Controllers, createControllers } from '../ctrl/controllerFactory';
 import { EventMediator } from '../ctrl/eventMediator';
-import { renderScene } from './rendering';
-import { createCamera } from './rendering';
+import { renderScene, createCamera } from './rendering';
 import { keybind } from '../io/keybind';
 
 
