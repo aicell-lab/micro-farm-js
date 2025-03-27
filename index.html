@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/src/css/overlay.css" />
   <link rel="stylesheet" href="/src/css/style.css" />
   <link rel="stylesheet" href="/src/css/dialog.css" />
+  <link rel="stylesheet" href="/src/css/physics.css" />
 </head>
 
 <body>
@@ -38,10 +39,20 @@
     <button class="ui-button" id="btn6">GOTO 6</button>
     <button class="ui-button" id="btn7">STOP</button>
   </div>
+  
   <div id="sync-panel">
     <button class="ui-button" id="sync-button">SYNC</button>
     <button class="ui-button" id="sync-button-real">SYNC-REAL</button>
-  </div>  
+  </div>
+
+  <div id="physics-panel">
+    <label class="switch">
+      <input type="checkbox" id="physics-toggle-checkbox">
+      <span class="slider"></span>
+    </label>
+    <span class="label">Physics</span>
+  </div>
+
 
   <div id="hud" class="hidden">Click microscope to interact</div>
 
@@ -54,7 +65,7 @@
     <div id="dialog-body">
       <iframe src="https://example.com/"></iframe>
     </div>
-  </div> 
+  </div>
 
 
   <div id="loading-screen">

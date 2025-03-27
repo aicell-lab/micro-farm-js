@@ -1,0 +1,71 @@
+#physics-panel {
+    position: fixed;
+    top: 155px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 4px 4px;
+    border-radius: 8px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: Arial, sans-serif;
+}
+
+/* Label next to toggle */
+#physics-panel .label {
+    color: white;
+    font-size: 14px;
+}
+
+/* Hide the checkbox itself */
+.switch input {
+    display: none;
+}
+
+/* Slider style */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 22px;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #888;
+    border-radius: 22px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transition: background-color 0.3s;
+}
+
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    top: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+/* Checked state */
+.switch input:checked+.slider {
+    background-color: #4CAF50;
+}
+
+.switch input:checked+.slider::before {
+    transform: translateX(20px);
+}
+
+#physics-panel .label {
+    color: rgb(188, 188, 188);
+    font-size: 14px;
+    font-weight: bold;
+}
