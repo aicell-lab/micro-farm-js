@@ -59,7 +59,7 @@
 
 /* Checked state */
 .switch input:checked+.slider {
-    background-color: #4CAF50;
+    background-color: #3f8842;
 }
 
 .switch input:checked+.slider::before {

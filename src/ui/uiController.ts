@@ -68,6 +68,7 @@ export class UIController {
         this.entities = entities;
         new ArmCommandUI(createArmCommandUIConfig());
         registerInfoToggle(this.ui.info);
+        this.registerPhysicsToggle();
     }
 
     public update(input: Input): void {
@@ -159,5 +160,20 @@ export class UIController {
             uiEventBus.queue(UIEventType.DialogToggle, { opticsID: ctrl.getID(), toggleVisibility: true });
         }
     }
+
+    private registerPhysicsToggle(): void {
+        const physicsToggle = document.getElementById("physics-toggle-checkbox") as HTMLInputElement;
+        if (physicsToggle) {
+            physicsToggle.addEventListener("change", () => {
+                const isOn = physicsToggle.checked;
+                this.onPhysicsToggle(isOn);
+            });
+        }
+    }
+
+    private onPhysicsToggle(enabled: boolean): void {
+        console.log("Physics toggled:", enabled);
+    }
+
 
 }
