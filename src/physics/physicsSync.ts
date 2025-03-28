@@ -22,21 +22,8 @@ function getSimulatedObjects(entities: EntityCollection): Array<THREE.Object3D> 
     return [cubeObj];
 }
 
-/*function getSimArmMeshes(entities: EntityCollection): THREE.Mesh[] {
-    const arm = entities.getActors().arm;
-    const base = arm.getMesh("arm-base")!;
-    const arm1 = arm.getMesh("arm1")!;
-    const arm2 = arm.getMesh("arm2")!;
-
-    return [base, arm1, arm2];
-}*/
-
 export function syncGraphics(entities: EntityCollection, rigidBodyMap: Map<THREE.Mesh, Ammo.btRigidBody>) {
     getSimulatedObjects(entities).forEach((object) => {
         syncObject(object, rigidBodyMap);
     });
-
-    /*getSimArmMeshes(entities).forEach((mesh) => {
-        syncObject(mesh, rigidBodyMap);
-    });*/
 }
