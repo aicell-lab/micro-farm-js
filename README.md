@@ -83,7 +83,7 @@ flowchart TD
   %% Initialization section
   subgraph Initialization
     Factory -->|Initialize| Containers
-    Containers["Containers\n<EntityCollection>"] -->|Stores| Data["Data\n<Entity>"]
+    Containers["Containers<br>(EntityCollection)"] -->|Stores| Data["Data<br>(Entity)"]
   end
   
   Loop -->|Loop| Runtime
