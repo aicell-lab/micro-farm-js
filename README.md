@@ -75,3 +75,37 @@ This feature is currently a work-in-progress, and full integration of Ammo.js in
 ##### Visualizing Physics Colliders
 
 Given that AmmoJS provides only a limited subset of the full Bullet Physics API it may be helpful to introduce visualization tools into the project to improve the development experience. For example, rendering visual representations of `btRigidBody` and `btCollisionShape` objects directly would simplify debugging.
+
+## Diagram
+
+```mermaid
+flowchart TD
+  %% Initialization section
+  subgraph Initialization
+    Factory -->|Initialize| Containers
+    Containers["Containers\n<EntityCollection>"] -->|Stores| Data["Data\n<Entity>"]
+  end
+  
+  Loop -->|Loop| Runtime
+  
+  %% Runtime section
+  subgraph Runtime
+    Mediators -->|Coordinate| Controllers
+  end
+
+  %% External Systems section
+  subgraph External["External Systems"]
+    Keyboard["Keyboard & Mouse"]
+    UI["HTML, CSS"]
+    Physics
+    Robot["Sync Robot"]
+    Network
+  end
+
+  %% Entry and Setup
+  Main["Main"] -->|Fetch| Initialization
+  Main -->|Load| Assets
+  Main -->|Run| Loop
+
+  %% One single connection from Runtime to External Systems
+  Runtime <-->|Sync| External
