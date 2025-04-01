@@ -44,7 +44,14 @@ micro-farm-js/
 ```
 
 ### Assets
-Download asset files separately and store them in a directory named `public`. There is a SciLifeLab Google Drive folder for the asset files ([link](https://drive.google.com/drive/folders/1g0Fn1z1HypzZXlIOSOknS61B0Xc6bXgN?usp=sharing)).
+
+Run `setup-assets.sh` to download and unzip the asset files.
+
+```bash
+sh ./setup-assets.sh
+```
+
+This will download asset files separately and store them in a directory named `public`.
 
 ### Code Overview
 
