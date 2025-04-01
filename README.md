@@ -93,13 +93,18 @@ flowchart TD
     Mediators -->|Coordinate| Controllers
   end
 
-  %% External Systems section
-  subgraph External["External Systems"]
+  %% External Interfaces
+  subgraph External["External Interfaces"]
     Keyboard["Keyboard & Mouse"]
     UI["HTML, CSS"]
-    Physics
-    Robot["Sync Robot"]
     Network
+  end
+
+  %% Simulation
+  subgraph Simulation["Simulation"]
+    Physics
+    Robot["Robot"]
+    Optics["Optics"]
   end
 
   %% Entry and Setup
@@ -107,5 +112,7 @@ flowchart TD
   Main -->|Load| Assets
   Main -->|Run| Loop
 
-  %% One single connection from Runtime to External Systems
-  Runtime <-->|Sync| External
+  %% One connection from Runtime to each
+  Runtime -->|Sync| External
+  Runtime -->|Update| Simulation
+
