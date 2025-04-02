@@ -10,6 +10,7 @@ import { MouseButton } from '../setup/enums';
 import { ArmCommandUI, ArmCommandUIConfig } from '../ctrl/armCommandUI';
 import { uiEventBus } from '../io/eventBus';
 import { keybind, KeybindBitFlag } from '../io/keybind';
+import { registerServer } from '../io/hypha';
 
 function createArmCommandUIConfig(): ArmCommandUIConfig {
     const armCommandConfig: ArmCommandUIConfig = {
@@ -47,6 +48,7 @@ function registerInfoToggle(info: HTMLElement) {
     });
 }
 
+
 /*
 Types of UI
 Diegetic UI – Exists within the world and can be seen by characters (e.g., in-game screens, holographic displays).
@@ -69,6 +71,7 @@ export class UIController {
         new ArmCommandUI(createArmCommandUIConfig());
         registerInfoToggle(this.ui.info);
         this.registerPhysicsToggle();
+        this.registerHyphaButton();
     }
 
     public update(input: Input): void {
@@ -174,6 +177,21 @@ export class UIController {
     private onPhysicsToggle(enabled: boolean): void {
         console.log("Physics toggled:", enabled);
     }
+
+    private registerHyphaButton(): void {
+        const hyphaButton = document.getElementById("register-hypha-button");
+        if (hyphaButton) {
+            hyphaButton.addEventListener("click", () => {
+                this.onHyphaRegisterClick();
+            });
+        }
+    }
+
+    private onHyphaRegisterClick(): void {
+        console.log("Hypha registration triggered.");
+        registerServer();
+    }
+
 
 
 }

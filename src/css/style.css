@@ -131,3 +131,23 @@
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+#register-hypha-button {
+    background: #1c5d99;
+    color: white;
+}
+
+#register-hypha-button:hover {
+    background: #2a72b5;
+}
+
+#hypha-panel {
+    position: absolute;
+    top: 190px; /* below the sync panel */
+    right: 10px;
+    background: var(--color-bg-panel);
+    padding: 4px;
+    border-radius: 8px;
+    z-index: 10;
+  }
+  

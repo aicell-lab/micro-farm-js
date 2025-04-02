@@ -17,6 +17,7 @@
   "dependencies": {
     "ammo.js": "github:kripken/ammo.js",
     "ammojs-typed": "github:giniedp/ammojs-typed",
+    "hypha-rpc": "^0.20.48",
     "jszip": "^3.10.1",
     "simplex-noise": "^4.0.3",
     "three": "^0.170.0",
