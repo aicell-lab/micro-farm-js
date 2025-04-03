@@ -60,7 +60,7 @@ export class SceneSystem {
   }
 
   private stepSimulation(dt: number): void {
-    this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
+    this.physicsSystem.step(dt);
   }
 
 }

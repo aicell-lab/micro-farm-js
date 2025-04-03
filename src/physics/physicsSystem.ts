@@ -201,7 +201,7 @@ export class PhysicsSystem {
         h.setJointAngle(ArmJoints.j4, data.j4);
     }
 
-    public step(dt: number, _armBasePosition: THREE.Vector3): void {
+    private animateArm(dt: number): void {
         if (this.currentAnimator) {
             this.currentAnimator.update(dt);
             const pose = this.currentAnimator.getArmPose();
@@ -210,6 +210,10 @@ export class PhysicsSystem {
                 this.currentAnimator = null;
             }
         }
+    }
+
+    public step(dt: number): void {
+        this.animateArm(dt);
     }
 
 } 
