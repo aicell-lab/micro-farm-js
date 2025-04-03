@@ -1,13 +1,9 @@
-import { PhysicsWorld } from './physicsWorld';
 import * as THREE from 'three';
 import { EntityCollection } from '../setup/entityCollection';
-import Ammo from 'ammojs-typed';
-import { AmmoUtils } from './physicsUtil';
 import { URDFLink } from 'urdf-loader';
 import { ArmJoints } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { JointsSync } from '../entity/armSync';
-//import { AmmoSingleton } from '../setup/ammoSingleton';
 
 function getLink(mesh: THREE.Mesh): URDFLink {
     const p1 = mesh.parent
@@ -23,22 +19,13 @@ function getLink(mesh: THREE.Mesh): URDFLink {
 
 export class PhysicsSystem {
     private entities: EntityCollection;
-    private world: PhysicsWorld;
-    private rigidBodies: Map<THREE.Mesh, Ammo.btRigidBody> = new Map();
-    private masses: Map<THREE.Mesh, number> = new Map();
-    //private hingeConstraints: Map<THREE.Mesh, Ammo.btHingeConstraint> = new Map();
 
     constructor(entities: EntityCollection) {
         this.entities = entities;
-        this.world = new PhysicsWorld();
         this.initializePhysics();
     }
 
     private initializePhysics(): void {
-        const room = this.entities.getRoom();
-        this.addObject(room.cube.object, 1.0);
-        this.addObject(room.floor.object, 0.0);
-        AmmoUtils.applyImpulse(new THREE.Vector3(4.5, 0, 0), [this.rigidBodies.get(room.cube.object as THREE.Mesh)!]);
         this.setJointAngle(ArmJoints.j0, 40);
         this.setJointAngle(ArmJoints.j1, 10);
         this.setJointAngle(ArmJoints.j2, 20);
@@ -92,17 +79,5 @@ export class PhysicsSystem {
     }
 
     public step(_dt: number, _armBasePosition: THREE.Vector3): void {
-    }
-
-    public getRigidBodyMap(): Map<THREE.Mesh, Ammo.btRigidBody> {
-        return this.rigidBodies;
-    }
-
-    private addObject(object: THREE.Object3D, mass: number): void {
-        const mesh = AmmoUtils.getMesh(object);
-        const body = AmmoUtils.createBody(mesh, mass);
-        this.rigidBodies.set(mesh, body);
-        this.masses.set(mesh, mass);
-        this.world.addRigidBody(body, mesh);
     }
 } 

@@ -3,7 +3,6 @@ import { PhysicsSystem } from '../physics/physicsSystem';
 import { Input } from '../io/input';
 import { InputListener } from '../io/inputListener';
 import { EntityCollection } from '../setup/entityCollection';
-import { syncGraphics } from '../physics/physicsSync';
 import { registerPlayerVisibilityToggle } from './playerOpacity';
 import { UIMediator } from '../ui/uiMediator';
 import { Controllers, createControllers } from '../ctrl/controllerFactory';
@@ -16,7 +15,6 @@ export class SceneSystem {
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private clock: THREE.Clock;
-  private entities: EntityCollection;
   private controllers: Controllers;
   private inputListener: InputListener;
   private uiMediator: UIMediator;
@@ -26,7 +24,6 @@ export class SceneSystem {
   constructor(entities: EntityCollection, scene: THREE.Scene) {
     this.camera = createCamera();
     this.scene = scene;
-    this.entities = entities;
     this.clock = new THREE.Clock();
     this.inputListener = new InputListener();
     this.physicsSystem = new PhysicsSystem(entities);
@@ -64,7 +61,6 @@ export class SceneSystem {
 
   private stepSimulation(dt: number): void {
     this.physicsSystem.step(dt, this.controllers.table.getArmBasePosition());
-    syncGraphics(this.entities, this.physicsSystem.getRigidBodyMap());
   }
 
 }
