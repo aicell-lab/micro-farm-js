@@ -5,6 +5,7 @@ import { PlayerController } from '../ctrl/playerController';
 import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
 import { DialogController } from '../ui/dialogController';
+import { OpticsUnit } from '../entity/opticsUnit';
 
 export interface Controllers {
     ui: UIController;
@@ -14,11 +15,18 @@ export interface Controllers {
     dialog: DialogController;
 }
 
+function createOpticsUnits(entities: EntityCollection): OpticsUnit[] {
+    const table = entities.getActors().table;
+    return Array.from({ length: 10 }, (_, i) =>
+        new OpticsUnit(table.bubbles[i], table.selectBoxes[i], i)
+    );
+}
+
 export function createControllers(entities: EntityCollection, camera: THREE.PerspectiveCamera): Controllers {
     const actors = entities.getActors();
     const cameraController = new CameraController(actors.player.object, camera);
     const playerCtrl = new PlayerController(actors.player);
-    const tableCtrl = new TableController(entities);
+    const tableCtrl = new TableController(entities, createOpticsUnits(entities));
     const uiCtrl = new UIController(camera, entities, tableCtrl);
 
     return {

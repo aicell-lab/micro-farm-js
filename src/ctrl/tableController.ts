@@ -7,12 +7,6 @@ import { Entity } from '../entity/entity';
 import { ArmBaseHandle } from './armBaseHandle';
 import { EntityCollection } from '../setup/entityCollection';
 
-function createOpticsUnits(table: Entity): OpticsUnit[] {
-    return Array.from({ length: 10 }, (_, i) =>
-        new OpticsUnit(table.bubbles[i], table.selectBoxes[i], i)
-    );
-}
-
 function getSlideJoint(table: Entity): URDFJoint {
     const tableRobot = table.object as URDFRobot;
     return tableRobot.joints["slide-j"]; // range [-3.5, 0]
@@ -26,13 +20,13 @@ function getSlideAngle(table: Entity): number {
 export class TableController {
     private static readonly SLIDE_SPEED = 1.0;
     private armFSM: ArmStateMachine;
-    private opticsUnitss: OpticsUnit[];
+    private opticsUnits: OpticsUnit[];
     private table: Entity;
     private armBaseHandle: ArmBaseHandle;
 
-    constructor(entities: EntityCollection) {
+    constructor(entities: EntityCollection, opticUnits: OpticsUnit[]) {
+        this.opticsUnits = opticUnits;
         this.table = entities.getActors().table;
-        this.opticsUnitss = createOpticsUnits(this.table);
         this.armFSM = new ArmStateMachine();
         this.armBaseHandle = new ArmBaseHandle(entities);
     }
@@ -46,11 +40,11 @@ export class TableController {
     }
 
     public getOpticsUnits(): OpticsUnit[] {
-        return this.opticsUnitss;
+        return this.opticsUnits;
     }
 
     public getOpticsUnitBySelectBox(selectBox: SelectBox): OpticsUnit | undefined {
-        return this.opticsUnitss.find(unit => unit.selectBox === selectBox);
+        return this.opticsUnits.find(unit => unit.selectBox === selectBox);
     }
 
     public setArmBasePositionScaled(scaledPosition: number): void {
