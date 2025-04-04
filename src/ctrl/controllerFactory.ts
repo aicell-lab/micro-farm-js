@@ -18,7 +18,7 @@ export function createControllers(entities: EntityCollection, camera: THREE.Pers
     const actors = entities.getActors();
     const cameraController = new CameraController(actors.player.object, camera);
     const playerCtrl = new PlayerController(actors.player);
-    const tableCtrl = new TableController(actors.table, actors.arm);
+    const tableCtrl = new TableController(entities);
     const uiCtrl = new UIController(camera, entities, tableCtrl);
 
     return {

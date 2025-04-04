@@ -1,6 +1,7 @@
 import { URDFRobot, URDFJoint } from 'urdf-loader';
 import * as THREE from 'three';
 import { Entity } from '../entity/entity';
+import { EntityCollection } from '../setup/entityCollection';
 
 function getSlideJoint(table: Entity): URDFJoint {
     const tableRobot = table.object as URDFRobot;
@@ -17,9 +18,9 @@ export class ArmBaseHandle {
     private table: Entity;
     private arm: Entity;
 
-    constructor(table: Entity, arm: Entity) {
-        this.table = table;
-        this.arm = arm;
+    constructor(entities: EntityCollection) {
+        this.table = entities.getActors().table;
+        this.arm = entities.getActors().arm;
         this.setArmPosition();
     }
 

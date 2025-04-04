@@ -5,6 +5,7 @@ import { OpticsUnit } from '../entity/opticsUnit';
 import { SelectBox } from '../entity/selectBox';
 import { Entity } from '../entity/entity';
 import { ArmBaseHandle } from './armBaseHandle';
+import { EntityCollection } from '../setup/entityCollection';
 
 function createOpticsUnits(table: Entity): OpticsUnit[] {
     return Array.from({ length: 10 }, (_, i) =>
@@ -29,11 +30,11 @@ export class TableController {
     private table: Entity;
     private armBaseHandle: ArmBaseHandle;
 
-    constructor(table: Entity, arm: Entity) {
-        this.table = table;
-        this.opticsUnitss = createOpticsUnits(table);
+    constructor(entities: EntityCollection) {
+        this.table = entities.getActors().table;
+        this.opticsUnitss = createOpticsUnits(this.table);
         this.armFSM = new ArmStateMachine();
-        this.armBaseHandle = new ArmBaseHandle(table, arm);
+        this.armBaseHandle = new ArmBaseHandle(entities);
     }
 
     public getArmState(): ArmState {
