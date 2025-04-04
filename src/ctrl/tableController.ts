@@ -1,8 +1,6 @@
 import { URDFRobot, URDFJoint } from 'urdf-loader';
 import { ArmStateMachine } from '../entity/armState';
 import { ArmState, ArmCommand } from '../setup/enums';
-import { OpticsUnit } from '../entity/opticsUnit';
-import { SelectBox } from '../entity/selectBox';
 import { Entity } from '../entity/entity';
 import { ArmBaseHandle } from './armBaseHandle';
 import { EntityCollection } from '../setup/entityCollection';
@@ -16,16 +14,13 @@ function getSlideAngle(table: Entity): number {
     return getSlideJoint(table).angle as number;
 }
 
-
 export class TableController {
     private static readonly SLIDE_SPEED = 1.0;
     private armFSM: ArmStateMachine;
-    private opticsUnits: OpticsUnit[];
     private table: Entity;
     private armBaseHandle: ArmBaseHandle;
 
-    constructor(entities: EntityCollection, opticUnits: OpticsUnit[]) {
-        this.opticsUnits = opticUnits;
+    constructor(entities: EntityCollection) {
         this.table = entities.getActors().table;
         this.armFSM = new ArmStateMachine();
         this.armBaseHandle = new ArmBaseHandle(entities);
@@ -37,14 +32,6 @@ export class TableController {
 
     public handleArmCommand(newCommand: ArmCommand): void {
         this.armFSM.transition(newCommand);
-    }
-
-    public getOpticsUnits(): OpticsUnit[] {
-        return this.opticsUnits;
-    }
-
-    public getOpticsUnitBySelectBox(selectBox: SelectBox): OpticsUnit | undefined {
-        return this.opticsUnits.find(unit => unit.selectBox === selectBox);
     }
 
     public setArmBasePositionScaled(scaledPosition: number): void {

@@ -6,6 +6,7 @@ import { TableController } from '../ctrl/tableController';
 import { EntityCollection } from '../setup/entityCollection';
 import { DialogController } from '../ui/dialogController';
 import { OpticsUnit } from '../entity/opticsUnit';
+import { OpticsUnitCollection } from './opticsUnitCollection';
 
 export interface Controllers {
     ui: UIController;
@@ -13,6 +14,7 @@ export interface Controllers {
     player: PlayerController;
     table: TableController;
     dialog: DialogController;
+    opticsUnitCollection: OpticsUnitCollection;
 }
 
 function createOpticsUnits(entities: EntityCollection): OpticsUnit[] {
@@ -26,8 +28,9 @@ export function createControllers(entities: EntityCollection, camera: THREE.Pers
     const actors = entities.getActors();
     const cameraController = new CameraController(actors.player.object, camera);
     const playerCtrl = new PlayerController(actors.player);
-    const tableCtrl = new TableController(entities, createOpticsUnits(entities));
-    const uiCtrl = new UIController(camera, entities, tableCtrl);
+    const tableCtrl = new TableController(entities);
+    const opticsUnitCollection = new OpticsUnitCollection(createOpticsUnits(entities));
+    const uiCtrl = new UIController(camera, entities, opticsUnitCollection);
 
     return {
         player: playerCtrl,
@@ -35,5 +38,6 @@ export function createControllers(entities: EntityCollection, camera: THREE.Pers
         camera: cameraController,
         ui: uiCtrl,
         dialog: new DialogController(),
+        opticsUnitCollection: opticsUnitCollection,
     };
 }
