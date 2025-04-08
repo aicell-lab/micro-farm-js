@@ -1,5 +1,21 @@
 import { ArmState, ArmCommand } from "../setup/enums";
 
+class TargetResolver {
+    private readonly targetAngleMap: Map<ArmCommand, number> = new Map([
+        [ArmCommand.GOTO_1, 0.2],
+        [ArmCommand.GOTO_2, 0.8],
+        [ArmCommand.GOTO_3, 1.4],
+        [ArmCommand.GOTO_4, 2.0],
+        [ArmCommand.GOTO_5, 2.5],
+        [ArmCommand.GOTO_6, 3.0],
+        [ArmCommand.STOP, 0.0],
+    ]);
+
+    public getTargetAngle(command: ArmCommand): number {
+        return this.targetAngleMap.get(command) || 0;
+    }
+}
+
 export interface ArmTransition {
     from: ArmState;
     to: ArmState;
@@ -39,18 +55,10 @@ function isGotoCommand(command: ArmCommand): boolean {
 export class ArmStateMachine {
     private state = ArmState.Idle;
     private command = ArmCommand.STOP;
-    private targetAngleMap: Map<ArmCommand, number>;
+    private readonly targetResolver: TargetResolver;
 
-    constructor() {
-        this.targetAngleMap = new Map([
-            [ArmCommand.GOTO_1, 0.2],
-            [ArmCommand.GOTO_2, 0.8],
-            [ArmCommand.GOTO_3, 1.4],
-            [ArmCommand.GOTO_4, 2.0],
-            [ArmCommand.GOTO_5, 2.5],
-            [ArmCommand.GOTO_6, 3.0],
-            [ArmCommand.STOP, 0.0],
-        ]);
+    constructor(targetResolver = new TargetResolver()) {
+        this.targetResolver = targetResolver;
     }
 
     public transition(newCommand: ArmCommand): ArmTransition {
@@ -65,7 +73,7 @@ export class ArmStateMachine {
     }
 
     public getTargetAngle(): number {
-        return this.targetAngleMap.get(this.command) || 0;
+        return this.targetResolver.getTargetAngle(this.command);
     }
 
 }
