@@ -1,18 +1,8 @@
-import { URDFRobot, URDFJoint } from 'urdf-loader';
+import { URDFJoint } from 'urdf-loader';
 import * as THREE from 'three';
 import { Entity } from '../entity/entity';
 import { EntityCollection } from '../setup/entityCollection';
-
-function getSlideJoint(table: Entity): URDFJoint {
-    const tableRobot = table.object as URDFRobot;
-    return tableRobot.joints["slide-j"]; // range [-3.5, 0]
-}
-
-function getSlidePosition(table: Entity): THREE.Vector3 {
-    const position = new THREE.Vector3();
-    getSlideJoint(table).getWorldPosition(position);
-    return position;
-}
+import { getSlideJoint, getSlidePosition } from './sliderUtils';
 
 export class ArmBaseHandle {
     private table: Entity;

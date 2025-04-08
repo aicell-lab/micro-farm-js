@@ -1,18 +1,10 @@
-import { URDFRobot, URDFJoint } from 'urdf-loader';
+import { URDFJoint } from 'urdf-loader';
 import { ArmStateMachine } from '../entity/armState';
 import { ArmState, ArmCommand } from '../setup/enums';
 import { Entity } from '../entity/entity';
 import { ArmBaseHandle } from './armBaseHandle';
 import { EntityCollection } from '../setup/entityCollection';
-
-function getSlideJoint(table: Entity): URDFJoint {
-    const tableRobot = table.object as URDFRobot;
-    return tableRobot.joints["slide-j"]; // range [-3.5, 0]
-}
-
-function getSlideAngle(table: Entity): number {
-    return getSlideJoint(table).angle as number;
-}
+import { getSlideAngle, getSlideJoint } from './sliderUtils';
 
 export class TableController {
     private static readonly SLIDE_SPEED = 1.0;
@@ -24,10 +16,6 @@ export class TableController {
         this.table = entities.getActors().table;
         this.armFSM = new ArmStateMachine();
         this.armBaseHandle = new ArmBaseHandle(entities);
-    }
-
-    public getArmState(): ArmState {
-        return this.armFSM.getState();
     }
 
     public handleArmCommand(newCommand: ArmCommand): void {
