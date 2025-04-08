@@ -6,25 +6,34 @@ export interface ArmTransition {
     command: ArmCommand;
 }
 
-function transition(state: ArmState, newCommand: ArmCommand): ArmTransition {
-    switch (newCommand) {
-        case ArmCommand.GOTO_1:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.GOTO_2:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.GOTO_3:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.GOTO_4:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.GOTO_5:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.GOTO_6:
-            return { from: state, to: ArmState.Moving, command: newCommand };
-        case ArmCommand.STOP:
-            return { from: state, to: ArmState.Idle, command: newCommand };
-        default:
-            throw new Error(`Unhandled case: ${newCommand}`);
+function toMoveTransition(state: ArmState, command: ArmCommand): ArmTransition {
+    return {
+        from: state,
+        to: ArmState.Moving,
+        command,
+    };
+}
+
+function toStopTransition(state: ArmState, command: ArmCommand): ArmTransition {
+    return {
+        from: state,
+        to: ArmState.Idle,
+        command,
+    };
+}
+
+function transition(state: ArmState, command: ArmCommand): ArmTransition {
+    if (isGotoCommand(command)) {
+        return toMoveTransition(state, command);
     }
+    if (command === ArmCommand.STOP) {
+        return toStopTransition(state, command);
+    }
+    throw new Error(`Unhandled command: ${command}`);
+}
+
+function isGotoCommand(command: ArmCommand): boolean {
+    return command !== ArmCommand.STOP;
 }
 
 export class ArmStateMachine {
